@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    scribblearea.cpp
+    scribblearea.cpp \
+    action.cpp
 
 HEADERS  += mainwindow.h \
-    scribblearea.h
+    scribblearea.h \
+    action.h
 
 FORMS    += mainwindow.ui

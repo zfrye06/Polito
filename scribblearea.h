@@ -55,6 +55,20 @@
 #include <QImage>
 #include <QPoint>
 #include <QWidget>
+#include "action.h"
+
+// Circular Dependencies suckkkkk
+class ScribbleArea;
+
+class ScribbleAction : public Action {
+private:
+    ScribbleArea* area;
+    QImage before;
+public:
+    ScribbleAction( ScribbleArea* Area );
+    void undo();
+    void redo();
+};
 
 class ScribbleArea : public QWidget
 {
@@ -67,6 +81,8 @@ public:
     bool saveImage(const QString &fileName, const char *fileFormat);
     void setPenColor(const QColor &newColor);
     void setPenWidth(int newWidth);
+    void setImage( QImage i );
+    QImage getImage();
 
     bool isModified() const { return modified; }
     QColor penColor() const { return myPenColor; }
@@ -75,6 +91,9 @@ public:
 public slots:
     void clearImage();
     void print();
+
+signals:
+    void addAction( Action* a );
 
 protected:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
@@ -93,6 +112,7 @@ private:
     QColor myPenColor;
     QImage image;
     QPoint lastPoint;
+    ScribbleAction* currentAction;
 };
 
 #endif

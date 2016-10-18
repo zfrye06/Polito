@@ -56,6 +56,10 @@
 MainWindow::MainWindow()
 {
     scribbleArea = new ScribbleArea;
+    actionHandler = new ActionHandler();
+
+    connect(scribbleArea, &ScribbleArea::addAction, actionHandler, &ActionHandler::addAction);
+
     setCentralWidget(scribbleArea);
 
     createActions();
@@ -127,6 +131,10 @@ void MainWindow::about()
 
 void MainWindow::createActions()
 {
+    undoAct = new QAction(tr("&Undo"), this);
+    undoAct->setShortcuts(QKeySequence::Undo);
+    connect(undoAct, &QAction::triggered, actionHandler, &ActionHandler::undo);
+
     openAct = new QAction(tr("&Open..."), this);
     openAct->setShortcuts(QKeySequence::Open);
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
@@ -179,6 +187,7 @@ void MainWindow::createMenus()
     fileMenu->addAction(exitAct);
 
     optionMenu = new QMenu(tr("&Options"), this);
+    optionMenu->addAction(undoAct);
     optionMenu->addAction(penColorAct);
     optionMenu->addAction(penWidthAct);
     optionMenu->addSeparator();

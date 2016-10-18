@@ -53,6 +53,7 @@
 
 #include <QList>
 #include <QMainWindow>
+#include "action.h"
 
 class ScribbleArea;
 
@@ -81,11 +82,14 @@ private:
 
     ScribbleArea *scribbleArea;
 
+    ActionHandler* actionHandler;
+
     QMenu *saveAsMenu;
     QMenu *fileMenu;
     QMenu *optionMenu;
     QMenu *helpMenu;
 
+    QAction *undoAct;
     QAction *openAct;
     QList<QAction *> saveAsActs;
     QAction *exitAct;

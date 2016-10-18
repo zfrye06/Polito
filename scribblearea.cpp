@@ -67,6 +67,18 @@ ScribbleArea::ScribbleArea(QWidget *parent)
     myPenColor = Qt::blue;
 }
 
+void ScribbleArea::setImage(QImage i ) {
+    QSize newSize = i.size().expandedTo(size());
+    resizeImage(&i, newSize);
+    image = i;
+    modified = false;
+    update();
+}
+
+QImage ScribbleArea::getImage() {
+    return image;
+}
+
 bool ScribbleArea::openImage(const QString &fileName)
 {
     QImage loadedImage;
@@ -116,6 +128,7 @@ void ScribbleArea::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         lastPoint = event->pos();
         scribbling = true;
+        currentAction = new ScribbleAction( this );
     }
 }
 
@@ -130,6 +143,7 @@ void ScribbleArea::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton && scribbling) {
         drawLineTo(event->pos());
         scribbling = false;
+        emit addAction( (Action*)currentAction );
     }
 }
 
@@ -193,4 +207,17 @@ void ScribbleArea::print()
         painter.drawImage(0, 0, image);
     }
 #endif // QT_NO_PRINTER
+}
+
+ScribbleAction::ScribbleAction( ScribbleArea* Area ) {
+    area = Area;
+    QImage copy(area->getImage());
+    before = copy;
+}
+
+void ScribbleAction::undo() {
+    area->setImage( before );
+}
+void ScribbleAction::redo() {
+
 }
