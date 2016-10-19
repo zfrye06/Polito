@@ -49,6 +49,7 @@
 ****************************************************************************/
 
 #include <QtWidgets>
+#include <iostream>
 #define QT_NO_PRINTER
 #ifndef QT_NO_PRINTER
 #include <QPrinter>
@@ -60,6 +61,15 @@
 ScribbleArea::ScribbleArea(QWidget *parent)
     : QWidget(parent)
 {
+    if (!background.load("../checkerboard.png")) {
+        throw 1;
+    }
+    resizeImage( &image, QSize(64,64) );
+    // Set up the camera matrix
+    camera.translate( size().rwidth()/2, size().rheight()/2 );
+    //camera.translate( 256, 256 );
+    //camera.translate( image.width()/2, image.height()/2 );
+    offset = QPoint(-image.width()/2,-image.height()/2);
     setAttribute(Qt::WA_StaticContents);
     modified = false;
     scribbling = false;
@@ -68,8 +78,8 @@ ScribbleArea::ScribbleArea(QWidget *parent)
 }
 
 void ScribbleArea::setImage(QImage& i ) {
-    QSize newSize = i.size().expandedTo(size());
-    resizeImage(&i, newSize);
+    //QSize newSize = i.size().expandedTo(size());
+    //resizeImage(&i, newSize);
     image = i;
     modified = true;
     update();
@@ -123,10 +133,26 @@ void ScribbleArea::clearImage()
     update();
 }
 
+void ScribbleArea::wheelEvent( QWheelEvent* event ) {
+    int numDegrees = event->delta() / 8;
+    int numSteps = numDegrees/15;
+    if ( numSteps == 0 ) {
+        event->accept();
+        return;
+    }
+    if ( numSteps > 0 ) {
+        camera.scale(2, 2);
+    } else {
+        camera.scale(0.5,0.5);
+    }
+    update();
+    event->accept();
+}
+
 void ScribbleArea::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        lastPoint = event->pos();
+        lastPoint = event->pos()*camera.inverted()-offset;
         scribbling = true;
         currentAction = new ScribbleAction( this );
     }
@@ -135,13 +161,13 @@ void ScribbleArea::mousePressEvent(QMouseEvent *event)
 void ScribbleArea::mouseMoveEvent(QMouseEvent *event)
 {
     if ((event->buttons() & Qt::LeftButton) && scribbling)
-        drawLineTo(event->pos());
+        drawLineTo(event->pos()*camera.inverted()-offset);
 }
 
 void ScribbleArea::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && scribbling) {
-        drawLineTo(event->pos());
+        drawLineTo(event->pos()*camera.inverted()-offset);
         scribbling = false;
         currentAction->finish();
         emit addAction( (Action*)currentAction );
@@ -152,17 +178,23 @@ void ScribbleArea::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
-    painter.drawImage(dirtyRect, image, dirtyRect);
+
+    painter.setTransform( camera );
+    // First draw a checkerboard.
+    painter.drawImage(QPoint(-256,-256), background, dirtyRect);
+    // Then the layers in order
+    painter.drawImage(offset, image, dirtyRect);
 }
 
 void ScribbleArea::resizeEvent(QResizeEvent *event)
 {
-    if (width() > image.width() || height() > image.height()) {
+    // We don't want to resize the image all willy-nilly
+    /*if (width() > image.width() || height() > image.height()) {
         int newWidth = qMax(width() + 128, image.width());
         int newHeight = qMax(height() + 128, image.height());
         resizeImage(&image, QSize(newWidth, newHeight));
         update();
-    }
+    }*/
     QWidget::resizeEvent(event);
 }
 
@@ -174,9 +206,10 @@ void ScribbleArea::drawLineTo(const QPoint &endPoint)
     painter.drawLine(lastPoint, endPoint);
     modified = true;
 
-    int rad = (myPenWidth / 2) + 2;
-    update(QRect(lastPoint, endPoint).normalized()
-                                     .adjusted(-rad, -rad, +rad, +rad));
+    //int rad = (myPenWidth / 2) + 2;
+    // This update tries to just update what changed instead of the whole widget. PfFFFFF hahahaha
+    //update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
+    update();
     lastPoint = endPoint;
 }
 

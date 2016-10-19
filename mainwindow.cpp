@@ -65,7 +65,7 @@ MainWindow::MainWindow()
     createActions();
     createMenus();
 
-    setWindowTitle(tr("Scribble"));
+    setWindowTitle(tr("Polito"));
     resize(500, 500);
 }
 
