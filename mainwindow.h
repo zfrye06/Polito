@@ -86,10 +86,12 @@ private:
 
     QMenu *saveAsMenu;
     QMenu *fileMenu;
+    QMenu *editMenu;
     QMenu *optionMenu;
     QMenu *helpMenu;
 
     QAction *undoAct;
+    QAction *redoAct;
     QAction *openAct;
     QList<QAction *> saveAsActs;
     QAction *exitAct;

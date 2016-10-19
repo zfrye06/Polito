@@ -67,15 +67,15 @@ ScribbleArea::ScribbleArea(QWidget *parent)
     myPenColor = Qt::blue;
 }
 
-void ScribbleArea::setImage(QImage i ) {
+void ScribbleArea::setImage(QImage& i ) {
     QSize newSize = i.size().expandedTo(size());
     resizeImage(&i, newSize);
     image = i;
-    modified = false;
+    modified = true;
     update();
 }
 
-QImage ScribbleArea::getImage() {
+QImage& ScribbleArea::getImage() {
     return image;
 }
 
@@ -143,6 +143,7 @@ void ScribbleArea::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton && scribbling) {
         drawLineTo(event->pos());
         scribbling = false;
+        currentAction->finish();
         emit addAction( (Action*)currentAction );
     }
 }
@@ -218,6 +219,12 @@ ScribbleAction::ScribbleAction( ScribbleArea* Area ) {
 void ScribbleAction::undo() {
     area->setImage( before );
 }
-void ScribbleAction::redo() {
 
+void ScribbleAction::finish() {
+    QImage copy(area->getImage());
+    after = copy;
+}
+
+void ScribbleAction::redo() {
+    area->setImage( after );
 }

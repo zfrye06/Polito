@@ -57,18 +57,8 @@
 #include <QWidget>
 #include "action.h"
 
-// Circular Dependencies suckkkkk
-class ScribbleArea;
-
-class ScribbleAction : public Action {
-private:
-    ScribbleArea* area;
-    QImage before;
-public:
-    ScribbleAction( ScribbleArea* Area );
-    void undo();
-    void redo();
-};
+// Must forward-declare ScribbleAction due to circular dependency.
+class ScribbleAction;
 
 class ScribbleArea : public QWidget
 {
@@ -81,8 +71,8 @@ public:
     bool saveImage(const QString &fileName, const char *fileFormat);
     void setPenColor(const QColor &newColor);
     void setPenWidth(int newWidth);
-    void setImage( QImage i );
-    QImage getImage();
+    void setImage( QImage& i );
+    QImage& getImage();
 
     bool isModified() const { return modified; }
     QColor penColor() const { return myPenColor; }
@@ -113,6 +103,18 @@ private:
     QImage image;
     QPoint lastPoint;
     ScribbleAction* currentAction;
+};
+
+class ScribbleAction : public Action {
+private:
+    ScribbleArea* area;
+    QImage before;
+    QImage after;
+public:
+    ScribbleAction( ScribbleArea* Area );
+    void finish();
+    void undo();
+    void redo();
 };
 
 #endif

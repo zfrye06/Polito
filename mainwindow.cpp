@@ -135,6 +135,10 @@ void MainWindow::createActions()
     undoAct->setShortcuts(QKeySequence::Undo);
     connect(undoAct, &QAction::triggered, actionHandler, &ActionHandler::undo);
 
+    redoAct = new QAction(tr("&Redo"), this);
+    redoAct->setShortcuts(QKeySequence::Redo);
+    connect(redoAct, &QAction::triggered, actionHandler, &ActionHandler::redo);
+
     openAct = new QAction(tr("&Open..."), this);
     openAct->setShortcuts(QKeySequence::Open);
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
@@ -186,8 +190,11 @@ void MainWindow::createMenus()
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
 
+    editMenu = new QMenu(tr("&Edit"), this);
+    editMenu->addAction(undoAct);
+    editMenu->addAction(redoAct);
+
     optionMenu = new QMenu(tr("&Options"), this);
-    optionMenu->addAction(undoAct);
     optionMenu->addAction(penColorAct);
     optionMenu->addAction(penWidthAct);
     optionMenu->addSeparator();
@@ -198,6 +205,7 @@ void MainWindow::createMenus()
     helpMenu->addAction(aboutQtAct);
 
     menuBar()->addMenu(fileMenu);
+    menuBar()->addMenu(editMenu);
     menuBar()->addMenu(optionMenu);
     menuBar()->addMenu(helpMenu);
 }
