@@ -68,6 +68,7 @@ ScribbleArea::ScribbleArea(QWidget *parent)
     // Set up the camera matrix
     camera.translate( size().rwidth()/2, size().rheight()/2 );
     //camera.rotate(45);
+    //camera.rotate(45,Qt::YAxis);
     //camera.translate( 256, 256 );
     //camera.translate( image.width()/2, image.height()/2 );
     offset = QPoint(-image.width()/2,-image.height()/2);
@@ -152,8 +153,9 @@ void ScribbleArea::wheelEvent( QWheelEvent* event ) {
 
 void ScribbleArea::mousePressEvent(QMouseEvent *event)
 {
+    QPoint p = QPoint( floor(event->pos().x()), floor(event->pos().y()) )*camera.inverted()-QPoint(offset.x(),offset.y());
     if (event->button() == Qt::LeftButton) {
-        lastPoint = event->pos()*camera.inverted()-offset;
+        lastPoint = p;
         scribbling = true;
         currentAction = new ScribbleAction( this );
     }
@@ -161,14 +163,16 @@ void ScribbleArea::mousePressEvent(QMouseEvent *event)
 
 void ScribbleArea::mouseMoveEvent(QMouseEvent *event)
 {
+    QPoint p = QPoint( floor(event->pos().x()), floor(event->pos().y()) )*camera.inverted()-QPoint(offset.x(), offset.y());
     if ((event->buttons() & Qt::LeftButton) && scribbling)
-        drawLineTo(event->pos()*camera.inverted()-offset);
+        drawLineTo(p);
 }
 
 void ScribbleArea::mouseReleaseEvent(QMouseEvent *event)
 {
+    QPoint p = QPoint( floor(event->pos().x()), floor(event->pos().y()) )*camera.inverted()-QPoint(offset.x(),offset.y());
     if (event->button() == Qt::LeftButton && scribbling) {
-        drawLineTo(event->pos()*camera.inverted()-offset);
+        drawLineTo(p);
         scribbling = false;
         currentAction->finish();
         emit addAction( (Action*)currentAction );
@@ -180,11 +184,11 @@ void ScribbleArea::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     QRect dirtyRect = event->rect();
 
-    painter.setTransform( camera );
     // First draw a checkerboard.
-    painter.drawImage(QPoint(-256,-256), background, dirtyRect);
+    painter.drawImage(dirtyRect, background, dirtyRect);
+    painter.setTransform( camera );
     // Then the layers in order
-    painter.drawImage(offset, image, dirtyRect);
+    painter.drawImage(offset-QPointF(0.5,0.5), image, dirtyRect);
 }
 
 void ScribbleArea::resizeEvent(QResizeEvent *event)
