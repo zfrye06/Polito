@@ -52,6 +52,7 @@
 
 #include "mainwindow.h"
 #include "scribblearea.h"
+#include "imagesizedialog.h"
 
 MainWindow::MainWindow()
 {
@@ -102,10 +103,29 @@ void MainWindow::penColor()
         scribbleArea->setPenColor(newColor);
 }
 
+void MainWindow::imageSize()
+{
+    int width = scribbleArea->getImage().width();
+    int height = scribbleArea->getImage().height();
+    ImageSizeDialog* d = new ImageSizeDialog(this, width, height);
+    d->activateWindow();
+    d->showNormal();
+    d->setVisible(true);
+    connect(d,&ImageSizeDialog::done,this,&MainWindow::finishImageSize);
+}
+
+void MainWindow::finishImageSize(int w, int h) {
+    ScribbleAction* a = new ScribbleAction(scribbleArea);
+    scribbleArea->resizeImage(w,h);
+    a->finish();
+    actionHandler->addAction(a);
+    //delete d;
+}
+
 void MainWindow::penWidth()
 {
     bool ok;
-    int newWidth = QInputDialog::getInt(this, tr("Scribble"),
+    int newWidth = QInputDialog::getInt(this, tr("Polito"),
                                         tr("Select pen width:"),
                                         scribbleArea->penWidth(),
                                         1, 50, 1, &ok);
@@ -131,6 +151,9 @@ void MainWindow::about()
 
 void MainWindow::createActions()
 {
+    imageSizeAct = new QAction(tr("&Image Size..."), this);
+    connect(imageSizeAct, SIGNAL(triggered()), this, SLOT(imageSize()));
+
     undoAct = new QAction(tr("&Undo"), this);
     undoAct->setShortcuts(QKeySequence::Undo);
     connect(undoAct, &QAction::triggered, actionHandler, &ActionHandler::undo);
@@ -193,6 +216,7 @@ void MainWindow::createMenus()
     editMenu = new QMenu(tr("&Edit"), this);
     editMenu->addAction(undoAct);
     editMenu->addAction(redoAct);
+    editMenu->addAction(imageSizeAct);
 
     optionMenu = new QMenu(tr("&Options"), this);
     optionMenu->addAction(penColorAct);

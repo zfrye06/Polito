@@ -67,6 +67,7 @@ ScribbleArea::ScribbleArea(QWidget *parent)
     resizeImage( &image, QSize(64,64) );
     // Set up the camera matrix
     camera.translate( size().rwidth()/2, size().rheight()/2 );
+    //camera.rotate(45);
     //camera.translate( 256, 256 );
     //camera.translate( image.width()/2, image.height()/2 );
     offset = QPoint(-image.width()/2,-image.height()/2);
@@ -211,6 +212,14 @@ void ScribbleArea::drawLineTo(const QPoint &endPoint)
     //update(QRect(lastPoint, endPoint).normalized().adjusted(-rad, -rad, +rad, +rad));
     update();
     lastPoint = endPoint;
+}
+
+void ScribbleArea::resizeImage( int width, int height, int filtering ) {
+    resizeImage( &image, QSize( width, height ) );
+    if ( filtering != 0 ) {
+        throw 1; // not implemented
+    }
+    update();
 }
 
 void ScribbleArea::resizeImage(QImage *image, const QSize &newSize)

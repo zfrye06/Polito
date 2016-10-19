@@ -53,6 +53,7 @@
 
 #include <QList>
 #include <QMainWindow>
+#include "imagesizedialog.h"
 #include "action.h"
 
 class ScribbleArea;
@@ -72,9 +73,12 @@ private slots:
     void save();
     void penColor();
     void penWidth();
+    void imageSize();
+    void finishImageSize(int w, int h);
     void about();
 
 private:
+    ImageSizeDialog* d;
     void createActions();
     void createMenus();
     bool maybeSave();
@@ -92,6 +96,7 @@ private:
 
     QAction *undoAct;
     QAction *redoAct;
+    QAction *imageSizeAct;
     QAction *openAct;
     QList<QAction *> saveAsActs;
     QAction *exitAct;

@@ -73,7 +73,7 @@ public:
     void setPenWidth(int newWidth);
     void setImage( QImage& i );
     QImage& getImage();
-    void setImageSize( int width, int height );
+    void resizeImage( int width, int height, int filtering = 0);
 
     bool isModified() const { return modified; }
     QColor penColor() const { return myPenColor; }
