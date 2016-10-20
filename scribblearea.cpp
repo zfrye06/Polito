@@ -61,9 +61,10 @@
 ScribbleArea::ScribbleArea(QWidget *parent)
     : QWidget(parent)
 {
-    if (!background.load("../checkerboard.png")) {
-        throw 1;
-    }
+    setMouseTracking(true);
+    //if (!background.load("../checkerboard.png")) {
+    //    throw 1;
+    //}
     resizeImage( &image, QSize(64,64) );
     // Set up the camera matrix
     camera.translate( size().rwidth()/2, size().rheight()/2 );
@@ -71,9 +72,11 @@ ScribbleArea::ScribbleArea(QWidget *parent)
     //camera.rotate(45,Qt::YAxis);
     //camera.translate( 256, 256 );
     //camera.translate( image.width()/2, image.height()/2 );
+    cameraScale = 1;
     offset = QPoint(-image.width()/2,-image.height()/2);
     setAttribute(Qt::WA_StaticContents);
     modified = false;
+    //dragging = false;
     scribbling = false;
     myPenWidth = 1;
     myPenColor = Qt::blue;
@@ -144,8 +147,10 @@ void ScribbleArea::wheelEvent( QWheelEvent* event ) {
     }
     if ( numSteps > 0 ) {
         camera.scale(2, 2);
+        cameraScale *= 2;
     } else {
         camera.scale(0.5,0.5);
+        cameraScale *= 0.5;
     }
     update();
     event->accept();
@@ -154,38 +159,69 @@ void ScribbleArea::wheelEvent( QWheelEvent* event ) {
 void ScribbleArea::mousePressEvent(QMouseEvent *event)
 {
     QPoint p = QPoint( floor(event->pos().x()), floor(event->pos().y()) )*camera.inverted()-QPoint(offset.x(),offset.y());
+    QPoint realp = QPoint( floor(event->pos().x()), floor(event->pos().y()) );
     if (event->button() == Qt::LeftButton) {
         lastPoint = p;
         scribbling = true;
         currentAction = new ScribbleAction( this );
+    }
+    if ((event->button() == Qt::RightButton)) {
+        lastDraggingPoint = realp;
+        dragging = true;
     }
 }
 
 void ScribbleArea::mouseMoveEvent(QMouseEvent *event)
 {
     QPoint p = QPoint( floor(event->pos().x()), floor(event->pos().y()) )*camera.inverted()-QPoint(offset.x(), offset.y());
-    if ((event->buttons() & Qt::LeftButton) && scribbling)
+    QPoint realp = QPoint( floor(event->pos().x()), floor(event->pos().y()) );
+    if ((event->buttons() & Qt::LeftButton) && scribbling) {
         drawLineTo(p);
+    }
+    if ( (event->buttons() & Qt::RightButton) && dragging ) {
+        offset += (realp-lastDraggingPoint)/cameraScale;
+        lastDraggingPoint = realp;
+        update();
+    }
 }
 
 void ScribbleArea::mouseReleaseEvent(QMouseEvent *event)
 {
     QPoint p = QPoint( floor(event->pos().x()), floor(event->pos().y()) )*camera.inverted()-QPoint(offset.x(),offset.y());
+    QPoint realp = QPoint( floor(event->pos().x()), floor(event->pos().y()) );
     if (event->button() == Qt::LeftButton && scribbling) {
         drawLineTo(p);
         scribbling = false;
         currentAction->finish();
         emit addAction( (Action*)currentAction );
     }
+    if ( event->button() == Qt::MiddleButton && dragging ) {
+        offset += (realp-lastDraggingPoint)/cameraScale;
+        dragging = false;
+        update();
+    }
 }
 
 void ScribbleArea::paintEvent(QPaintEvent *event)
 {
+    // Clamp offset to screen
+    QPointF projectedOffset = (offset+(QPoint(image.size().rwidth(),image.size().rheight()))/2)*camera;
+    if ( projectedOffset.x() > size().rwidth() + image.size().rwidth()/2*cameraScale) {
+        projectedOffset.setX(size().rwidth() + image.size().rwidth()/2*cameraScale);
+    } else if ( projectedOffset.x() < 0 - image.size().rwidth()/2*cameraScale ) {
+        projectedOffset.setX(0 - image.size().rwidth()/2*cameraScale);
+    }
+    if ( projectedOffset.y() > size().rheight() + image.size().rheight()/2*cameraScale ) {
+        projectedOffset.setY(size().rheight() + image.size().rheight()/2*cameraScale );
+    } else if ( projectedOffset.y() < 0 - image.size().rheight()/2*cameraScale ) {
+        projectedOffset.setY(0 - image.size().rheight()/2*cameraScale);
+    }
+    offset = projectedOffset*camera.inverted()-(QPoint(image.size().rwidth(),image.size().rheight()))/2;
     QPainter painter(this);
     QRect dirtyRect = event->rect();
 
     // First draw a checkerboard.
-    painter.drawImage(dirtyRect, background, dirtyRect);
+    //painter.drawImage(dirtyRect, background, dirtyRect);
     painter.setTransform( camera );
     // Then the layers in order
     painter.drawImage(offset-QPointF(0.5,0.5), image, dirtyRect);

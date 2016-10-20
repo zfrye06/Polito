@@ -100,13 +100,16 @@ private:
 
     QPointF offset;
     QTransform camera;
+    float cameraScale;
     bool modified;
     bool scribbling;
+    bool dragging;
     int myPenWidth;
     QColor myPenColor;
     QImage background;
     QImage image;
     QPoint lastPoint;
+    QPoint lastDraggingPoint;
     ScribbleAction* currentAction;
 };
 
