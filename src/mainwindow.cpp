@@ -8,9 +8,8 @@
 MainWindow::MainWindow()
 {
     scribbleArea = new DrawArea;
-    actionHandler = new ActionHandler();
 
-    connect(scribbleArea, &DrawArea::addAction, actionHandler, &ActionHandler::addAction);
+    connect(scribbleArea, &DrawArea::addAction, &actionHistory, &ActionHistory::addAction);
 
     setCentralWidget(scribbleArea);
 
@@ -41,7 +40,7 @@ void MainWindow::finishImageSize(int w, int h) {
     ScribbleAction* a = new ScribbleAction(scribbleArea);
     scribbleArea->resizeImage(w,h);
     a->finish();
-    actionHandler->addAction(a);
+    actionHistory.addAction(a);
 }
 
 void MainWindow::createActions()
@@ -51,11 +50,11 @@ void MainWindow::createActions()
 
     undoAct = new QAction(tr("&Undo"), this);
     undoAct->setShortcuts(QKeySequence::Undo);
-    connect(undoAct, &QAction::triggered, actionHandler, &ActionHandler::undo);
+    connect(undoAct, &QAction::triggered, &actionHistory, &ActionHistory::undo);
 
     redoAct = new QAction(tr("&Redo"), this);
     redoAct->setShortcuts(QKeySequence::Redo);
-    connect(redoAct, &QAction::triggered, actionHandler, &ActionHandler::redo);
+    connect(redoAct, &QAction::triggered, &actionHistory, &ActionHistory::redo);
 
     exitAct = new QAction(tr("E&xit"), this);
     exitAct->setShortcuts(QKeySequence::Quit);

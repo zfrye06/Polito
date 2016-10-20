@@ -4,8 +4,10 @@
 
 #include <QList>
 #include <QMainWindow>
-#include "imagesizedialog.h"
+#include <vector>
 #include "action.h"
+#include "frame.h"
+#include "imagesizedialog.h"
 
 class DrawArea;
 
@@ -24,24 +26,24 @@ private slots:
     void finishImageSize(int w, int h);
 
 private:
+
+    std::vector<Frame> animation;
+    ActionHistory actionHistory;
+
     ImageSizeDialog* d;
-    void createActions();
-    void createMenus();
-
     DrawArea *scribbleArea;
-
-    ActionHandler* actionHandler;
-
     QMenu *saveAsMenu;
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *optionMenu;
-
     QAction *undoAct;
     QAction *redoAct;
     QAction *imageSizeAct;
     QAction *exitAct;
     QAction *clearScreenAct;
+    
+    void createActions();
+    void createMenus();
 };
 
 #endif

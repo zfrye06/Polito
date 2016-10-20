@@ -29,11 +29,11 @@ void Action::undo() {
 void Action::redo() {
 }
 
-ActionHandler::ActionHandler() {
+ActionHistory::ActionHistory() {
   maxSize = 30;
 }
 
-ActionHandler::~ActionHandler() {
+ActionHistory::~ActionHistory() {
   for( auto a : redoStack ) {
     delete a;
   }
@@ -48,7 +48,7 @@ ActionHandler::~ActionHandler() {
  * @param action When ActionHandler::undo() is called, this action will
  *               be the one to have undo() called.
  */
-void ActionHandler::addAction( Action* action ) {
+void ActionHistory::addAction( Action* action ) {
   undoStack.push_back( action );
   // Since we added a new action, clear the redo stack.
   for( auto a : redoStack ) {
@@ -66,7 +66,7 @@ void ActionHandler::addAction( Action* action ) {
  * @brief Calls undo() on the last action added to the stack, and moves it to
  * the redo stack.
  */
-void ActionHandler::undo() {
+void ActionHistory::undo() {
   if ( undoStack.empty() ) {
     return;
   }
@@ -81,7 +81,7 @@ void ActionHandler::undo() {
  * @brief Calls redo() on the action last added to the redo stack, and moves it
  * to the undo stack.
  */
-void ActionHandler::redo() {
+void ActionHistory::redo() {
   if ( redoStack.empty() ) {
     return;
   }

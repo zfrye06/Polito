@@ -32,15 +32,15 @@ public:
  * It has slots to cause an undo or redo, and a signal that's sent to cause
  * the app to update its visuals. The signal can probably be ignored in some cases.
  */
-class ActionHandler : public QObject {
+class ActionHistory : public QObject {
     Q_OBJECT
 private:
     unsigned int maxSize;
     std::vector<Action*> undoStack;
     std::vector<Action*> redoStack;
 public:
-    ActionHandler();
-    ~ActionHandler();
+    ActionHistory();
+    ~ActionHistory();
 
 signals:
     void update();
