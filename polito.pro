@@ -15,10 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     scribblearea.cpp \
-    action.cpp
+    action.cpp \
+    imagesizedialog.cpp
 
 HEADERS  += mainwindow.h \
     scribblearea.h \
-    action.h
+    action.h \
+    imagesizedialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    imagesizedialog.ui
