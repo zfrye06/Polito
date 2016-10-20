@@ -9,7 +9,8 @@
 #include "action.h"
 
 /**
- * @brief This may be unused on your actions, but when they are deconstructed they may need to release some memory.
+ * @brief This may be unused on your actions, but when they are deconstructed
+ * they may need to release some memory.
  */
 Action::~Action() {
 }
@@ -21,22 +22,24 @@ void Action::undo() {
 }
 
 /**
- * @brief This should load the state saved after the action completed, there may be extra implemented functions to help with this. (For example ScribbleAction::finish()).
+ * @brief This should load the state saved after the action completed, there may
+ * be extra implemented functions to help with this. (For example
+ * ScribbleAction::finish()).
  */
 void Action::redo() {
 }
 
 ActionHandler::ActionHandler() {
-    maxSize = 30;
+  maxSize = 30;
 }
 
 ActionHandler::~ActionHandler() {
-    for( auto a : redoStack ) {
-        delete a;
-    }
-    for ( auto a : undoStack ) {
-        delete a;
-    }
+  for( auto a : redoStack ) {
+    delete a;
+  }
+  for ( auto a : undoStack ) {
+    delete a;
+  }
 }
 
 /**
@@ -46,43 +49,45 @@ ActionHandler::~ActionHandler() {
  *               be the one to have undo() called.
  */
 void ActionHandler::addAction( Action* action ) {
-    undoStack.push_back( action );
-    // Since we added a new action, clear the redo stack.
-    for( auto a : redoStack ) {
-        delete a;
-    }
-    redoStack.clear();
-    if ( undoStack.size() > maxSize ) {
-        delete undoStack.front();
-        // Delete the first element.
-        undoStack.erase(undoStack.begin());
-    }
+  undoStack.push_back( action );
+  // Since we added a new action, clear the redo stack.
+  for( auto a : redoStack ) {
+    delete a;
+  }
+  redoStack.clear();
+  if ( undoStack.size() > maxSize ) {
+    delete undoStack.front();
+    // Delete the first element.
+    undoStack.erase(undoStack.begin());
+  }
 }
 
 /**
- * @brief Calls undo() on the last action added to the stack, and moves it to the redo stack.
+ * @brief Calls undo() on the last action added to the stack, and moves it to
+ * the redo stack.
  */
 void ActionHandler::undo() {
-    if ( undoStack.empty() ) {
-        return;
-    }
-    Action* a = undoStack.back();
-    undoStack.pop_back();
-    a->undo();
-    emit update();
-    redoStack.push_back( a );
+  if ( undoStack.empty() ) {
+    return;
+  }
+  Action* a = undoStack.back();
+  undoStack.pop_back();
+  a->undo();
+  emit update();
+  redoStack.push_back( a );
 }
 
 /**
- * @brief Calls redo() on the action last added to the redo stack, and moves it to the undo stack.
+ * @brief Calls redo() on the action last added to the redo stack, and moves it
+ * to the undo stack.
  */
 void ActionHandler::redo() {
-    if ( redoStack.empty() ) {
-        return;
-    }
-    Action* a = redoStack.back();
-    redoStack.pop_back();
-    a->redo();
-    emit update();
-    undoStack.push_back( a );
+  if ( redoStack.empty() ) {
+    return;
+  }
+  Action* a = redoStack.back();
+  redoStack.pop_back();
+  a->redo();
+  emit update();
+  undoStack.push_back( a );
 }
