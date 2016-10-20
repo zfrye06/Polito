@@ -14,14 +14,24 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    scribblearea.cpp \
     action.cpp \
-    imagesizedialog.cpp
+    imagesizedialog.cpp \
+    drawarea.cpp \
+    frame.cpp \
+    toolbar.cpp \
+    layermenu.cpp \
+    scrubber.cpp \
+    previewarea.cpp
 
 HEADERS  += mainwindow.h \
-    scribblearea.h \
     action.h \
-    imagesizedialog.h
+    imagesizedialog.h \
+    drawarea.h \
+    frame.h \
+    toolbar.h \
+    layermenu.h \
+    scrubber.h \
+    previewarea.h
 
 FORMS    += mainwindow.ui \
     imagesizedialog.ui

@@ -60,12 +60,12 @@
 // Must forward-declare ScribbleAction due to circular dependency.
 class ScribbleAction;
 
-class ScribbleArea : public QWidget
+class DrawArea : public QWidget
 {
     Q_OBJECT
 
 public:
-    ScribbleArea(QWidget *parent = 0);
+    DrawArea(QWidget *parent = 0);
 
     bool openImage(const QString &fileName);
     bool saveImage(const QString &fileName, const char *fileFormat);
@@ -115,11 +115,11 @@ private:
 
 class ScribbleAction : public Action {
 private:
-    ScribbleArea* area;
+    DrawArea* area;
     QImage before;
     QImage after;
 public:
-    ScribbleAction( ScribbleArea* Area );
+    ScribbleAction( DrawArea* Area );
     void finish();
     void undo();
     void redo();

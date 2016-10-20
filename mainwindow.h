@@ -56,7 +56,7 @@
 #include "imagesizedialog.h"
 #include "action.h"
 
-class ScribbleArea;
+class DrawArea;
 
 class MainWindow : public QMainWindow
 {
@@ -84,7 +84,7 @@ private:
     bool maybeSave();
     bool saveFile(const QByteArray &fileFormat);
 
-    ScribbleArea *scribbleArea;
+    DrawArea *scribbleArea;
 
     ActionHandler* actionHandler;
 

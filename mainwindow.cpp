@@ -51,15 +51,15 @@
 #include <QtWidgets>
 
 #include "mainwindow.h"
-#include "scribblearea.h"
+#include "drawarea.h"
 #include "imagesizedialog.h"
 
 MainWindow::MainWindow()
 {
-    scribbleArea = new ScribbleArea;
+    scribbleArea = new DrawArea;
     actionHandler = new ActionHandler();
 
-    connect(scribbleArea, &ScribbleArea::addAction, actionHandler, &ActionHandler::addAction);
+    connect(scribbleArea, &DrawArea::addAction, actionHandler, &ActionHandler::addAction);
 
     setCentralWidget(scribbleArea);
 
