@@ -12,26 +12,26 @@ TARGET = polito
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    action.cpp \
-    imagesizedialog.cpp \
-    drawarea.cpp \
-    frame.cpp \
-    toolbar.cpp \
-    layermenu.cpp \
-    scrubber.cpp \
-    previewarea.cpp
+SOURCES += src/main.cpp\
+        src/mainwindow.cpp \
+    src/action.cpp \
+    src/imagesizedialog.cpp \
+    src/drawarea.cpp \
+    src/frame.cpp \
+    src/toolbar.cpp \
+    src/layermenu.cpp \
+    src/scrubber.cpp \
+    src/previewarea.cpp
 
-HEADERS  += mainwindow.h \
-    action.h \
-    imagesizedialog.h \
-    drawarea.h \
-    frame.h \
-    toolbar.h \
-    layermenu.h \
-    scrubber.h \
-    previewarea.h
+HEADERS  += src/mainwindow.h \
+    src/action.h \
+    src/imagesizedialog.h \
+    src/drawarea.h \
+    src/frame.h \
+    src/toolbar.h \
+    src/layermenu.h \
+    src/scrubber.h \
+    src/previewarea.h
 
-FORMS    += mainwindow.ui \
-    imagesizedialog.ui
+FORMS    += src/mainwindow.ui \
+    src/imagesizedialog.ui
