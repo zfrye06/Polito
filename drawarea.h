@@ -32,7 +32,6 @@ public:
 
 public slots:
     void clearImage();
-    void print();
 
 signals:
     void addAction( Action* a );

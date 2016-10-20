@@ -1,11 +1,6 @@
 
 #include <QtWidgets>
 #include <iostream>
-#define QT_NO_PRINTER
-#ifndef QT_NO_PRINTER
-#include <QPrinter>
-#include <QPrintDialog>
-#endif
 
 #include "drawarea.h"
 
@@ -116,7 +111,7 @@ void DrawArea::mousePressEvent(QMouseEvent *event)
         scribbling = true;
         currentAction = new ScribbleAction( this );
     }
-    if ((event->button() == Qt::RightButton)) {
+    if ((event->button() == Qt::MidButton)) {
         lastDraggingPoint = realp;
         dragging = true;
     }
@@ -129,7 +124,7 @@ void DrawArea::mouseMoveEvent(QMouseEvent *event)
     if ((event->buttons() & Qt::LeftButton) && scribbling) {
         drawLineTo(p);
     }
-    if ( (event->buttons() & Qt::RightButton) && dragging ) {
+    if ( (event->buttons() & Qt::MidButton) && dragging ) {
         offset += (realp-lastDraggingPoint)/cameraScale;
         lastDraggingPoint = realp;
         update();
@@ -146,7 +141,7 @@ void DrawArea::mouseReleaseEvent(QMouseEvent *event)
         currentAction->finish();
         emit addAction( (Action*)currentAction );
     }
-    if ( event->button() == Qt::MiddleButton && dragging ) {
+    if ( event->button() == Qt::MidButton && dragging ) {
         offset += (realp-lastDraggingPoint)/cameraScale;
         dragging = false;
         update();
@@ -223,24 +218,6 @@ void DrawArea::resizeImage(QImage *image, const QSize &newSize)
     QPainter painter(&newImage);
     painter.drawImage(QPoint(0, 0), *image);
     *image = newImage;
-}
-
-void DrawArea::print()
-{
-#if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
-    QPrinter printer(QPrinter::HighResolution);
-
-    QPrintDialog printDialog(&printer, this);
-    if (printDialog.exec() == QDialog::Accepted) {
-        QPainter painter(&printer);
-        QRect rect = painter.viewport();
-        QSize size = image.size();
-        size.scale(rect.size(), Qt::KeepAspectRatio);
-        painter.setViewport(rect.x(), rect.y(), size.width(), size.height());
-        painter.setWindow(image.rect());
-        painter.drawImage(0, 0, image);
-    }
-#endif // QT_NO_PRINTER
 }
 
 ScribbleAction::ScribbleAction( DrawArea* Area ) {
