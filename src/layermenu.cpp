@@ -3,10 +3,18 @@
 #include "layermenu.h"
 #include <QListView>
 
+/*To do:
+ * Allow deleting layers;
+ * use another button or just delete key?
+ * Actually hook up LayerMenu to model.
+ * Fix drag-and-drop copying layer names.
+ *
+ * */
+
 LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent)
 {
     this->resize(170,500);
-    QVBoxLayout *layerMenuLayout = new QVBoxLayout;
+    layerMenuLayout = new QVBoxLayout;
     listOfLayers = new QListView(parent);
     listOfLayers->setMovement(QListView::Snap);
     addLayerButton = new QPushButton(listOfLayers);
@@ -26,13 +34,8 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent)
 
 void LayerMenu::addLayerButtonClicked()
 {
-    //QStandardItem *item = new QStandardItem();
-    //item->setData("Layer", Qt::DisplayRole);
-    //item->setData( QImage(":/Pix/Pix.png"), Qt::DecorationRole );
-    //item->setEditable(false);
     int row = layerNames->rowCount();
     listOfLayers->model()->insertRow(row);
     QModelIndex index = layerNames->index(layerNames->rowCount()-1);
     layerNames->setData(index, "New layer");
-
 }

@@ -5,6 +5,7 @@
 #include <QListView>
 #include <QPushButton>
 #include <QStringListModel>
+#include <QVBoxLayout>
 
 class LayerMenu : public QWidget
 {
@@ -24,6 +25,7 @@ private:
     QListView *listOfLayers;
     QPushButton *addLayerButton;
     QStringListModel *layerNames;
+    QVBoxLayout *layerMenuLayout;
 };
 
 #endif // LAYERMENU_H
