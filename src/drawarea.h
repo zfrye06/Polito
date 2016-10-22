@@ -7,6 +7,7 @@
 #include <QPoint>
 #include <QWidget>
 #include "action.h"
+#include "layermenu.h"
 
 // Must forward-declare ScribbleAction due to circular dependency.
 class ScribbleAction;
@@ -61,6 +62,7 @@ private:
     QPoint lastPoint;
     QPoint lastDraggingPoint;
     ScribbleAction* currentAction;
+    LayerMenu *layerMenu;
 };
 
 class ScribbleAction : public Action {

@@ -26,6 +26,9 @@ DrawArea::DrawArea(QWidget *parent)
     scribbling = false;
     myPenWidth = 1;
     myPenColor = Qt::blue;
+    //QHBoxLayout *layout = new QHBoxLayout();
+    layerMenu = new LayerMenu(this);
+    //layerMenu->setLayout(layout);
 }
 
 void DrawArea::setImage(QImage& i ) {
