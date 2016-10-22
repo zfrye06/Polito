@@ -5,7 +5,7 @@
 
 LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent)
 {
-    this->resize(200,500);
+    this->resize(170,500);
     QVBoxLayout *layerMenuLayout = new QVBoxLayout;
     listOfLayers = new QListView(parent);
     listOfLayers->setMovement(QListView::Snap);
@@ -19,8 +19,8 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent)
     listOfLayers->setModel(layerNames);
     listOfLayers->setEditTriggers(QAbstractItemView::AnyKeyPressed |
                                   QAbstractItemView::DoubleClicked);
-    layerMenuLayout->addWidget(listOfLayers);
     layerMenuLayout->addWidget(addLayerButton);
+    layerMenuLayout->addWidget(listOfLayers);
     this->setLayout(layerMenuLayout);
 }
 
