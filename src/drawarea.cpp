@@ -28,6 +28,7 @@ DrawArea::DrawArea(QWidget *parent)
     myPenColor = Qt::blue;
     //QHBoxLayout *layout = new QHBoxLayout();
     layerMenu = new LayerMenu(this);
+    //addLayerButton = new QPushButton(this);
     //layerMenu->setLayout(layout);
 }
 

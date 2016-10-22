@@ -63,6 +63,7 @@ private:
     QPoint lastDraggingPoint;
     ScribbleAction* currentAction;
     LayerMenu *layerMenu;
+    //QPushButton *addLayerButton;
 };
 
 class ScribbleAction : public Action {
