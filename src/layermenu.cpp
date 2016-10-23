@@ -36,6 +36,12 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     layerMenuLayout->addWidget(deleteLayerButton);
     layerMenuLayout->addWidget(listOfLayers);
     this->setLayout(layerMenuLayout);
+
+    //selectedItems = new QList<QListViewItem>();
+
+    QItemSelectionModel *selectionModel = listOfLayers->selectionModel();
+      connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),
+              this, SLOT(selectionChangedSlot(const QItemSelection &, const QItemSelection &)));
 }
 
 void LayerMenu::addLayerButtonClicked() {
@@ -57,6 +63,10 @@ void LayerMenu::deleteLayerButtonClicked() {
 //            List->removeOne(qs);
 //        }
 //    }
+    listOfLayers->model()->removeRow(0);
 
     //QListViewItem.isSelected();
+}
+
+void LayerMenu::selectionChangedSlot(const QItemSelection& selected, const QItemSelection& deselected){
 }

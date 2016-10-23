@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QStringListModel>
 #include <QVBoxLayout>
+//#include <QListViewItem>
 
 class LayerMenu : public QWidget {
     Q_OBJECT
@@ -18,6 +19,7 @@ signals:
 public slots:
     void addLayerButtonClicked();
     void deleteLayerButtonClicked();
+    void selectionChangedSlot(const QItemSelection&, const QItemSelection&);
 
 protected:
 
@@ -28,6 +30,7 @@ private:
     QVBoxLayout *layerMenuLayout;
     QPushButton *deleteLayerButton;
     QStringList *List;
+    //QList<QListViewItem> *selectedItems;
     //QListViewItem
 };
 
