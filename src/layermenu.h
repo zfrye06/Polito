@@ -6,14 +6,12 @@
 #include <QPushButton>
 #include <QStringListModel>
 #include <QVBoxLayout>
-//#include <QListViewItem>
 
 class LayerMenu : public QWidget {
     Q_OBJECT
 public:
     explicit LayerMenu(QWidget *parent = 0);
-
-    //void addLayer();
+    void deleteItem(const QModelIndex& index);
 signals:
 
 public slots:
@@ -30,6 +28,7 @@ private:
     QVBoxLayout *layerMenuLayout;
     QPushButton *deleteLayerButton;
     QStringList *List;
+    //QModelIndexList selectedIndices;
     //QList<QListViewItem> *selectedItems;
     //QListViewItem
 };

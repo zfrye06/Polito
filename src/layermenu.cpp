@@ -37,11 +37,16 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     layerMenuLayout->addWidget(listOfLayers);
     this->setLayout(layerMenuLayout);
 
-    //selectedItems = new QList<QListViewItem>();
-
     QItemSelectionModel *selectionModel = listOfLayers->selectionModel();
-      connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),
-              this, SLOT(selectionChangedSlot(const QItemSelection &, const QItemSelection &)));
+    connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),
+            this, SLOT(selectionChangedSlot(const QItemSelection &, const QItemSelection &)));
+}
+
+void LayerMenu::deleteItem(const QModelIndex& index)
+{
+    if (!index.isValid() || index.row() >= listOfLayers->model()->rowCount())
+        return;
+    layerNames->removeRows(index.row(), 1);
 }
 
 void LayerMenu::addLayerButtonClicked() {
@@ -52,21 +57,9 @@ void LayerMenu::addLayerButtonClicked() {
 }
 
 void LayerMenu::deleteLayerButtonClicked() {
-//    foreach (QListViewItem ql, listOfLayers){
-//        if (ql.isSelected()){
-//            listOfLayers->
-//        }
-//    }
-
-//    foreach (QString qs, *List) {
-//        if (qs.isSelected()){
-//            List->removeOne(qs);
-//        }
-//    }
-    listOfLayers->model()->removeRow(0);
-
-    //QListViewItem.isSelected();
+    deleteItem(listOfLayers->currentIndex());
 }
 
 void LayerMenu::selectionChangedSlot(const QItemSelection& selected, const QItemSelection& deselected){
+    //selectedIndices = selected.indexes();
 }
