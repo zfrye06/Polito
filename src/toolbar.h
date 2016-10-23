@@ -3,8 +3,7 @@
 
 #include <QWidget>
 
-class Toolbar : public QWidget
-{
+class Toolbar : public QWidget {
     Q_OBJECT
 public:
     explicit Toolbar(QWidget *parent = 0);

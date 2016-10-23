@@ -5,8 +5,7 @@
 #include "drawarea.h"
 #include "imagesizedialog.h"
 
-MainWindow::MainWindow()
-{
+MainWindow::MainWindow() {
     scribbleArea = new DrawArea;
 
     connect(scribbleArea, &DrawArea::addAction, &actionHistory, &ActionHistory::addAction);
@@ -20,13 +19,11 @@ MainWindow::MainWindow()
     resize(500, 500);
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{
+void MainWindow::closeEvent(QCloseEvent *event) {
     event->accept();
 }
 
-void MainWindow::imageSize()
-{
+void MainWindow::imageSize() {
     int width = scribbleArea->getImage().width();
     int height = scribbleArea->getImage().height();
     ImageSizeDialog* d = new ImageSizeDialog(this, width, height);
@@ -43,8 +40,7 @@ void MainWindow::finishImageSize(int w, int h) {
     actionHistory.addAction(a);
 }
 
-void MainWindow::createActions()
-{
+void MainWindow::createActions() {
     imageSizeAct = new QAction(tr("&Image Size..."), this);
     connect(imageSizeAct, SIGNAL(triggered()), this, SLOT(imageSize()));
 
@@ -66,8 +62,7 @@ void MainWindow::createActions()
             scribbleArea, SLOT(clearImage()));
 }
 
-void MainWindow::createMenus()
-{
+void MainWindow::createMenus() {
     fileMenu = new QMenu(tr("&File"), this);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);

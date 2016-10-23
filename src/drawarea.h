@@ -12,8 +12,7 @@
 // Must forward-declare ScribbleAction due to circular dependency.
 class ScribbleAction;
 
-class DrawArea : public QWidget
-{
+class DrawArea : public QWidget {
     Q_OBJECT
 
 public:

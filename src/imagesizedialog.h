@@ -7,8 +7,7 @@ namespace Ui {
 class ImageSizeDialog;
 }
 
-class ImageSizeDialog : public QDialog
-{
+class ImageSizeDialog : public QDialog {
     Q_OBJECT
 
 public:

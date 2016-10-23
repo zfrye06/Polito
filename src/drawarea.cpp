@@ -5,8 +5,7 @@
 #include "drawarea.h"
 
 DrawArea::DrawArea(QWidget *parent)
-    : QWidget(parent)
-{
+    : QWidget(parent) {
     setMouseTracking(true);
     //if (!background.load("../checkerboard.png")) {
     //    throw 1;
@@ -41,8 +40,7 @@ QImage& DrawArea::getImage() {
     return image;
 }
 
-bool DrawArea::openImage(const QString &fileName)
-{
+bool DrawArea::openImage(const QString &fileName) {
     QImage loadedImage;
     if (!loadedImage.load(fileName))
         return false;
@@ -55,8 +53,7 @@ bool DrawArea::openImage(const QString &fileName)
     return true;
 }
 
-bool DrawArea::saveImage(const QString &fileName, const char *fileFormat)
-{
+bool DrawArea::saveImage(const QString &fileName, const char *fileFormat) {
     QImage visibleImage = image;
     resizeImage(&visibleImage, size());
 
@@ -68,18 +65,15 @@ bool DrawArea::saveImage(const QString &fileName, const char *fileFormat)
     }
 }
 
-void DrawArea::setPenColor(const QColor &newColor)
-{
+void DrawArea::setPenColor(const QColor &newColor) {
     myPenColor = newColor;
 }
 
-void DrawArea::setPenWidth(int newWidth)
-{
+void DrawArea::setPenWidth(int newWidth) {
     myPenWidth = newWidth;
 }
 
-void DrawArea::clearImage()
-{
+void DrawArea::clearImage() {
     image.fill(qRgb(255, 255, 255));
     modified = true;
     update();
@@ -103,8 +97,7 @@ void DrawArea::wheelEvent( QWheelEvent* event ) {
     event->accept();
 }
 
-void DrawArea::mousePressEvent(QMouseEvent *event)
-{
+void DrawArea::mousePressEvent(QMouseEvent *event) {
     QPoint p = QPoint( floor(event->pos().x()), floor(event->pos().y()) )*camera.inverted()-QPoint(offset.x(),offset.y());
     QPoint realp = QPoint( floor(event->pos().x()), floor(event->pos().y()) );
     if (event->button() == Qt::LeftButton) {
@@ -118,8 +111,7 @@ void DrawArea::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void DrawArea::mouseMoveEvent(QMouseEvent *event)
-{
+void DrawArea::mouseMoveEvent(QMouseEvent *event) {
     QPoint p = QPoint( floor(event->pos().x()), floor(event->pos().y()) )*camera.inverted()-QPoint(offset.x(), offset.y());
     QPoint realp = QPoint( floor(event->pos().x()), floor(event->pos().y()) );
     if ((event->buttons() & Qt::LeftButton) && scribbling) {
@@ -132,8 +124,7 @@ void DrawArea::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void DrawArea::mouseReleaseEvent(QMouseEvent *event)
-{
+void DrawArea::mouseReleaseEvent(QMouseEvent *event) {
     QPoint p = QPoint( floor(event->pos().x()), floor(event->pos().y()) )*camera.inverted()-QPoint(offset.x(),offset.y());
     QPoint realp = QPoint( floor(event->pos().x()), floor(event->pos().y()) );
     if (event->button() == Qt::LeftButton && scribbling) {
@@ -149,8 +140,7 @@ void DrawArea::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-void DrawArea::paintEvent(QPaintEvent *event)
-{
+void DrawArea::paintEvent(QPaintEvent *event) {
     // Clamp offset to screen
     QPointF projectedOffset = (offset+(QPoint(image.size().rwidth(),image.size().rheight()))/2)*camera;
     if ( projectedOffset.x() > size().rwidth() + image.size().rwidth()/2*cameraScale) {
@@ -174,8 +164,7 @@ void DrawArea::paintEvent(QPaintEvent *event)
     painter.drawImage(offset-QPointF(0.5,0.5), image, dirtyRect);
 }
 
-void DrawArea::resizeEvent(QResizeEvent *event)
-{
+void DrawArea::resizeEvent(QResizeEvent *event) {
     // We don't want to resize the image all willy-nilly
     /*if (width() > image.width() || height() > image.height()) {
         int newWidth = qMax(width() + 128, image.width());
@@ -186,8 +175,7 @@ void DrawArea::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void DrawArea::drawLineTo(const QPoint &endPoint)
-{
+void DrawArea::drawLineTo(const QPoint &endPoint) {
     QPainter painter(&image);
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
                         Qt::RoundJoin));
@@ -209,8 +197,7 @@ void DrawArea::resizeImage( int width, int height, int filtering ) {
     update();
 }
 
-void DrawArea::resizeImage(QImage *image, const QSize &newSize)
-{
+void DrawArea::resizeImage(QImage *image, const QSize &newSize) {
     if (image->size() == newSize)
         return;
 

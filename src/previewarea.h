@@ -3,8 +3,7 @@
 
 #include <QWidget>
 
-class PreviewArea : public QWidget
-{
+class PreviewArea : public QWidget {
     Q_OBJECT
 public:
     explicit PreviewArea(QWidget *parent = 0);

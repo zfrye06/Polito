@@ -3,8 +3,7 @@
 
 #include <QWidget>
 
-class Scrubber : public QWidget
-{
+class Scrubber : public QWidget {
     Q_OBJECT
 public:
     explicit Scrubber(QWidget *parent = 0);

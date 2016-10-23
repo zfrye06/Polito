@@ -5,8 +5,7 @@
 #include <QImage>
 #include <vector>
 
-class Frame
-{
+class Frame {
 public:
     Frame();
 
