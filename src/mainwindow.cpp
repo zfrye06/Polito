@@ -2,15 +2,12 @@
 #include <QtWidgets>
 
 #include "mainwindow.h"
-#include "drawarea.h"
 #include "imagesizedialog.h"
 
-MainWindow::MainWindow() {
-    scribbleArea = new DrawArea;
+MainWindow::MainWindow() : drawArea(new QGraphicsView){
 
-    connect(scribbleArea, &DrawArea::addAction, &actionHistory, &ActionHistory::addAction);
-
-    setCentralWidget(scribbleArea);
+    drawArea->setScene(&animation.activeFrame().scene());
+    setCentralWidget(drawArea);
 
     createActions();
     createMenus();
@@ -24,8 +21,8 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void MainWindow::imageSize() {
-    int width = scribbleArea->getImage().width();
-    int height = scribbleArea->getImage().height();
+    int width = drawArea->width();
+    int height = drawArea->height();
     ImageSizeDialog* d = new ImageSizeDialog(this, width, height);
     d->activateWindow();
     d->showNormal();
@@ -34,10 +31,10 @@ void MainWindow::imageSize() {
 }
 
 void MainWindow::finishImageSize(int w, int h) {
-    ScribbleAction* a = new ScribbleAction(scribbleArea);
-    scribbleArea->resizeImage(w,h);
-    a->finish();
-    actionHistory.addAction(a);
+//    ScribbleAction* a = new ScribbleAction(scribbleArea);
+//    scribbleArea->resizeImage(w,h);
+//    a->finish();
+//    actionHistory.addAction(a);
 }
 
 void MainWindow::createActions() {
@@ -58,8 +55,8 @@ void MainWindow::createActions() {
 
     clearScreenAct = new QAction(tr("&Clear Screen"), this);
     clearScreenAct->setShortcut(tr("Ctrl+L"));
-    connect(clearScreenAct, SIGNAL(triggered()),
-            scribbleArea, SLOT(clearImage()));
+//    connect(clearScreenAct, SIGNAL(triggered()),
+//            scribbleArea, SLOT(clearImage()));
 }
 
 void MainWindow::createMenus() {
