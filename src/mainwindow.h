@@ -2,11 +2,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QGraphicsView>
 #include <QList>
 #include <QMainWindow>
 #include <vector>
 #include "action.h"
-#include "frame.h"
+#include "animation.h"
 #include "imagesizedialog.h"
 
 class DrawArea;
@@ -26,11 +27,11 @@ private slots:
 
 private:
 
-    std::vector<Frame> animation;
+    Animation animation;
     ActionHistory actionHistory;
 
+    QGraphicsView *drawArea;
     ImageSizeDialog* d;
-    DrawArea *scribbleArea;
     QMenu *saveAsMenu;
     QMenu *fileMenu;
     QMenu *editMenu;
