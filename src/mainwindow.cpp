@@ -55,8 +55,10 @@ void MainWindow::createActions() {
 
     clearScreenAct = new QAction(tr("&Clear Screen"), this);
     clearScreenAct->setShortcut(tr("Ctrl+L"));
-//    connect(clearScreenAct, SIGNAL(triggered()),
-//            scribbleArea, SLOT(clearImage()));
+    connect(clearScreenAct, &QAction::triggered,
+            this, [this] {
+        animation.activeFrame().clear();
+    });
 }
 
 void MainWindow::createMenus() {
