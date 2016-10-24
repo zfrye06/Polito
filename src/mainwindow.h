@@ -8,6 +8,9 @@
 #include "action.h"
 #include "frame.h"
 #include "imagesizedialog.h"
+#include "toolbar.h"
+#include "layermenu.h"
+#include <QGridLayout>
 
 class DrawArea;
 
@@ -40,6 +43,10 @@ private:
     QAction *imageSizeAct;
     QAction *exitAct;
     QAction *clearScreenAct;
+    Toolbar *toolbar;
+    QWidget *window;
+    LayerMenu *layermenu;
+    QGridLayout *layout;
     
     void createActions();
     void createMenus();

@@ -6,17 +6,26 @@
 #include "imagesizedialog.h"
 
 MainWindow::MainWindow() {
+    window = new QWidget;
+    layermenu = new LayerMenu;
+    layout = new QGridLayout;
     scribbleArea = new DrawArea;
+    toolbar = new Toolbar;
 
     connect(scribbleArea, &DrawArea::addAction, &actionHistory, &ActionHistory::addAction);
 
-    setCentralWidget(scribbleArea);
+    //setCentralWidget(scribbleArea);
 
     createActions();
     createMenus();
 
     setWindowTitle(tr("Polito"));
     resize(500, 500);
+    layout->addWidget(scribbleArea, 0, 1);
+    layout->addWidget(toolbar, 0, 0);
+    layout->addWidget(layermenu, 0, 2);
+    window->setLayout(layout);
+    this->setCentralWidget(window);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {

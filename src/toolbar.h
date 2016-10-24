@@ -11,10 +11,9 @@ public:
     explicit Toolbar(QWidget *parent = 0);
 
 signals:
-    QPushButton::toggled(bool checked);
 
 public slots:
-    void setCheckedButtons(bool checked);
+    void setCheckedButtons();
 
 private:
     QVBoxLayout* toolsLayout;
