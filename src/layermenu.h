@@ -17,7 +17,10 @@ signals:
 public slots:
     void addLayerButtonClicked();
     void deleteLayerButtonClicked();
-    void selectionChangedSlot(const QItemSelection&, const QItemSelection&);
+    void moveLayerUpButtonClicked();
+    void moveLayerDownButtonClicked();
+//    void selectionChangedSlot(const QItemSelection&, const QItemSelection&);
+
 
 protected:
 
@@ -28,6 +31,8 @@ private:
     QVBoxLayout *layerMenuLayout;
     QPushButton *deleteLayerButton;
     QStringList *List;
+    QPushButton *moveLayerUpButton;
+    QPushButton *moveLayerDownButton;
     //QModelIndexList selectedIndices;
     //QList<QListViewItem> *selectedItems;
     //QListViewItem
