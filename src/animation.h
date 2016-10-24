@@ -13,6 +13,9 @@
 #include <memory>
 #include <ostream>
 #include <vector>
+#include "action.h"
+
+class Layer;
 
 enum PaintMode {
   SELECTION,
@@ -28,12 +31,27 @@ struct DrawState {
   QPoint lastMousePoint;
 };
 
+class DrawAction : public Action {
+public:
+
+    DrawAction(Layer *layer, QPixmap before);
+    void undo();
+    void redo();
+    void finish(QPixmap &after);
+
+private:
+
+    Layer *layer;
+    QPixmap before;
+    QPixmap after;
+};
+
 class Layer : public QGraphicsItem {
  public:
 
   Layer();
   QRectF boundingRect() const override;
-  void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *);
+  void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
 
  protected:
 
@@ -81,6 +99,13 @@ class Frame {
   // Returns the duration of this frame in milliseconds,
   // or -1 if no duration is set.
   int duration() const;
+
+  void clear() {
+      gscene.clear();
+      layers.clear();
+      addLayer();
+      setActiveLayer(0);
+  }
 
   QGraphicsScene& scene();
 

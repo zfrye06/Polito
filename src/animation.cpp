@@ -1,5 +1,6 @@
 #include "animation.h"
 #include <iostream>
+#include <stdexcept>
 
 Layer::Layer() : image(500, 500) {
   image.fill(Qt::transparent);
@@ -47,13 +48,18 @@ void Frame::addLayer(int index) {
   Layer *l = new Layer;
   gscene.addItem(l);
   l->setZValue(index);
+  if (activeLayerIndex == index) activeLayerIndex++;
 }
 
 void Frame::removeLayer(int index) {
+  if (layers.size() == 1) {
+      throw std::invalid_argument("A Frame must have at least one layer.");
+  }
   Layer *l = layers[index];
   gscene.removeItem(l);
   delete l;
   layers.erase(layers.begin() + index);
+  if (index == activeLayerIndex && activeLayerIndex != 0) activeLayerIndex--;
 }
 
 void Frame::setActiveLayer(int index) {
@@ -83,10 +89,15 @@ void Animation::addFrame() {
 void Animation::addFrame(int index) {
   std::unique_ptr<Frame> f(new Frame);
   frames.insert(frames.begin() + index, std::move(f));
+  if (activeFrameIndex == index) activeFrameIndex++;
 }
 
 void Animation::removeFrame(int index) {
+  if (frames.size() == 0) {
+      throw std::invalid_argument("An animation must have at least one frame.");
+  }
   frames.erase(frames.begin() + index);
+  if (index == activeFrameIndex && activeFrameIndex != 0) activeFrameIndex--;
 }
 
 void Animation::setActiveFrame(int index) {
