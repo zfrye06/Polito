@@ -2,7 +2,8 @@
 #include <iostream>
 #include <stdexcept>
 
-Layer::Layer() : image(std::make_shared<QPixmap>(500, 500)) {
+Layer::Layer(AnimationEventEmitter *emitter) :
+  image(std::make_shared<QPixmap>(500, 500)), emitter(emitter) {
   image->fill(Qt::transparent);
 }
 
@@ -28,15 +29,16 @@ void Layer::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   painter.setPen(QPen(Qt::red, 5, Qt::SolidLine, Qt::RoundCap,
                       Qt::RoundJoin));
   painter.drawLine(drawState.lastMousePoint, event->pos());
-   drawState.lastMousePoint = event->pos().toPoint();
+  drawState.lastMousePoint = event->pos().toPoint();
   update();
 }
 
 void Layer::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   std::cout << "mouse released" << std::endl;
+  emitter->emitDrawEvent(new DrawAction(this, prevImage, image));
 }
 
-Frame::Frame() : durationMs(-1) {
+Frame::Frame(AnimationEventEmitter *emitter) : durationMs(-1), emitter(emitter){
   addLayer();
   setActiveLayer(0);
 }
@@ -46,7 +48,7 @@ void Frame::addLayer() {
 }
 
 void Frame::addLayer(int index) {
-  Layer *l = new Layer;
+  Layer *l = new Layer(emitter);
   gscene.addItem(l);
   l->setZValue(index);
   if (activeLayerIndex == index) activeLayerIndex++;
@@ -54,7 +56,7 @@ void Frame::addLayer(int index) {
 
 void Frame::removeLayer(int index) {
   if (layers.size() == 1) {
-      throw std::invalid_argument("A Frame must have at least one layer.");
+    throw std::invalid_argument("A Frame must have at least one layer.");
   }
   Layer *l = layers[index];
   gscene.removeItem(l);
@@ -78,7 +80,7 @@ int Frame::duration() const { return durationMs; }
 
 QGraphicsScene& Frame::scene() { return gscene; }
 
-Animation::Animation() {
+Animation::Animation(AnimationEventEmitter *emitter) : emitter(emitter) {
   addFrame();
   setActiveFrame(0);
 }
@@ -88,14 +90,14 @@ void Animation::addFrame() {
 }
 
 void Animation::addFrame(int index) {
-  std::unique_ptr<Frame> f(new Frame);
+  std::unique_ptr<Frame> f(new Frame(emitter));
   frames.insert(frames.begin() + index, std::move(f));
   if (activeFrameIndex == index) activeFrameIndex++;
 }
 
 void Animation::removeFrame(int index) {
   if (frames.size() == 0) {
-      throw std::invalid_argument("An animation must have at least one frame.");
+    throw std::invalid_argument("An animation must have at least one frame.");
   }
   frames.erase(frames.begin() + index);
   if (index == activeFrameIndex && activeFrameIndex != 0) activeFrameIndex--;

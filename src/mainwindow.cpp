@@ -4,7 +4,7 @@
 #include "mainwindow.h"
 #include "imagesizedialog.h"
 
-MainWindow::MainWindow() : drawArea(new QGraphicsView){
+MainWindow::MainWindow() : animation(&emitter), drawArea(new QGraphicsView) {
 
     drawArea->setScene(&animation.activeFrame().scene());
     setCentralWidget(drawArea);
@@ -59,6 +59,9 @@ void MainWindow::createActions() {
             this, [this] {
         animation.activeFrame().clear();
     });
+
+    connect(&emitter, &AnimationEventEmitter::drawEvent,
+            &actionHistory, &ActionHistory::addAction);
 }
 
 void MainWindow::createMenus() {

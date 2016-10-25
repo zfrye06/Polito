@@ -27,6 +27,7 @@ private slots:
 
 private:
 
+    AnimationEventEmitter emitter;
     Animation animation;
     ActionHistory actionHistory;
 
