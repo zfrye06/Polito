@@ -78,6 +78,13 @@ void Frame::setDuration(int duration) { durationMs = duration; }
 
 int Frame::duration() const { return durationMs; }
 
+void Frame::clear() {
+  gscene.clear();
+  layers.clear();
+  addLayer();
+  setActiveLayer(0);
+}
+
 QGraphicsScene& Frame::scene() { return gscene; }
 
 Animation::Animation(AnimationEventEmitter *emitter) : emitter(emitter) {

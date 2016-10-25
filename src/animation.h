@@ -102,12 +102,7 @@ class Frame {
   // or -1 if no duration is set.
   int duration() const;
 
-  void clear() {
-    gscene.clear();
-    layers.clear();
-    addLayer();
-    setActiveLayer(0);
-  }
+  void clear();
 
   QGraphicsScene& scene();
 
