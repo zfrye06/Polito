@@ -1,6 +1,6 @@
 
-#ifndef FRAME_H
-#define FRAME_H
+#ifndef ANIMATION_H
+#define ANIMATION_H
 
 #include <QGraphicsItem>
 #include <QGraphicsScene>
@@ -184,4 +184,4 @@ class DrawAction : public Action {
   std::shared_ptr<QPixmap> after;
 };
 
-#endif // FRAME_H
+#endif // ANIMATION_H
