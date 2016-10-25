@@ -17,21 +17,19 @@ SOURCES += src/main.cpp\
     src/action.cpp \
     src/imagesizedialog.cpp \
     src/drawarea.cpp \
-    src/frame.cpp \
-    src/toolbar.cpp \
     src/layermenu.cpp \
     src/scrubber.cpp \
-    src/previewarea.cpp
+    src/previewarea.cpp \
+    src/animation.cpp
 
 HEADERS  += src/mainwindow.h \
     src/action.h \
     src/imagesizedialog.h \
     src/drawarea.h \
-    src/frame.h \
-    src/toolbar.h \
     src/layermenu.h \
     src/scrubber.h \
-    src/previewarea.h
+    src/previewarea.h \
+    src/animation.h
 
 FORMS    += src/mainwindow.ui \
     src/imagesizedialog.ui
