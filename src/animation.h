@@ -15,7 +15,7 @@
 #include <vector>
 #include "action.h"
 
-class Layer;
+class DrawAction;
 
 enum PaintMode {
   SELECTION,
@@ -27,17 +27,29 @@ enum PaintMode {
   CIRCLE
 };
 
+class AnimationEventEmitter : public QObject {
+  Q_OBJECT
+
+ signals:
+
+  void drawEvent(DrawAction *);
+
+ public:
+  
+  void emitDrawEvent(DrawAction *action) {
+    emit drawEvent(action);
+  }
+};
+
 struct DrawState {
   QPoint lastMousePoint;
 };
 
-class DrawAction;
-
 class Layer : public QGraphicsItem {
-    friend class DrawAction;
+  friend class DrawAction;
  public:
 
-  Layer();
+  Layer(AnimationEventEmitter *);
   QRectF boundingRect() const override;
   void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
 
@@ -52,29 +64,7 @@ class Layer : public QGraphicsItem {
   std::shared_ptr<QPixmap> image;
   std::shared_ptr<QPixmap> prevImage;
   DrawState drawState;
-};
-
-class DrawAction : public Action {
-public:
-
-  DrawAction(Layer *layer, std::shared_ptr<QPixmap> before, std::shared_ptr<QPixmap> after) :
-    layer(layer),
-    before(before),
-    after(after) {}
-
-  void undo() {
-    layer->image = before;
-  }
-
-  void redo() {
-    layer->image = after;
-  }
-
-private:
-
-  Layer *layer;
-  std::shared_ptr<QPixmap> before;
-  std::shared_ptr<QPixmap> after;
+  AnimationEventEmitter *emitter;
 };
 
 // Represents a frame consisting of a stack of images, or layers,
@@ -84,7 +74,7 @@ class Frame {
  public:
 
   // Constructs a new frame with a single layer.
-  Frame();
+  Frame(AnimationEventEmitter *emitter);
 
   // Adds a single layer to the top of this frame.
   // Does not change the active layer.
@@ -113,10 +103,10 @@ class Frame {
   int duration() const;
 
   void clear() {
-      gscene.clear();
-      layers.clear();
-      addLayer();
-      setActiveLayer(0);
+    gscene.clear();
+    layers.clear();
+    addLayer();
+    setActiveLayer(0);
   }
 
   QGraphicsScene& scene();
@@ -129,13 +119,14 @@ class Frame {
   int activeLayerIndex;
   int durationMs;
   QGraphicsScene gscene;
+  AnimationEventEmitter *emitter;
 };
 
 class Animation {
  public:
 
   // Constructs an animation with a single frame.
-  Animation();
+  Animation(AnimationEventEmitter *emitter);
 
   void addFrame();
 
@@ -165,6 +156,32 @@ class Animation {
 
   std::vector<std::unique_ptr<Frame>> frames;
   int activeFrameIndex;
+  AnimationEventEmitter *emitter;
+};
+
+class DrawAction : public Action {
+ public:
+
+ DrawAction(Layer *layer, std::shared_ptr<QPixmap> before, std::shared_ptr<QPixmap> after) :
+  layer(layer),
+    before(before),
+    after(after) {}
+
+  void undo() {
+    layer->image = before;
+    layer->update();
+  }
+
+  void redo() {
+    layer->image = after;
+    layer->update();
+  }
+
+ private:
+
+  Layer *layer;
+  std::shared_ptr<QPixmap> before;
+  std::shared_ptr<QPixmap> after;
 };
 
 #endif // FRAME_H
