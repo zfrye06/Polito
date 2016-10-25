@@ -2,33 +2,34 @@
 #include <iostream>
 #include <stdexcept>
 
-Layer::Layer() : image(500, 500) {
-  image.fill(Qt::transparent);
+Layer::Layer() : image(std::make_shared<QPixmap>(500, 500)) {
+  image->fill(Qt::transparent);
 }
 
 QRectF Layer::boundingRect() const {
-  return QRectF(image.rect());
+  return QRectF(image->rect());
 }
 
 void Layer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                   QWidget *widget) {
   std::cout << "paint" << std::endl;
-  painter->drawPixmap(image.rect(), image);
+  painter->drawPixmap(image->rect(), *image);
 }
 
 void Layer::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   std::cout << "mouse pressed" << std::endl;
+  prevImage = std::make_shared<QPixmap>(*image);
   drawState.lastMousePoint = event->pos().toPoint();
 }
 
 void Layer::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
   std::cout << "mouse move" << std::endl;
-  QPainter painter(&image);
+  QPainter painter(image.get());
   painter.setPen(QPen(Qt::red, 5, Qt::SolidLine, Qt::RoundCap,
                       Qt::RoundJoin));
   painter.drawLine(drawState.lastMousePoint, event->pos());
+   drawState.lastMousePoint = event->pos().toPoint();
   update();
-  drawState.lastMousePoint = event->pos().toPoint();
 }
 
 void Layer::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {

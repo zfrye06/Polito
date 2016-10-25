@@ -31,22 +31,10 @@ struct DrawState {
   QPoint lastMousePoint;
 };
 
-class DrawAction : public Action {
-public:
-
-    DrawAction(Layer *layer, QPixmap before);
-    void undo();
-    void redo();
-    void finish(QPixmap &after);
-
-private:
-
-    Layer *layer;
-    QPixmap before;
-    QPixmap after;
-};
+class DrawAction;
 
 class Layer : public QGraphicsItem {
+    friend class DrawAction;
  public:
 
   Layer();
@@ -61,8 +49,32 @@ class Layer : public QGraphicsItem {
 
  private:
 
-  QPixmap image;
+  std::shared_ptr<QPixmap> image;
+  std::shared_ptr<QPixmap> prevImage;
   DrawState drawState;
+};
+
+class DrawAction : public Action {
+public:
+
+  DrawAction(Layer *layer, std::shared_ptr<QPixmap> before, std::shared_ptr<QPixmap> after) :
+    layer(layer),
+    before(before),
+    after(after) {}
+
+  void undo() {
+    layer->image = before;
+  }
+
+  void redo() {
+    layer->image = after;
+  }
+
+private:
+
+  Layer *layer;
+  std::shared_ptr<QPixmap> before;
+  std::shared_ptr<QPixmap> after;
 };
 
 // Represents a frame consisting of a stack of images, or layers,
