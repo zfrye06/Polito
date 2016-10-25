@@ -41,7 +41,7 @@ class AnimationEventEmitter : public QObject {
   }
 };
 
-struct DrawState {
+struct DrawingState {
   QPoint lastMousePoint;
 };
 
@@ -63,7 +63,7 @@ class Layer : public QGraphicsItem {
 
   std::shared_ptr<QPixmap> image;
   std::shared_ptr<QPixmap> prevImage;
-  DrawState drawState;
+  DrawingState drawState;
   AnimationEventEmitter *emitter;
 };
 

@@ -1,6 +1,5 @@
 #include "imagesizedialog.h"
 #include "ui_imagesizedialog.h"
-#include <unistd.h>
 
 ImageSizeDialog::ImageSizeDialog(QWidget *parent, int Width, int Height) :
     QDialog(parent),
