@@ -13,6 +13,7 @@
 #include "imagesizedialog.h"
 #include "toolbar.h"
 #include "layermenu.h"
+#include "previewarea.h"
 
 class DrawArea;
 
@@ -35,6 +36,7 @@ private:
     Animation animation;
     ActionHistory actionHistory;
     Toolbar *toolbar;
+    PreviewArea *previewArea;
 
     QGraphicsView *drawArea;
     ImageSizeDialog *d;

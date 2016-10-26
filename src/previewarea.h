@@ -23,6 +23,7 @@ private:
     vector<unique_ptr<Frame>>* frames;
 
     QVBoxLayout* previewLayout;
+    QHBoxLayout* buttonLayout;
     QButtonGroup* playbackButtons;
 
     QGraphicsView* currentFrame;
@@ -30,6 +31,11 @@ private:
     QPushButton* pauseButton;
     QPushButton* nextFrame;
     QPushButton* previousFrame;
+
+    QIcon playIcon = QIcon(QPixmap(":/icons/icons/play"));
+    QIcon pauseIcon = QIcon(QPixmap(":/icons/icons/pause"));
+    QIcon nextIcon = QIcon(QPixmap(":/icons/icons/next"));
+    QIcon previousIcon = QIcon(QPixmap(":/icons/icons/previous"));
 
     void initWidgets();
     void initConnections();

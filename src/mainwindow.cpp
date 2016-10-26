@@ -62,12 +62,21 @@ void MainWindow::initWidgets() {
     layout = new QGridLayout(window);
     toolbar = new Toolbar(window);
     layerMenu = new LayerMenu(window);
+    previewArea = new PreviewArea(window);
 
     drawArea->setScene(&animation.activeFrame().scene());
 
     layout->addWidget(toolbar, 0, 0);
     layout->addWidget(drawArea, 0, 1);
     layout->addWidget(layerMenu, 0, 2);
+    layout->addWidget(previewArea, 1, 2);
+
+    layout->setColumnStretch(0,0);
+    layout->setColumnStretch(1,4);
+    layout->setColumnStretch(2,0);
+
+    layout->setRowStretch(0,4);
+    layout->setRowStretch(1,0);
 
     fileMenu = new QMenu(tr("&File"), this);
     fileMenu->addSeparator();

@@ -12,6 +12,7 @@ PreviewArea::PreviewArea(QWidget *parent) : QWidget(parent) {
 
 void PreviewArea::initWidgets(){
     previewLayout = new QVBoxLayout(this);
+    buttonLayout = new QHBoxLayout(this);
     playbackButtons = new QButtonGroup(this);
 
     currentFrame = new QGraphicsView;
@@ -20,10 +21,29 @@ void PreviewArea::initWidgets(){
     nextFrame = new QPushButton;
     previousFrame = new QPushButton;
 
+    //playButton->("");
+
     playButton->setCheckable(true);
     pauseButton->setCheckable(true);
     nextFrame->setCheckable(true);
     previousFrame->setCheckable(true);
+
+    playButton->setIcon(playIcon);
+    pauseButton->setIcon(pauseIcon);
+    nextFrame->setIcon(nextIcon);
+    previousFrame->setIcon(previousIcon);
+
+//    playButton->setMaximumWidth(30);
+//    pauseButton->setMaximumWidth(30);
+//    nextFrame->setMaximumWidth(30);
+//    previousFrame->setMaximumWidth(30);
+
+//    QFont font;
+//    font.setPointSize(14);
+//    playButton->setFont(font);
+//    pauseButton->setFont(font);
+//    nextFrame->setFont(font);
+//    previousFrame->setFont(font);
 
     playbackButtons->addButton(playButton);
     playbackButtons->addButton(pauseButton);
@@ -31,10 +51,13 @@ void PreviewArea::initWidgets(){
     playbackButtons->addButton(previousFrame);
     playbackButtons->setExclusive(true);
 
-    previewLayout->addWidget(playButton);
-    previewLayout->addWidget(pauseButton);
-    previewLayout->addWidget(nextFrame);
-    previewLayout->addWidget(previousFrame);
+    buttonLayout->addWidget(playButton);
+    buttonLayout->addWidget(pauseButton);
+    buttonLayout->addWidget(nextFrame);
+    buttonLayout->addWidget(previousFrame);
+
+    previewLayout->addWidget(currentFrame);
+    previewLayout->addLayout(buttonLayout);
 }
 
 void PreviewArea::initConnections(){
