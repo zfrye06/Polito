@@ -2,41 +2,38 @@
 #include <QObject>
 
 Toolbar::Toolbar(QWidget *parent) : QWidget(parent){
-    initWidgets();
+    initWidgets(parent);
     initConnections();
 }
 
-void Toolbar::initWidgets(){
-    toolsLayout = new QVBoxLayout;
+void Toolbar::initWidgets(QWidget *parent){
+    toolsLayout = new QVBoxLayout(parent);
+    buttonGroup = new QButtonGroup(parent);
 
     moveButton = new QPushButton;
     brushButton = new QPushButton;
     fillButton = new QPushButton;
     colorButton = new QPushButton;
-    currentButton = brushButton;
 
-    fillButton->setCheckable(true);
-    brushButton->setCheckable(true);
-    moveButton->setCheckable(true);
-    colorButton->setCheckable(true);
+//    fillButton->setCheckable(true);
+//    brushButton->setCheckable(true);
+//    moveButton->setCheckable(true);
+//    colorButton->setCheckable(true);
 
-    currentButton->setChecked(true);
+    buttonGroup->addButton(fillButton);
+    buttonGroup->addButton(brushButton);
+    buttonGroup->addButton(moveButton);
+    buttonGroup->addButton(colorButton);
+    buttonGroup->setExclusive(true);
+
+    toolsLayout->addWidget(fillButton);
+    toolsLayout->addWidget(brushButton);
+    toolsLayout->addWidget(moveButton);
+    toolsLayout->addWidget(colorButton);
+
+    this->setLayout(toolsLayout);
 }
 
 void Toolbar::initConnections(){
-    connect(moveButton, &QPushButton::toggled(), this, &setCheckedButtons());
-    connect(brushButton, &QPushButton::toggled(), this, &setCheckedButtons());
-    connect(fillButton, &QPushButton::toggled(), this, &setCheckedButtons());
-    connect(colorButton, &QPushButton::toggled(), this, &setCheckedButtons());
 
-}
-
-void Toolbar::setCheckedButtons(){
-    if(((QPushButton*) QObject::sender())->isChecked()){
-    }
-    else{
-        currentButton->setChecked(false);
-        currentButton = (QPushButton*) QObject::sender();
-        currentButton->setChecked(true);
-    }
 }

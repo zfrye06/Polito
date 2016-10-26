@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QButtonGroup>
 
 class Toolbar : public QWidget {
     Q_OBJECT
@@ -13,18 +14,17 @@ public:
 signals:
 
 public slots:
-    void setCheckedButtons();
 
 private:
     QVBoxLayout* toolsLayout;
+    QButtonGroup* buttonGroup;
 
     QPushButton* moveButton;
     QPushButton* brushButton;
     QPushButton* fillButton;
     QPushButton* colorButton;
-    QPushButton* currentButton;
 
-    void initWidgets();
+    void initWidgets(QWidget*);
     void initConnections();
 };
 
