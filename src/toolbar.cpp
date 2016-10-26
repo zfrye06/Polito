@@ -42,5 +42,5 @@ void Toolbar::initConnections(){
 }
 
 QColor Toolbar::colorPicked(){
-
+    return nullptr;
 }
