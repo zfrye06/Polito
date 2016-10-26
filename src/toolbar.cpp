@@ -2,13 +2,13 @@
 #include <QObject>
 
 Toolbar::Toolbar(QWidget *parent) : QWidget(parent){
-    initWidgets(parent);
+    initWidgets();
     initConnections();
 }
 
-void Toolbar::initWidgets(QWidget *parent){
-    toolsLayout = new QVBoxLayout(parent);
-    buttonGroup = new QButtonGroup(parent);
+void Toolbar::initWidgets(){
+    toolsLayout = new QVBoxLayout(this);
+    buttonGroup = new QButtonGroup(this);
 
     moveButton = new QPushButton;
     brushButton = new QPushButton;

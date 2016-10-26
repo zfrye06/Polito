@@ -49,8 +49,8 @@ private:
     QWidget *window;
     QGridLayout *layout;
     
-    void createActions();
-    void createMenus();
+    void initActions();
+    void initWidgets();
 };
 
 #endif

@@ -24,7 +24,7 @@ private:
     QPushButton* fillButton;
     QPushButton* colorButton;
 
-    void initWidgets(QWidget*);
+    void initWidgets();
     void initConnections();
 };
 

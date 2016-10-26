@@ -5,22 +5,8 @@
 #include "imagesizedialog.h"
 
 MainWindow::MainWindow() : animation(&emitter), drawArea(new QGraphicsView) {
-
-    window = new QWidget(this);
-    layout = new QGridLayout(window);
-    toolbar = new Toolbar(window);
-    layout->addWidget(toolbar, 0, 0);
-
-    drawArea->setScene(&animation.activeFrame().scene());
-//    setCentralWidget(drawArea);
-    layout->addWidget(drawArea, 0, 1);
-    window->setLayout(layout);
-    this->setCentralWidget(window);
-    createActions();
-    createMenus();
-
-    setWindowTitle(tr("Polito"));
-    resize(500, 500);
+    initActions();
+    initWidgets();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -44,7 +30,7 @@ void MainWindow::finishImageSize(int w, int h) {
 //    actionHistory.addAction(a);
 }
 
-void MainWindow::createActions() {
+void MainWindow::initActions() {
     imageSizeAct = new QAction(tr("&Image Size..."), this);
     connect(imageSizeAct, SIGNAL(triggered()), this, SLOT(imageSize()));
 
@@ -71,7 +57,17 @@ void MainWindow::createActions() {
             &actionHistory, &ActionHistory::addAction);
 }
 
-void MainWindow::createMenus() {
+void MainWindow::initWidgets() {
+    window = new QWidget(this);
+    layout = new QGridLayout(window);
+    toolbar = new Toolbar(window);
+
+    drawArea->setScene(&animation.activeFrame().scene());
+
+    layout->addWidget(toolbar, 0, 0);
+    layout->addWidget(drawArea, 0, 1);
+    //window->setLayout(layout);
+
     fileMenu = new QMenu(tr("&File"), this);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
@@ -88,4 +84,9 @@ void MainWindow::createMenus() {
     menuBar()->addMenu(fileMenu);
     menuBar()->addMenu(editMenu);
     menuBar()->addMenu(optionMenu);
+
+    this->setCentralWidget(window);
+
+    setWindowTitle(tr("Polito"));
+    resize(600, 600);
 }
