@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QButtonGroup>
 
 class Toolbar : public QWidget {
     Q_OBJECT
@@ -17,6 +18,7 @@ public slots:
 
 private:
     QVBoxLayout* toolsLayout;
+    QButtonGroup* buttonGroup;
 
     QPushButton* moveButton;
     QPushButton* brushButton;
@@ -24,7 +26,7 @@ private:
     QPushButton* colorButton;
     QPushButton* currentButton;
 
-    void initWidgets();
+    void initWidgets(QWidget*);
     void initConnections();
 };
 
