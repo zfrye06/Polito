@@ -61,12 +61,13 @@ void MainWindow::initWidgets() {
     window = new QWidget(this);
     layout = new QGridLayout(window);
     toolbar = new Toolbar(window);
+    layerMenu = new LayerMenu(window);
 
     drawArea->setScene(&animation.activeFrame().scene());
 
     layout->addWidget(toolbar, 0, 0);
     layout->addWidget(drawArea, 0, 1);
-    //window->setLayout(layout);
+    layout->addWidget(layerMenu, 0, 2);
 
     fileMenu = new QMenu(tr("&File"), this);
     fileMenu->addSeparator();

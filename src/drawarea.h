@@ -61,7 +61,6 @@ private:
     QPoint lastPoint;
     QPoint lastDraggingPoint;
     ScribbleAction* currentAction;
-    LayerMenu *layerMenu;
 };
 
 class ScribbleAction : public Action {

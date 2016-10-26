@@ -12,6 +12,7 @@
 #include "animation.h"
 #include "imagesizedialog.h"
 #include "toolbar.h"
+#include "layermenu.h"
 
 class DrawArea;
 
@@ -37,6 +38,7 @@ private:
 
     QGraphicsView *drawArea;
     ImageSizeDialog *d;
+    LayerMenu *layerMenu;
     QMenu *saveAsMenu;
     QMenu *fileMenu;
     QMenu *editMenu;

@@ -4,6 +4,7 @@
 Toolbar::Toolbar(QWidget *parent) : QWidget(parent){
     initWidgets();
     initConnections();
+    setParent(parent);
 }
 
 void Toolbar::initWidgets(){
@@ -30,8 +31,6 @@ void Toolbar::initWidgets(){
     toolsLayout->addWidget(brushButton);
     toolsLayout->addWidget(moveButton);
     toolsLayout->addWidget(colorButton);
-
-    this->setLayout(toolsLayout);
 }
 
 void Toolbar::initConnections(){
