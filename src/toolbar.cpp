@@ -10,6 +10,7 @@ Toolbar::Toolbar(QWidget *parent) : QWidget(parent){
 void Toolbar::initWidgets(){
     toolsLayout = new QVBoxLayout(this);
     buttonGroup = new QButtonGroup(this);
+    colorPicker = new QColorDialog(this);
 
     moveButton = new QPushButton;
     brushButton = new QPushButton;
@@ -19,12 +20,15 @@ void Toolbar::initWidgets(){
     fillButton->setCheckable(true);
     brushButton->setCheckable(true);
     moveButton->setCheckable(true);
-    colorButton->setCheckable(true);
+
+    brushButton->setIcon(brushIcon);
+    moveButton->setIcon(moveIcon);
+    fillButton->setIcon(fillIcon);
+    colorButton->setIcon(colorIcon);
 
     buttonGroup->addButton(fillButton);
     buttonGroup->addButton(brushButton);
     buttonGroup->addButton(moveButton);
-    buttonGroup->addButton(colorButton);
     buttonGroup->setExclusive(true);
 
     toolsLayout->addWidget(fillButton);
@@ -34,5 +38,9 @@ void Toolbar::initWidgets(){
 }
 
 void Toolbar::initConnections(){
+    //connect(colorButton, &QPushButton::pressed, colorPicker, &QColorDialog::open(&Toolbar::colorPicked));
+}
+
+QColor Toolbar::colorPicked(){
 
 }
