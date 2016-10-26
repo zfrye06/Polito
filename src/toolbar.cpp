@@ -19,19 +19,20 @@ void Toolbar::initWidgets(){
     brushButton->setCheckable(true);
     moveButton->setCheckable(true);
     colorButton->setCheckable(true);
+
+    currentButton->setChecked(true);
 }
 
 void Toolbar::initConnections(){
-    connect(moveButton, &QPushButton::toggled(moveButton->isChecked()), this, &setCheckedButtons(moveButton->isChecked()));
-    connect(brushButton, &QPushButton::toggled(brushButton->isChecked()), this, &setCheckedButtons(brushButton->isChecked()));
-    connect(fillButton, &QPushButton::toggled(fillButton->isChecked()), this, &setCheckedButtons(fillButton->isChecked()));
-    connect(colorButton, &QPushButton::toggled(colorButton->isChecked()), this, &setCheckedButtons(colorButton->isChecked()));
+    connect(moveButton, &QPushButton::toggled(), this, &setCheckedButtons());
+    connect(brushButton, &QPushButton::toggled(), this, &setCheckedButtons());
+    connect(fillButton, &QPushButton::toggled(), this, &setCheckedButtons());
+    connect(colorButton, &QPushButton::toggled(), this, &setCheckedButtons());
 
 }
 
-void Toolbar::setCheckedButtons(bool checked){
-    if(checked){
-        currentButton->setChecked(true);
+void Toolbar::setCheckedButtons(){
+    if(((QPushButton*) QObject::sender())->isChecked()){
     }
     else{
         currentButton->setChecked(false);

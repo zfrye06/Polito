@@ -20,7 +20,8 @@ SOURCES += src/main.cpp\
     src/layermenu.cpp \
     src/scrubber.cpp \
     src/previewarea.cpp \
-    src/animation.cpp
+    src/animation.cpp \
+    src/toolbar.cpp
 
 HEADERS  += src/mainwindow.h \
     src/action.h \
@@ -29,7 +30,8 @@ HEADERS  += src/mainwindow.h \
     src/layermenu.h \
     src/scrubber.h \
     src/previewarea.h \
-    src/animation.h
+    src/animation.h \
+    src/toolbar.h
 
 FORMS    += src/mainwindow.ui \
     src/imagesizedialog.ui
