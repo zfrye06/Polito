@@ -1,8 +1,4 @@
-#include <QtWidgets>
-#include <iostream>
 #include "layermenu.h"
-#include <QListView>
-#include <QPoint>
 
 /*To do:
  * Allow deleting layers;
@@ -27,9 +23,9 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     listOfLayers->setMovement(QListView::Snap);
 
     layerNames = new QStringListModel(listOfLayers);
-    List = new QStringList();
-    *List << "Layer1";
-    layerNames->setStringList(*List);
+    list = new QStringList();
+    *list << "Layer1";
+    layerNames->setStringList(*list);
     listOfLayers->setModel(layerNames);
     listOfLayers->setEditTriggers(QAbstractItemView::AnyKeyPressed |
                                   QAbstractItemView::DoubleClicked);
@@ -113,7 +109,7 @@ void LayerMenu::moveLayerUpButtonClicked(){
         //current = listOfLayers->currentIndex();
         //QModelIndex swapIndex = listOfLayers->indexAt(QPoint(insertionIndex, 0));
         //layerNames->setData(previous, "test", 0);
-        //List->append("test");
+        //list->append("test");
         //layerNames->data(swapIndex, 0).setValue(temp);
         //listOfLayers->model()->data(swapIndex).setValue(temp);
 
