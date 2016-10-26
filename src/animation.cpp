@@ -164,6 +164,7 @@ QGraphicsScene& Frame::scene() { return gscene; }
 Animation::Animation(AnimationEventEmitter &emitter) : emitter(emitter) {
   addFrame();
   setActiveFrame(0);
+  publicFrames = &frames;
 }
 
 void Animation::addFrame() {
