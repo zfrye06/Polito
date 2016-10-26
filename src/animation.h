@@ -147,6 +147,9 @@ class Animation {
 
   void load(std::istream&);
 
+
+
+  const std::vector<std::unique_ptr<Frame>>* publicFrames;
  private:
 
   std::vector<std::unique_ptr<Frame>> frames;
