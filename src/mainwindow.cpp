@@ -6,9 +6,16 @@
 
 MainWindow::MainWindow() : animation(&emitter), drawArea(new QGraphicsView) {
 
-    drawArea->setScene(&animation.activeFrame().scene());
-    setCentralWidget(drawArea);
+    window = new QWidget(this);
+    layout = new QGridLayout(window);
+    toolbar = new Toolbar(window);
+    layout->addWidget(toolbar, 0, 0);
 
+    drawArea->setScene(&animation.activeFrame().scene());
+//    setCentralWidget(drawArea);
+    layout->addWidget(drawArea, 0, 1);
+    window->setLayout(layout);
+    this->setCentralWidget(window);
     createActions();
     createMenus();
 

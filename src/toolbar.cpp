@@ -15,10 +15,10 @@ void Toolbar::initWidgets(QWidget *parent){
     fillButton = new QPushButton;
     colorButton = new QPushButton;
 
-//    fillButton->setCheckable(true);
-//    brushButton->setCheckable(true);
-//    moveButton->setCheckable(true);
-//    colorButton->setCheckable(true);
+    fillButton->setCheckable(true);
+    brushButton->setCheckable(true);
+    moveButton->setCheckable(true);
+    colorButton->setCheckable(true);
 
     buttonGroup->addButton(fillButton);
     buttonGroup->addButton(brushButton);

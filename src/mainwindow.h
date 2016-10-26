@@ -6,9 +6,12 @@
 #include <QList>
 #include <QMainWindow>
 #include <vector>
+#include <QWidget>
+#include <QGridLayout>
 #include "action.h"
 #include "animation.h"
 #include "imagesizedialog.h"
+#include "toolbar.h"
 
 class DrawArea;
 
@@ -30,9 +33,10 @@ private:
     AnimationEventEmitter emitter;
     Animation animation;
     ActionHistory actionHistory;
+    Toolbar *toolbar;
 
     QGraphicsView *drawArea;
-    ImageSizeDialog* d;
+    ImageSizeDialog *d;
     QMenu *saveAsMenu;
     QMenu *fileMenu;
     QMenu *editMenu;
@@ -42,6 +46,8 @@ private:
     QAction *imageSizeAct;
     QAction *exitAct;
     QAction *clearScreenAct;
+    QWidget *window;
+    QGridLayout *layout;
     
     void createActions();
     void createMenus();
