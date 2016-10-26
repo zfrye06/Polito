@@ -1,11 +1,14 @@
 #ifndef LAYERMENU_H
 #define LAYERMENU_H
 
+#include <QPoint>
 #include <QWidget>
 #include <QListView>
 #include <QPushButton>
 #include <QStringListModel>
 #include <QVBoxLayout>
+#include <iostream>
+
 
 class LayerMenu : public QWidget {
     Q_OBJECT
@@ -30,7 +33,7 @@ private:
     QStringListModel *layerNames;
     QVBoxLayout *layerMenuLayout;
     QPushButton *deleteLayerButton;
-    QStringList *List;
+    QStringList *list;
     QPushButton *moveLayerUpButton;
     QPushButton *moveLayerDownButton;
     //QModelIndexList selectedIndices;
