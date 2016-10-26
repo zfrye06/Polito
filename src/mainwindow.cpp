@@ -62,7 +62,7 @@ void MainWindow::initWidgets() {
     layout = new QGridLayout(window);
     toolbar = new Toolbar(window);
     layerMenu = new LayerMenu(window);
-    previewArea = new PreviewArea(window);
+    previewArea = new PreviewArea(window, animation.getFrames());
 
     drawArea->setScene(&animation.activeFrame().scene());
 

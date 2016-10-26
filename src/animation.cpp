@@ -164,7 +164,6 @@ QGraphicsScene& Frame::scene() { return gscene; }
 Animation::Animation(AnimationEventEmitter &emitter) : emitter(emitter) {
   addFrame();
   setActiveFrame(0);
-  publicFrames = &frames;
 }
 
 void Animation::addFrame() {
@@ -216,4 +215,8 @@ void Animation::saveGif(std::ostream& out) const {
 
 void Animation::load(std::istream& in) {
   
+}
+
+std::vector<std::unique_ptr<Frame>>& Animation::getFrames(){
+    return frames;
 }

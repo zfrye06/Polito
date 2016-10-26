@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QLayout>
 #include <QGraphicsView>
+#include <memory>
 #include <vector>
 #include "animation.h"
 
@@ -13,14 +14,14 @@ using namespace std;
 class PreviewArea : public QWidget {
     Q_OBJECT
 public:
-    explicit PreviewArea(QWidget *parent = 0);
+    explicit PreviewArea(QWidget *parent, vector<unique_ptr<Frame>> &publicFrames);
 
 signals:
 
 public slots:
 
 private:
-    vector<unique_ptr<Frame>>* frames;
+    const vector<unique_ptr<Frame>> &frames;
 
     QVBoxLayout* previewLayout;
     QHBoxLayout* buttonLayout;

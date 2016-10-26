@@ -3,7 +3,7 @@
 #include <QLayout>
 #include "previewarea.h"
 
-PreviewArea::PreviewArea(QWidget *parent) : QWidget(parent) {
+PreviewArea::PreviewArea(QWidget *parent, std::vector<std::unique_ptr<Frame>> &publicFrames) : QWidget(parent), frames(publicFrames){
     initWidgets();
     initConnections();
     setParent(parent);
@@ -21,8 +21,6 @@ void PreviewArea::initWidgets(){
     nextFrame = new QPushButton;
     previousFrame = new QPushButton;
 
-    //playButton->("");
-
     playButton->setCheckable(true);
     pauseButton->setCheckable(true);
     nextFrame->setCheckable(true);
@@ -32,18 +30,6 @@ void PreviewArea::initWidgets(){
     pauseButton->setIcon(pauseIcon);
     nextFrame->setIcon(nextIcon);
     previousFrame->setIcon(previousIcon);
-
-//    playButton->setMaximumWidth(30);
-//    pauseButton->setMaximumWidth(30);
-//    nextFrame->setMaximumWidth(30);
-//    previousFrame->setMaximumWidth(30);
-
-//    QFont font;
-//    font.setPointSize(14);
-//    playButton->setFont(font);
-//    pauseButton->setFont(font);
-//    nextFrame->setFont(font);
-//    previousFrame->setFont(font);
 
     playbackButtons->addButton(playButton);
     playbackButtons->addButton(pauseButton);
