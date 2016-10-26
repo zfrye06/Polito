@@ -35,3 +35,6 @@ HEADERS  += src/mainwindow.h \
 
 FORMS    += src/mainwindow.ui \
     src/imagesizedialog.ui
+
+RESOURCES += \
+    icons.qrc
