@@ -4,7 +4,7 @@
 #include "mainwindow.h"
 #include "imagesizedialog.h"
 
-MainWindow::MainWindow() : animation(&emitter), drawArea(new QGraphicsView) {
+MainWindow::MainWindow() : animation(emitter), drawArea(new QGraphicsView) {
     initActions();
     initWidgets();
 }

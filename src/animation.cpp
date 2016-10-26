@@ -31,12 +31,12 @@ void Layer::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void Layer::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  emitter.emitDrawEvent(new DrawAction(this, prevImage, image));
+  emitter.emitDrawEvent(new DrawAction(this, prevImage, std::shared_ptr<QPixmap>(new QPixmap(*image))));
 }
 
-Frame::Frame(AnimationEventEmitter &emitter) : durationMs(-1), emitter(emitter), activeLayerIndex(0){
+Frame::Frame(AnimationEventEmitter &emitter) : emitter(emitter), activeLayerIndex(0), durationMs(-1){
   addLayer();
-  layers[0]->setEnabled(true);
+  layers.front()->setEnabled(true);
 }
 
 void Frame::addLayer() {
@@ -44,7 +44,7 @@ void Frame::addLayer() {
 }
 
 void Frame::addLayer(int index) {
-  if (index < 0 || index > layers.size()) {
+  if (index < 0 || index > (int)layers.size()) {
     throw std::invalid_argument("Index out of bounds.");
   }
   Layer *l = new Layer(emitter);
@@ -57,7 +57,7 @@ void Frame::addLayerInternal(Layer *layer, int index) {
   gscene.addItem(layer);
   layers.insert(layers.begin() + index, layer);
   layer->setZValue(index);
-  for (int i = index + 1; i < layers.size(); i++) {
+  for (auto i = index + 1; i < (int)layers.size(); i++) {
     layers[i]->setZValue(i);
   }
   if (activeLayerIndex >= index) {
@@ -67,7 +67,7 @@ void Frame::addLayerInternal(Layer *layer, int index) {
 
 void Frame::moveLayer(int fromIndex, int toIndex) {
   if (fromIndex < 0 || fromIndex >= (int)layers.size() ||
-      toIndex < 0 || toIndex >= layers.size()) {
+      toIndex < 0 || toIndex >= (int)layers.size()) {
     throw std::invalid_argument("Index out of bounds");
   }
   moveLayerInternal(fromIndex, toIndex);
@@ -77,7 +77,7 @@ void Frame::moveLayer(int fromIndex, int toIndex) {
 void Frame::moveLayerInternal(int fromIndex, int toIndex) {
   Layer *layer = layers[fromIndex];
   if (fromIndex < toIndex) {
-    for (int i = fromIndex; i < toIndex; i++) {
+    for (auto i = fromIndex; i < toIndex; i++) {
       layers[i] = layers[i + 1];
       layers[i]->setZValue(i);
     }
@@ -85,7 +85,7 @@ void Frame::moveLayerInternal(int fromIndex, int toIndex) {
       activeLayerIndex--;
     }
   } else {
-    for (int i = toIndex; i < fromIndex; i++) {
+    for (auto i = toIndex; i < fromIndex; i++) {
       layers[i + 1] = layers[i];
       layers[i]->setZValue(i);
     }
@@ -101,7 +101,7 @@ void Frame::moveLayerInternal(int fromIndex, int toIndex) {
 }
 
 void Frame::removeLayer(int index) {
-  if (index < 0 || index >= layers.size()) {
+  if (index < 0 || index >= (int)layers.size()) {
     throw std::invalid_argument("Index out of bounds");
   }
   if (layers.size() == 1) {
@@ -115,14 +115,14 @@ void Frame::removeLayer(int index) {
 void Frame::removeLayerInternal(Layer *layer, int index) {
   gscene.removeItem(layer);
   layers.erase(layers.begin() + index);
-  for (int i = index; i < layers.size(); i++) {
+  for (auto i = index; i < (int)layers.size(); i++) {
     layers[i]->setZValue(i);
   }
   if (index > activeLayerIndex) {
     activeLayerIndex--;
   }
   else if (index == activeLayerIndex) {
-    if (activeLayerIndex == layers.size()) {
+    if (activeLayerIndex == (int)layers.size()) {
       activeLayerIndex--;
     }
     layers[activeLayerIndex]->setEnabled(true);
@@ -130,7 +130,7 @@ void Frame::removeLayerInternal(Layer *layer, int index) {
 }
 
 void Frame::setActiveLayer(int index) {
-  if (index < 0 || index >= layers.size()) {
+  if (index < 0 || index >= (int)layers.size()) {
     throw std::invalid_argument("Index out of bounds");
   }
   if (index != activeLayerIndex) {
