@@ -33,10 +33,10 @@ private:
     QPushButton* nextFrame;
     QPushButton* previousFrame;
 
-    QIcon playIcon = QIcon(QPixmap(":/icons/icons/play"));
-    QIcon pauseIcon = QIcon(QPixmap(":/icons/icons/pause"));
-    QIcon nextIcon = QIcon(QPixmap(":/icons/icons/next"));
-    QIcon previousIcon = QIcon(QPixmap(":/icons/icons/previous"));
+    QIcon playIcon = QIcon(QPixmap(":/icons/play"));
+    QIcon pauseIcon = QIcon(QPixmap(":/icons/pause"));
+    QIcon nextIcon = QIcon(QPixmap(":/icons/next"));
+    QIcon previousIcon = QIcon(QPixmap(":/icons/previous"));
 
     void initWidgets();
     void initConnections();
