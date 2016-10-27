@@ -8,7 +8,7 @@
 #include <QStringListModel>
 #include <QVBoxLayout>
 #include <iostream>
-#include <QLabel>
+#include <QLineEdit>
 #include <QGroupBox>
 
 
@@ -31,6 +31,7 @@ signals:
 public slots:
     void addLayerButtonClicked();
     void deleteLayerButtonClicked();
+    void layerBoxClicked();
     //void moveLayerUpButtonClicked();
     //void moveLayerDownButtonClicked();
 //    void selectionChangedSlot(const QItemSelection&, const QItemSelection&);

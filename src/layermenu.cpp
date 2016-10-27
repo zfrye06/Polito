@@ -1,6 +1,7 @@
 #include "layermenu.h"
 #include <vector>
 #include <QMessageBox>
+#include <QLineEdit>
 
 
 /*To do:
@@ -81,9 +82,11 @@ void LayerMenu::redrawLayerMenu(){
 
 void LayerMenu::addLayer(QString layerName){
     QGroupBox* groupBox = new QGroupBox();
-    QLabel* label = new QLabel(layerName);
-    label->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard | Qt::TextEditable);
+    connect(groupBox, &QGroupBox::clicked, this, &LayerMenu::layerBoxClicked);
+
+    QLineEdit* label = new QLineEdit(layerName);
     label->setParent(groupBox);
+    layerNames.append(layerName);
 
     QPushButton* deleteLayerButton = new QPushButton();
     deleteLayerButton->setText("Delete");
@@ -100,6 +103,10 @@ void LayerMenu::addLayer(QString layerName){
     layerMenuLayout->addWidget(groupBox);
 
     //emitAddLayerSignal(new AddLayerAction());
+}
+
+void LayerMenu::layerBoxClicked(){
+   //highlight sender()
 }
 
 
