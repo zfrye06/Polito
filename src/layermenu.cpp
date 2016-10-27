@@ -26,17 +26,13 @@
  * */
 
 LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
-    this->resize(this->sizeHint());
-    //this->resize(100,700);
     addLayerButton = new QPushButton(this);
     addLayerButton->setText("Add Layer");
-
     connect(addLayerButton, &QPushButton::released,this, &LayerMenu::addLayerButtonClicked);
 
     layerMenuLayout = new QVBoxLayout();
     layerMenuLayout->setAlignment(Qt::AlignTop);
     layerMenuLayout->addWidget(addLayerButton);
-
     this->setLayout(layerMenuLayout);
     addLayer("Layer1");
 
@@ -46,11 +42,12 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
 }
 
 void LayerMenu::redrawLayerMenu(){
+    QVector<QString> layerNamesCopy = QVector<QString>(layerNames);
     foreach(QGroupBox* qgb, layers){
         deleteLayer(qgb);
     }
-    foreach(QString qs, layerNames){
-
+    foreach(QString qs, layerNamesCopy){
+        addLayer(qs);
     }
 }
 
@@ -61,7 +58,7 @@ void LayerMenu::addLayer(QString layerName){
     //groupBox->resize(100, 700);
     groupBox->setCheckable(true);
     connect(groupBox, &QGroupBox::clicked, this, &LayerMenu::layerBoxClicked);
-
+    layers.append(groupBox);
 
    // QLabel* showHide = new QLabel("show/hide");
 
@@ -88,18 +85,13 @@ void LayerMenu::addLayer(QString layerName){
     connect(deleteLayerButton, &QPushButton::released, this, &LayerMenu::deleteLayerButtonClicked);
 
     QGridLayout* hbox = new QGridLayout();
-    //QHBoxLayout *hbox = new QHBoxLayout();
-    //vbox->addWidget(showHide);
     hbox->addWidget(label, 0, 0, 1, 3, Qt::AlignCenter);
     hbox->addWidget(moveLayerUpButton, 1, 0);
     hbox->addWidget(moveLayerDownButton, 1, 1);
     hbox->addWidget(deleteLayerButton, 1, 2);
-    //hbox->set
 
 
     groupBox->setLayout(hbox);
-    //groupBox->resize(50,70);
-    layers.push_back(groupBox);
     layerMenuLayout->addWidget(groupBox);
 
     //emitAddLayerSignal(new AddLayerAction());
@@ -130,12 +122,16 @@ void LayerMenu::layerBoxClicked(){
 
 void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
 {
+    int index = layers.indexOf(layerToBeDeleted);
+    layerNames.remove(index);
     foreach(auto child, layerToBeDeleted->children())
     {
         delete child;
     }
     layerMenuLayout->removeWidget(layerToBeDeleted);
+    //layers.remove(layerToBeDeleted);
     delete layerToBeDeleted;
+    layers.remove(index);
 }
 
 void LayerMenu::addLayerButtonClicked() {
@@ -163,7 +159,18 @@ void LayerMenu::textChanged(){
 //}
 
 void LayerMenu::moveLayerUpButtonClicked(){
-
+    QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
+    int index = layers.indexOf(thisBox);
+        QMessageBox::information(
+            this,
+            tr("Index is"),
+            tr(std::to_string(index).c_str()) );
+    if (index > 0){
+        QString temp = layerNames[index];
+        layerNames[index] = layerNames[index-1];
+        layerNames[index-1] = temp;
+        redrawLayerMenu();
+    }
 }
 
 void LayerMenu::moveLayerDownButtonClicked(){
