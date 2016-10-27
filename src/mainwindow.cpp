@@ -112,5 +112,5 @@ void MainWindow::initWidgets() {
     this->setCentralWidget(window);
 
     setWindowTitle(tr("Polito"));
-    resize(600, 600);
+    resize(785, 665);
 }

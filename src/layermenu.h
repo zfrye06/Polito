@@ -43,9 +43,9 @@ protected:
 
 private:
     //Each QGroupBox
-    QIcon upArrow = QIcon(QPixmap(":/icons/upArrow"));
-    QIcon downArrow = QIcon(QPixmap(":/icons/downArrow"));
-    QIcon deleteX = QIcon(QPixmap(":/icons/deleteX"));
+    QIcon upArrow = QIcon(QPixmap(":/icons/up"));
+    QIcon downArrow = QIcon(QPixmap(":/icons/down"));
+    QIcon deleteX = QIcon(QPixmap(":/icons/delete"));
     QVector<QGroupBox*> layers;
     QVector<QString> layerNames;
     QPushButton* addLayerButton;

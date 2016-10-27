@@ -4,12 +4,12 @@
         <file alias="fill">icons/fill.png</file>
         <file alias="palette">icons/palette.png</file>
         <file alias="pan">icons/pan.png</file>
-        <file alias="upArrow">icons/upArrow.png</file>
-        <file alias="downArrow">icons/downArrow.png</file>
-        <file alias="deleteX">icons/deleteX.png</file>
-        <file alias="next">icons/next.png</file>
         <file alias="pause">icons/pause.png</file>
         <file alias="play">icons/play.png</file>
         <file alias="previous">icons/previous.png</file>
+        <file alias="delete">icons/delete.png</file>
+        <file alias="down">icons/downArrow.png</file>
+        <file alias="next">icons/next.png</file>
+        <file alias="up">icons/upArrow.png</file>
     </qresource>
 </RCC>
