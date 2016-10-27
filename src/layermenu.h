@@ -8,37 +8,47 @@
 #include <QStringListModel>
 #include <QVBoxLayout>
 #include <iostream>
+#include <QLabel>
+#include <QGroupBox>
 
 
 class LayerMenu : public QWidget {
     Q_OBJECT
 public:
     explicit LayerMenu(QWidget *parent = 0);
-    void deleteItem(const QModelIndex& index);
+    void deleteLayer(QGroupBox* layerToBeDeleted);
+    void addLayer(QString layerName);
+    void redrawLayerMenu();
+
+//    void emitAddLayerSignal(AddLayerAction* action){
+//        emit addLayerSignal(action);
+//    }
+
 signals:
+
+   // void addLayerSignal(AddLayerAction*);
 
 public slots:
     void addLayerButtonClicked();
     void deleteLayerButtonClicked();
-    void moveLayerUpButtonClicked();
-    void moveLayerDownButtonClicked();
+    //void moveLayerUpButtonClicked();
+    //void moveLayerDownButtonClicked();
 //    void selectionChangedSlot(const QItemSelection&, const QItemSelection&);
 
 
 protected:
 
 private:
-    QListView *listOfLayers;
-    QPushButton *addLayerButton;
-    QStringListModel *layerNames;
-    QVBoxLayout *layerMenuLayout;
-    QPushButton *deleteLayerButton;
-    QStringList *list;
-    QPushButton *moveLayerUpButton;
-    QPushButton *moveLayerDownButton;
-    //QModelIndexList selectedIndices;
-    //QList<QListViewItem> *selectedItems;
-    //QListViewItem
+    //Each QGroupBox
+    QVector<QGroupBox*> layers;
+    QVector<QString> layerNames;
+    QPushButton* addLayerButton;
+    QPushButton* moveLayerUpButton;
+    QPushButton* moveLayerDownButton;
+    QVBoxLayout* layerMenuLayout;
+    QGroupBox* selectedLayer;
+    //The layer that has most recently been deleted.
+    QGroupBox* deletedLayer;
 };
 
 #endif // LAYERMENU_H
