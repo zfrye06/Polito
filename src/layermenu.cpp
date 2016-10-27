@@ -176,5 +176,16 @@ void LayerMenu::moveLayerUpButtonClicked(){
 }
 
 void LayerMenu::moveLayerDownButtonClicked(){
-
+    QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
+    int index = layers.indexOf(thisBox);
+    //        QMessageBox::information(
+    //            this,
+    //            tr("Index is"),
+    //            tr(std::to_string(index).c_str()) );
+    if (index < layers.size() - 1){
+        QString temp = layerNames[index];
+        layerNames[index] = layerNames[index+1];
+        layerNames[index+1] = temp;
+        redrawLayerMenu();
+    }
 }
