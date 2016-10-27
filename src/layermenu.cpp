@@ -20,19 +20,19 @@
  * Pass a reference into the layer menu constructor?
  * Each Frame has its own set of layers that are
  * totally independent from the layers of other frames, right?
+ * Add a button to change the active layer, allow only one at a time
+ * (unfortunately, QGroupBoxes do not emit a suitable signal for clicked)
+ *
  * */
 
 LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
-    //this->resize(this->sizeHint());
-    //this->resize(100,700);
     addLayerButton = new QPushButton(this);
     addLayerButton->setText("Add Layer");
-
     connect(addLayerButton, &QPushButton::released,this, &LayerMenu::addLayerButtonClicked);
 
     layerMenuLayout = new QVBoxLayout();
+    layerMenuLayout->setAlignment(Qt::AlignTop);
     layerMenuLayout->addWidget(addLayerButton);
-
     this->setLayout(layerMenuLayout);
     addLayer("Layer1");
 
@@ -42,21 +42,24 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
 }
 
 void LayerMenu::redrawLayerMenu(){
+    QVector<QString> layerNamesCopy = QVector<QString>(layerNames);
     foreach(QGroupBox* qgb, layers){
         deleteLayer(qgb);
     }
-    foreach(QString qs, layerNames){
-
+    foreach(QString qs, layerNamesCopy){
+        addLayer(qs);
     }
 }
 
 void LayerMenu::addLayer(QString layerName){
     QGroupBox* groupBox = new QGroupBox();
+    groupBox->setParent(this);
+    //groupBox->setContentsMargins(0,0,0,0);
     groupBox->setCheckable(true);
     connect(groupBox, &QGroupBox::clicked, this, &LayerMenu::layerBoxClicked);
+    layers.append(groupBox);
 
-
-   // QLabel* showHide = new QLabel("show/hide");
+    // QLabel* showHide = new QLabel("show/hide");
 
     QLineEdit* label = new QLineEdit(layerName);
     label->setParent(groupBox);
@@ -67,12 +70,14 @@ void LayerMenu::addLayer(QString layerName){
     QPushButton* moveLayerUpButton = new QPushButton();
     //moveLayerUpButton->setText("Up");
     moveLayerUpButton->setIcon(upArrow);
+    moveLayerUpButton->setParent(groupBox);
     //moveLayerUpButton->setIconSize(QSize(20,20));
     connect(moveLayerUpButton, &QPushButton::released,this, &LayerMenu::moveLayerUpButtonClicked);
 
     QPushButton* moveLayerDownButton = new QPushButton();
     //moveLayerDownButton->setText("Down");
     moveLayerDownButton->setIcon(downArrow);
+    moveLayerDownButton->setParent(groupBox);
     connect(moveLayerDownButton, &QPushButton::released,this, &LayerMenu::moveLayerDownButtonClicked);
 
     QPushButton* deleteLayerButton = new QPushButton();
@@ -80,29 +85,25 @@ void LayerMenu::addLayer(QString layerName){
     deleteLayerButton->setParent(groupBox);
     connect(deleteLayerButton, &QPushButton::released, this, &LayerMenu::deleteLayerButtonClicked);
 
-    QHBoxLayout *vbox = new QHBoxLayout();
-    //vbox->addWidget(showHide);
-    vbox->addWidget(label);
-    vbox->addWidget(moveLayerUpButton);
-    vbox->addWidget(moveLayerDownButton);
-    vbox->addWidget(deleteLayerButton);
+    QGridLayout* hbox = new QGridLayout();
+    hbox->addWidget(label, 0, 0, 1, 3, Qt::AlignCenter);
+    hbox->addWidget(moveLayerUpButton, 1, 0);
+    hbox->addWidget(moveLayerDownButton, 1, 1);
+    hbox->addWidget(deleteLayerButton, 1, 2);
 
+    groupBox->setLayout(hbox);
 
-
-    groupBox->setLayout(vbox);
-    //groupBox->resize(50,70);
-    layers.push_back(groupBox);
     layerMenuLayout->addWidget(groupBox);
 
     //emitAddLayerSignal(new AddLayerAction());
 }
 
 void LayerMenu::layerBoxClicked(){
-   //highlight sender()
-//        QMessageBox::information(
-//            this,
-//            tr("Application Name"),
-//            tr("An information message.") );
+    //highlight sender()
+    //        QMessageBox::information(
+    //            this,
+    //            tr("Application Name"),
+    //            tr("An information message.") );
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender());
     if (selectedLayer == NULL){
         selectedLayer = thisBox;
@@ -122,19 +123,24 @@ void LayerMenu::layerBoxClicked(){
 
 void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
 {
+    int index = layers.indexOf(layerToBeDeleted);
+    layerNames.remove(index);
     foreach(auto child, layerToBeDeleted->children())
     {
         delete child;
     }
     layerMenuLayout->removeWidget(layerToBeDeleted);
+    //layers.remove(layerToBeDeleted);
+    delete layerToBeDeleted->layout();
     delete layerToBeDeleted;
+    layers.remove(index);
 }
 
 void LayerMenu::addLayerButtonClicked() {
-//    QMessageBox::information(
-//        this,
-//        tr("Application Name"),
-//        tr("An information message.") );
+    //    QMessageBox::information(
+    //        this,
+    //        tr("Application Name"),
+    //        tr("An information message.") );
     addLayer("New Layer");
 }
 
@@ -155,9 +161,31 @@ void LayerMenu::textChanged(){
 //}
 
 void LayerMenu::moveLayerUpButtonClicked(){
-
+    QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
+    int index = layers.indexOf(thisBox);
+    //        QMessageBox::information(
+    //            this,
+    //            tr("Index is"),
+    //            tr(std::to_string(index).c_str()) );
+    if (index > 0){
+        QString temp = layerNames[index];
+        layerNames[index] = layerNames[index-1];
+        layerNames[index-1] = temp;
+        redrawLayerMenu();
+    }
 }
 
 void LayerMenu::moveLayerDownButtonClicked(){
-
+    QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
+    int index = layers.indexOf(thisBox);
+    //        QMessageBox::information(
+    //            this,
+    //            tr("Index is"),
+    //            tr(std::to_string(index).c_str()) );
+    if (index < layers.size() - 1){
+        QString temp = layerNames[index];
+        layerNames[index] = layerNames[index+1];
+        layerNames[index+1] = temp;
+        redrawLayerMenu();
+    }
 }

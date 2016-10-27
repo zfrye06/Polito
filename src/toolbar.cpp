@@ -8,6 +8,7 @@ Toolbar::Toolbar(QWidget *parent) : QWidget(parent){
 }
 
 void Toolbar::initWidgets(){
+    QSize size = QSize(40, 40);
     toolsLayout = new QVBoxLayout(this);
     buttonGroup = new QButtonGroup(this);
     colorPicker = new QColorDialog(this);
@@ -21,19 +22,24 @@ void Toolbar::initWidgets(){
     brushButton->setCheckable(true);
     moveButton->setCheckable(true);
 
+    brushButton->setFixedSize(size);
+    fillButton->setFixedSize(size);
+    moveButton->setFixedSize(size);
+    colorButton->setFixedSize(size);
+
     brushButton->setIcon(brushIcon);
     moveButton->setIcon(moveIcon);
     fillButton->setIcon(fillIcon);
     colorButton->setIcon(colorIcon);
 
-    buttonGroup->addButton(fillButton);
     buttonGroup->addButton(brushButton);
     buttonGroup->addButton(moveButton);
+    buttonGroup->addButton(fillButton);
     buttonGroup->setExclusive(true);
 
-    toolsLayout->addWidget(fillButton);
     toolsLayout->addWidget(brushButton);
     toolsLayout->addWidget(moveButton);
+    toolsLayout->addWidget(fillButton);
     toolsLayout->addWidget(colorButton);
 }
 
