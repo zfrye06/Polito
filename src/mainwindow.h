@@ -8,6 +8,7 @@
 #include <vector>
 #include <QWidget>
 #include <QGridLayout>
+#include <QSplitter>
 #include "action.h"
 #include "animation.h"
 #include "imagesizedialog.h"
@@ -51,7 +52,10 @@ private:
     QAction *exitAct;
     QAction *clearScreenAct;
     QWidget *window;
-    QGridLayout *layout;
+    QVBoxLayout *layout;
+    QSplitter *splitter;
+    QSplitter *upperArea;
+    QSplitter *lowerArea;
     
     void initActions();
     void initWidgets();

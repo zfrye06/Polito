@@ -59,24 +59,38 @@ void MainWindow::initActions() {
 
 void MainWindow::initWidgets() {
     window = new QWidget(this);
-    layout = new QGridLayout(window);
+    layout = new QVBoxLayout(window);
+    splitter = new QSplitter(window);
+    upperArea = new QSplitter(window);
+    lowerArea = new QSplitter(window);
     toolbar = new Toolbar(window);
     layerMenu = new LayerMenu(window);
     previewArea = new PreviewArea(window, animation.getFrames());
 
     drawArea->setScene(&animation.activeFrame().scene());
 
-    layout->addWidget(toolbar, 0, 0);
-    layout->addWidget(drawArea, 0, 1);
-    layout->addWidget(layerMenu, 0, 2);
-    layout->addWidget(previewArea, 1, 2);
+    layout->addWidget(splitter);
 
-    layout->setColumnStretch(0,0);
-    layout->setColumnStretch(1,4);
-    layout->setColumnStretch(2,0);
+    splitter->setOrientation(Qt::Vertical);
 
-    layout->setRowStretch(0,4);
-    layout->setRowStretch(1,0);
+    splitter->addWidget(upperArea);
+    splitter->addWidget(lowerArea);
+
+    splitter->setStretchFactor(0,10);
+    splitter->setStretchFactor(1,2);
+
+    toolbar->setMaximumWidth(50);
+    layerMenu->setMaximumWidth(200);
+
+    upperArea->setStretchFactor(0,0);
+    upperArea->setStretchFactor(1,20);
+    upperArea->setStretchFactor(2,0);
+
+    upperArea->addWidget(toolbar);
+    upperArea->addWidget(drawArea);
+    upperArea->addWidget(layerMenu);
+
+    lowerArea->addWidget(previewArea);
 
     fileMenu = new QMenu(tr("&File"), this);
     fileMenu->addSeparator();

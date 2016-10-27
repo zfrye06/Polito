@@ -22,6 +22,8 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     listOfLayers = new QListView(parent);
     listOfLayers->setMovement(QListView::Snap);
 
+    listOfLayers->setMaximumWidth(200);
+
     layerNames = new QStringListModel(listOfLayers);
     list = new QStringList();
     *list << "Layer1";
