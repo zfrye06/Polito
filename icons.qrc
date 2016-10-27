@@ -4,5 +4,8 @@
         <file alias="fill">icons/fill.png</file>
         <file alias="palette">icons/palette.png</file>
         <file alias="pan">icons/pan.png</file>
+        <file alias="upArrow">icons/upArrow.png</file>
+        <file alias="downArrow">icons/downArrow.png</file>
+        <file alias="deleteX">icons/deleteX.png</file>
     </qresource>
 </RCC>

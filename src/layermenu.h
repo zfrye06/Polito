@@ -8,18 +8,32 @@
 #include <QStringListModel>
 #include <QVBoxLayout>
 #include <iostream>
+#include <QLineEdit>
+#include <QGroupBox>
+#include <QIcon>
 
 
 class LayerMenu : public QWidget {
     Q_OBJECT
 public:
     explicit LayerMenu(QWidget *parent = 0);
-    void deleteItem(const QModelIndex& index);
+    void deleteLayer(QGroupBox* layerToBeDeleted);
+    void addLayer(QString layerName);
+    void redrawLayerMenu();
+
+//    void emitAddLayerSignal(AddLayerAction* action){
+//        emit addLayerSignal(action);
+//    }
+
 signals:
+
+   // void addLayerSignal(AddLayerAction*);
 
 public slots:
     void addLayerButtonClicked();
     void deleteLayerButtonClicked();
+    void layerBoxClicked();
+    void textChanged();
     void moveLayerUpButtonClicked();
     void moveLayerDownButtonClicked();
 //    void selectionChangedSlot(const QItemSelection&, const QItemSelection&);
@@ -28,17 +42,19 @@ public slots:
 protected:
 
 private:
-    QListView *listOfLayers;
-    QPushButton *addLayerButton;
-    QStringListModel *layerNames;
-    QVBoxLayout *layerMenuLayout;
-    QPushButton *deleteLayerButton;
-    QStringList *list;
-    QPushButton *moveLayerUpButton;
-    QPushButton *moveLayerDownButton;
-    //QModelIndexList selectedIndices;
-    //QList<QListViewItem> *selectedItems;
-    //QListViewItem
+    //Each QGroupBox
+    QIcon upArrow = QIcon(QPixmap(":/icons/upArrow"));
+    QIcon downArrow = QIcon(QPixmap(":/icons/downArrow"));
+    QIcon deleteX = QIcon(QPixmap(":/icons/deleteX"));
+    QVector<QGroupBox*> layers;
+    QVector<QString> layerNames;
+    QPushButton* addLayerButton;
+    //QPushButton* moveLayerUpButton;
+    //QPushButton* moveLayerDownButton;
+    QVBoxLayout* layerMenuLayout;
+    QGroupBox* selectedLayer;
+    //The layer that has most recently been deleted.
+    //QGroupBox* deletedLayer;
 };
 
 #endif // LAYERMENU_H
