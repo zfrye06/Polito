@@ -2,7 +2,10 @@
 #include <vector>
 #include <QMessageBox>
 #include <QLineEdit>
-
+#include <QPalette>
+#include <QLabel>
+#include <QIcon>
+#include <QPixmap>
 
 /*To do:
  * Allow deleting layers;
@@ -20,49 +23,16 @@
  * */
 
 LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
-
-    this->resize(170,500);
-    //listOfLayers = new QListView(parent);
-    //listOfLayers->setMovement(QListView::Snap);
-
-    //layerNames = new QStringListModel(listOfLayers);
-    //list = new QStringList();
-    //*list << "Layer1";
-    //layerNames->setStringList(*list);
-    //listOfLayers->setModel(layerNames);
-    //listOfLayers->setEditTriggers(QAbstractItemView::AnyKeyPressed |
-    //  QAbstractItemView::DoubleClicked);
-
+    //this->resize(this->sizeHint());
+    //this->resize(100,700);
     addLayerButton = new QPushButton(this);
     addLayerButton->setText("Add Layer");
 
-    moveLayerUpButton = new QPushButton();
-    moveLayerUpButton->setText("Move Selected Layer Up");
-
-    moveLayerDownButton = new QPushButton();
-    moveLayerDownButton->setText("Move Selected Layer Down");
-
     connect(addLayerButton, &QPushButton::released,this, &LayerMenu::addLayerButtonClicked);
 
-    //deleteLayerButton = new QPushButton(listOfLayers);
-    //deleteLayerButton->setText("Delete Selected Layer");
-
-    // moveLayerUpButton = new QPushButton(listOfLayers);
-    //moveLayerUpButton->setText("Move Layer Up");
-    // connect(moveLayerUpButton, &QPushButton::released,this, &LayerMenu::moveLayerUpButtonClicked);
-
-    //moveLayerDownButton = new QPushButton(listOfLayers);
-    //moveLayerDownButton->setText("Move Layer Down");
-    //connect(moveLayerDownButton, &QPushButton::released,this, &LayerMenu::moveLayerDownButtonClicked);
     layerMenuLayout = new QVBoxLayout();
     layerMenuLayout->addWidget(addLayerButton);
-    layerMenuLayout->addWidget(moveLayerUpButton);
-    layerMenuLayout->addWidget(moveLayerDownButton);
 
-    //    layerMenuLayout->addWidget(deleteLayerButton);
-    //    layerMenuLayout->addWidget(moveLayerUpButton);
-    //    layerMenuLayout->addWidget(moveLayerDownButton);
-    //    layerMenuLayout->addWidget(listOfLayers);
     this->setLayout(layerMenuLayout);
     addLayer("Layer1");
 
@@ -82,20 +52,42 @@ void LayerMenu::redrawLayerMenu(){
 
 void LayerMenu::addLayer(QString layerName){
     QGroupBox* groupBox = new QGroupBox();
+    groupBox->setCheckable(true);
     connect(groupBox, &QGroupBox::clicked, this, &LayerMenu::layerBoxClicked);
+
+
+   // QLabel* showHide = new QLabel("show/hide");
 
     QLineEdit* label = new QLineEdit(layerName);
     label->setParent(groupBox);
     layerNames.append(layerName);
+    connect(label, &QLineEdit::textChanged, this, &LayerMenu::textChanged);
+    //connect(label, &QLineEdit::clicked, this, &LayerMenu::layerBoxClicked);
+
+    QPushButton* moveLayerUpButton = new QPushButton();
+    //moveLayerUpButton->setText("Up");
+    moveLayerUpButton->setIcon(upArrow);
+    //moveLayerUpButton->setIconSize(QSize(20,20));
+    connect(moveLayerUpButton, &QPushButton::released,this, &LayerMenu::moveLayerUpButtonClicked);
+
+    QPushButton* moveLayerDownButton = new QPushButton();
+    //moveLayerDownButton->setText("Down");
+    moveLayerDownButton->setIcon(downArrow);
+    connect(moveLayerDownButton, &QPushButton::released,this, &LayerMenu::moveLayerDownButtonClicked);
 
     QPushButton* deleteLayerButton = new QPushButton();
-    deleteLayerButton->setText("Delete");
+    deleteLayerButton->setIcon(deleteX);
     deleteLayerButton->setParent(groupBox);
     connect(deleteLayerButton, &QPushButton::released, this, &LayerMenu::deleteLayerButtonClicked);
 
-    QVBoxLayout *vbox = new QVBoxLayout();
+    QHBoxLayout *vbox = new QHBoxLayout();
+    //vbox->addWidget(showHide);
     vbox->addWidget(label);
+    vbox->addWidget(moveLayerUpButton);
+    vbox->addWidget(moveLayerDownButton);
     vbox->addWidget(deleteLayerButton);
+
+
 
     groupBox->setLayout(vbox);
     //groupBox->resize(50,70);
@@ -107,6 +99,24 @@ void LayerMenu::addLayer(QString layerName){
 
 void LayerMenu::layerBoxClicked(){
    //highlight sender()
+//        QMessageBox::information(
+//            this,
+//            tr("Application Name"),
+//            tr("An information message.") );
+    QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender());
+    if (selectedLayer == NULL){
+        selectedLayer = thisBox;
+    }
+    else{
+        //old selected layer restore old format
+
+
+    }
+    //now highlight the new selected layer and then assign it
+    QPalette p = thisBox->palette();
+    p.setColor(QPalette::Dark, Qt::white);
+    thisBox->setPalette(p);
+    selectedLayer = thisBox;
 }
 
 
@@ -131,48 +141,23 @@ void LayerMenu::addLayerButtonClicked() {
 void LayerMenu::deleteLayerButtonClicked() {
     deleteLayer(qobject_cast<QGroupBox*>(sender()->parent()));
     //emit an action for undo/redo
+}
+
+void LayerMenu::textChanged(){
+    QString newText = qobject_cast<QLineEdit*>(sender())->text();
+    QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
+    int index = layers.indexOf(thisBox);
+    layerNames[index] = newText;
+}
+
+//void LayerMenu::selectionChangedSlot(const QItemSelection& selected, const QItemSelection& deselected){
+//    //selectedIndices = selected.indexes();
+//}
+
+void LayerMenu::moveLayerUpButtonClicked(){
 
 }
 
-////void LayerMenu::selectionChangedSlot(const QItemSelection& selected, const QItemSelection& deselected){
-////    //selectedIndices = selected.indexes();
-////}
+void LayerMenu::moveLayerDownButtonClicked(){
 
-//void LayerMenu::moveLayerUpButtonClicked(){
-//    //    QModelIndex current = listOfLayers->currentIndex();
-//    //    if (current.row() - 1 >= 0){
-//    //        QModelIndex previous = listOfLayers->indexAt(QPoint(current.row() - 1, 0));
-//    //        //QModelIndex previous = current.parent();
-//    //        //QModelIndex previous = layerNames->QStringListModel::createIndex(current.row() - 1, 0, [] () {;});
-//    //        //QModelIndex prev = listOfLayers->indexAt(previous);
-//    //        //save the string in previous
-//    //        //QString temp = (QString)(listOfLayers->model()->data(previous, 0));
-//    //        QString temp = layerNames->data(previous, 0).toString();
-//    //        //remove previous
-//    //        //int previousIndex = previous.row();
-//    //        listOfLayers->model()->removeRow(previous.row());
-//    //        //layerNames->removeRows(previous, 1);
-//    //        //now add previous back after current (that is, where current used to be
-//    //        //before we deleted previous)
-//    //        //current = listOfLayers->currentIndex();
-//    //        //QModelIndex insertionIndex = listOfLayers->indexAt(QPoint(current.row() + 1, 0));
-//    //        int insertionIndex = listOfLayers->currentIndex().row() + 1;
-//    //        listOfLayers->model()->insertRow(insertionIndex);
-//    //        listOfLayers->model()->setData(listOfLayers->model()->index(insertionIndex, 0), temp);
-//    //                //ui->listview->model()->setData(ui->listview->model()->index ( row, column),ui.lineEdit->text());
-//    //        //QModelIndex swapIndex = listOfLayers->currentIndex();
-//    //        //current = listOfLayers->currentIndex();
-//    //        //QModelIndex swapIndex = listOfLayers->indexAt(QPoint(insertionIndex, 0));
-//    //        //layerNames->setData(previous, "test", 0);
-//    //        //list->append("test");
-//    //        //layerNames->data(swapIndex, 0).setValue(temp);
-//    //        //listOfLayers->model()->data(swapIndex).setValue(temp);
-
-
-//    //        //add code to rearrange layers in Frame vector<Qimage>
-
-//}
-
-//void LayerMenu::moveLayerDownButtonClicked(){
-
-//}
+}

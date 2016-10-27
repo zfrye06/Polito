@@ -10,6 +10,7 @@
 #include <iostream>
 #include <QLineEdit>
 #include <QGroupBox>
+#include <QIcon>
 
 
 class LayerMenu : public QWidget {
@@ -32,8 +33,9 @@ public slots:
     void addLayerButtonClicked();
     void deleteLayerButtonClicked();
     void layerBoxClicked();
-    //void moveLayerUpButtonClicked();
-    //void moveLayerDownButtonClicked();
+    void textChanged();
+    void moveLayerUpButtonClicked();
+    void moveLayerDownButtonClicked();
 //    void selectionChangedSlot(const QItemSelection&, const QItemSelection&);
 
 
@@ -41,15 +43,18 @@ protected:
 
 private:
     //Each QGroupBox
+    QIcon upArrow = QIcon(QPixmap(":/icons/upArrow"));
+    QIcon downArrow = QIcon(QPixmap(":/icons/downArrow"));
+    QIcon deleteX = QIcon(QPixmap(":/icons/deleteX"));
     QVector<QGroupBox*> layers;
     QVector<QString> layerNames;
     QPushButton* addLayerButton;
-    QPushButton* moveLayerUpButton;
-    QPushButton* moveLayerDownButton;
+    //QPushButton* moveLayerUpButton;
+    //QPushButton* moveLayerDownButton;
     QVBoxLayout* layerMenuLayout;
     QGroupBox* selectedLayer;
     //The layer that has most recently been deleted.
-    QGroupBox* deletedLayer;
+    //QGroupBox* deletedLayer;
 };
 
 #endif // LAYERMENU_H
