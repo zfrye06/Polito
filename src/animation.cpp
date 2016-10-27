@@ -11,27 +11,13 @@ QRectF Layer::boundingRect() const {
   return QRectF(image->rect());
 }
 
+std::shared_ptr<QPixmap> Layer::pixmap() {
+    return image;
+}
+
 void Layer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                   QWidget *widget) {
   painter->drawPixmap(image->rect(), *image);
-}
-
-void Layer::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  prevImage = std::make_shared<QPixmap>(*image);
-  drawState.lastMousePoint = event->pos().toPoint();
-}
-
-void Layer::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-  QPainter painter(image.get());
-  painter.setPen(QPen(Qt::red, 5, Qt::SolidLine, Qt::RoundCap,
-                      Qt::RoundJoin));
-  painter.drawLine(drawState.lastMousePoint, event->pos());
-  drawState.lastMousePoint = event->pos().toPoint();
-  update();
-}
-
-void Layer::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  emitter.emitDrawEvent(new DrawAction(this, prevImage, std::shared_ptr<QPixmap>(new QPixmap(*image))));
 }
 
 Frame::Frame(AnimationEventEmitter &emitter) : emitter(emitter), activeLayerIndex(0), durationMs(-1){
@@ -60,9 +46,9 @@ void Frame::addLayerInternal(Layer *layer, int index) {
   for (auto i = index + 1; i < (int)layers.size(); i++) {
     layers[i]->setZValue(i);
   }
-  if (activeLayerIndex >= index) {
-    activeLayerIndex++; 
-  }
+  //if (activeLayerIndex >= index) {
+    //activeLayerIndex++;
+  //}
 }
 
 void Frame::moveLayer(int fromIndex, int toIndex) {
@@ -144,6 +130,10 @@ int Frame::activeLayerIdx() const {
   return activeLayerIndex;
 }
 
+Layer* Frame::activeLayer() {
+    return layers[activeLayerIndex];
+}
+
 int Frame::numlayers() const {
   return layers.size();
 }
@@ -162,8 +152,8 @@ void Frame::clear() {
 QGraphicsScene& Frame::scene() { return gscene; }
 
 Animation::Animation(AnimationEventEmitter &emitter) : emitter(emitter) {
-  addFrame();
   setActiveFrame(0);
+  addFrame();
 }
 
 void Animation::addFrame() {
@@ -173,7 +163,7 @@ void Animation::addFrame() {
 void Animation::addFrame(int index) {
   std::unique_ptr<Frame> f(new Frame(emitter));
   frames.insert(frames.begin() + index, std::move(f));
-  if (activeFrameIndex == index) activeFrameIndex++;
+  //if (activeFrameIndex == index) activeFrameIndex++;
 }
 
 void Animation::removeFrame(int index) {
@@ -189,8 +179,8 @@ void Animation::setActiveFrame(int index) {
   activeFrameIndex = index;
 }
 
-Frame& Animation::activeFrame() {
-  return *frames[activeFrameIndex];
+Frame* Animation::activeFrame() {
+  return frames[activeFrameIndex].get();
 }
 
 void Animation::resize(int dim) {
