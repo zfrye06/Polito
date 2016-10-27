@@ -10,6 +10,7 @@
 #include <QGridLayout>
 #include <QSplitter>
 #include "action.h"
+#include "drawarea.h"
 #include "animation.h"
 #include "imagesizedialog.h"
 #include "toolbar.h"
@@ -39,7 +40,7 @@ private:
     Toolbar *toolbar;
     PreviewArea *previewArea;
 
-    QGraphicsView *drawArea;
+    DrawArea *drawArea;
     ImageSizeDialog *d;
     LayerMenu *layerMenu;
     QMenu *saveAsMenu;

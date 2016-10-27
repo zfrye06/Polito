@@ -17,6 +17,7 @@ SOURCES += src/main.cpp\
     src/action.cpp \
     src/imagesizedialog.cpp \
     src/drawarea.cpp \
+    src/painthandler.cpp \
     src/layermenu.cpp \
     src/scrubber.cpp \
     src/previewarea.cpp \
@@ -27,6 +28,7 @@ HEADERS  += src/mainwindow.h \
     src/action.h \
     src/imagesizedialog.h \
     src/drawarea.h \
+    src/painthandler.h \
     src/layermenu.h \
     src/scrubber.h \
     src/previewarea.h \

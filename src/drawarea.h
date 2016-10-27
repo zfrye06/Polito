@@ -1,78 +1,31 @@
+#ifndef DRAWAREA_H
+#define DRAWAREA_H
 
-#ifndef SCRIBBLEAREA_H
-#define SCRIBBLEAREA_H
+#include <QGraphicsView>
+#include <QMouseEvent>
+#include "animation.h"
+#include "painthandler.h"
 
-#include <QColor>
-#include <QImage>
-#include <QPoint>
-#include <QWidget>
-#include "action.h"
-#include "layermenu.h"
-
-// Must forward-declare ScribbleAction due to circular dependency.
-class ScribbleAction;
-
-class DrawArea : public QWidget {
+class DrawArea : public QGraphicsView {
     Q_OBJECT
-
 public:
-    DrawArea(QWidget *parent = 0);
+    PaintHandler* currentPaintHandler;
+    Animation* animation;
+    DrawAction* currentAction;
 
-    bool openImage(const QString &fileName);
-    bool saveImage(const QString &fileName, const char *fileFormat);
-    void setPenColor(const QColor &newColor);
-    void setPenWidth(int newWidth);
-    void setImage( QImage& i );
-    QImage& getImage();
-    void resizeImage( int width, int height, int filtering = 0);
+    DrawArea(Animation* animation) : animation(animation){
+        currentPaintHandler = new PaintBrush();
+    }
 
-    bool isModified() const { return modified; }
-    QColor penColor() const { return myPenColor; }
-    int penWidth() const { return myPenWidth; }
+    ~DrawArea();
+    void setPaintHandler( PaintHandler* paintHandler );
 
-public slots:
-    void clearImage();
+    virtual void mousePressEvent( QMouseEvent* event );
+    virtual void mouseMoveEvent( QMouseEvent* event );
+    virtual void mouseReleaseEvent( QMouseEvent* event );
 
 signals:
-    void addAction( Action* a );
-
-protected:
-    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
-    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
-    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-
-private:
-    void drawLineTo(const QPoint &endPoint);
-    void resizeImage(QImage *image, const QSize &newSize);
-
-    QPointF offset;
-    QTransform camera;
-    float cameraScale;
-    bool modified;
-    bool scribbling;
-    bool dragging;
-    int myPenWidth;
-    QColor myPenColor;
-    QImage background;
-    QImage image;
-    QPoint lastPoint;
-    QPoint lastDraggingPoint;
-    ScribbleAction* currentAction;
-};
-
-class ScribbleAction : public Action {
-private:
-    DrawArea* area;
-    QImage before;
-    QImage after;
-public:
-    ScribbleAction( DrawArea* Area );
-    void finish();
-    void undo();
-    void redo();
+    void addAction( Action* action );
 };
 
 #endif

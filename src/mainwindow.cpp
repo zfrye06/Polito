@@ -4,7 +4,7 @@
 #include "mainwindow.h"
 #include "imagesizedialog.h"
 
-MainWindow::MainWindow() : animation(emitter), drawArea(new QGraphicsView) {
+MainWindow::MainWindow() : animation(emitter), drawArea(new DrawArea(&animation)) {
     initActions();
     initWidgets();
 }
@@ -50,7 +50,7 @@ void MainWindow::initActions() {
     clearScreenAct->setShortcut(tr("Ctrl+L"));
     connect(clearScreenAct, &QAction::triggered,
             this, [this] {
-        animation.activeFrame().clear();
+        animation.activeFrame()->clear();
     });
 
     connect(&emitter, &AnimationEventEmitter::drawEvent,
@@ -67,7 +67,7 @@ void MainWindow::initWidgets() {
     layerMenu = new LayerMenu(window);
     previewArea = new PreviewArea(window, animation.getFrames());
 
-    drawArea->setScene(&animation.activeFrame().scene());
+    drawArea->setScene(&animation.activeFrame()->scene());
 
     layout->addWidget(splitter);
 

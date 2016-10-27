@@ -51,12 +51,7 @@ class Layer : public QGraphicsItem {
   Layer(AnimationEventEmitter &);
   QRectF boundingRect() const override;
   void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
-
- protected:
-
-  virtual void mousePressEvent(QGraphicsSceneMouseEvent *) override;
-  virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *) override;
-  virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override;
+  std::shared_ptr<QPixmap> pixmap();
 
  private:
 
@@ -106,6 +101,8 @@ class Frame {
 
   // Returns the index of the active layer.
   int activeLayerIdx() const;
+
+  Layer* activeLayer();
 
   // Returns the number of layers in this frame.
   int numlayers() const;
@@ -157,7 +154,7 @@ class Animation {
 
   void setActiveFrame(int index);
 
-  Frame& activeFrame();
+  Frame* activeFrame();
 
   // Resizes every frame in this animation to the given dimension.
   // TODO: Add appropriately-typed size parameter.
@@ -185,9 +182,12 @@ class Animation {
 class DrawAction : public Action {
  public:
 
- DrawAction(Layer *layer, std::shared_ptr<QPixmap> before,
-            std::shared_ptr<QPixmap> after) :
-  layer(layer), before(before), after(after) {}
+ DrawAction(Layer *layer, std::shared_ptr<QPixmap> before) :
+  layer(layer), before(before) {}
+
+ void finish( std::shared_ptr<QPixmap> after) {
+     this->after = after;
+ }
 
   void undo() {
     layer->image = before;
