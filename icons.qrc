@@ -7,5 +7,9 @@
         <file alias="upArrow">icons/upArrow.png</file>
         <file alias="downArrow">icons/downArrow.png</file>
         <file alias="deleteX">icons/deleteX.png</file>
+        <file alias="next">icons/next.png</file>
+        <file alias="pause">icons/pause.png</file>
+        <file alias="play">icons/play.png</file>
+        <file alias="previous">icons/previous.png</file>
     </qresource>
 </RCC>
