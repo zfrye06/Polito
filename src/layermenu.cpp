@@ -20,10 +20,13 @@
  * Pass a reference into the layer menu constructor?
  * Each Frame has its own set of layers that are
  * totally independent from the layers of other frames, right?
+ * Add a button to change the active layer, allow only one at a time
+ * (unfortunately, QGroupBoxes do not emit a suitable signal for clicked)
+ *
  * */
 
 LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
-    //this->resize(this->sizeHint());
+    this->resize(this->sizeHint());
     //this->resize(100,700);
     addLayerButton = new QPushButton(this);
     addLayerButton->setText("Add Layer");
@@ -31,6 +34,7 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     connect(addLayerButton, &QPushButton::released,this, &LayerMenu::addLayerButtonClicked);
 
     layerMenuLayout = new QVBoxLayout();
+    layerMenuLayout->setAlignment(Qt::AlignTop);
     layerMenuLayout->addWidget(addLayerButton);
 
     this->setLayout(layerMenuLayout);
@@ -52,6 +56,9 @@ void LayerMenu::redrawLayerMenu(){
 
 void LayerMenu::addLayer(QString layerName){
     QGroupBox* groupBox = new QGroupBox();
+    groupBox->setParent(this);
+    //groupBox->setContentsMargins(0,0,0,0);
+    //groupBox->resize(100, 700);
     groupBox->setCheckable(true);
     connect(groupBox, &QGroupBox::clicked, this, &LayerMenu::layerBoxClicked);
 
@@ -80,16 +87,17 @@ void LayerMenu::addLayer(QString layerName){
     deleteLayerButton->setParent(groupBox);
     connect(deleteLayerButton, &QPushButton::released, this, &LayerMenu::deleteLayerButtonClicked);
 
-    QHBoxLayout *vbox = new QHBoxLayout();
+    QGridLayout* hbox = new QGridLayout();
+    //QHBoxLayout *hbox = new QHBoxLayout();
     //vbox->addWidget(showHide);
-    vbox->addWidget(label);
-    vbox->addWidget(moveLayerUpButton);
-    vbox->addWidget(moveLayerDownButton);
-    vbox->addWidget(deleteLayerButton);
+    hbox->addWidget(label, 0, 0, 1, 3, Qt::AlignCenter);
+    hbox->addWidget(moveLayerUpButton, 1, 0);
+    hbox->addWidget(moveLayerDownButton, 1, 1);
+    hbox->addWidget(deleteLayerButton, 1, 2);
+    //hbox->set
 
 
-
-    groupBox->setLayout(vbox);
+    groupBox->setLayout(hbox);
     //groupBox->resize(50,70);
     layers.push_back(groupBox);
     layerMenuLayout->addWidget(groupBox);
