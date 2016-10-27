@@ -44,9 +44,9 @@ void Toolbar::initWidgets(){
 }
 
 void Toolbar::initConnections(){
-    //connect(colorButton, &QPushButton::pressed, colorPicker, &QColorDialog::open(&Toolbar::colorPicked));
+    connect(colorButton, &QPushButton::pressed, this, &Toolbar::getColor);
 }
 
-QColor Toolbar::colorPicked(){
-    return nullptr;
+void Toolbar::getColor(){
+    currentColor = colorPicker->getColor();
 }

@@ -15,7 +15,7 @@ public:
 signals:
 
 public slots:
-    QColor colorPicked();
+    void getColor();
 
 private:
     QVBoxLayout* toolsLayout;
