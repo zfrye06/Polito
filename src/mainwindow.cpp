@@ -4,8 +4,9 @@
 #include "mainwindow.h"
 #include "imagesizedialog.h"
 
-MainWindow::MainWindow() : animation(emitter), drawArea(new DrawArea(&animation)) {
+MainWindow::MainWindow() : animation(emitter), drawArea(new DrawArea(animation.activeFrame())) {
     initActions();
+    initSignals();
     initWidgets();
 }
 
@@ -53,7 +54,10 @@ void MainWindow::initActions() {
         animation.activeFrame()->clear();
     });
 
-    connect(&emitter, &AnimationEventEmitter::drawEvent,
+}
+
+void MainWindow::initSignals() {
+    connect(drawArea, &DrawArea::addAction,
             &actionHistory, &ActionHistory::addAction);
 }
 

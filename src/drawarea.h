@@ -8,18 +8,17 @@
 
 class DrawArea : public QGraphicsView {
     Q_OBJECT
-public:
-    PaintHandler* currentPaintHandler;
-    Animation* animation;
-    DrawAction* currentAction;
+ public:
+    PaintHandler *currentPaintHandler;
+    Frame *frame;
+    DrawAction *currentAction;
 
-    DrawArea(Animation* animation) : animation(animation){
-        currentPaintHandler = new PaintBrush();
-    }
+ DrawArea(Frame *frame) :
+    frame(frame), currentPaintHandler(new PaintBrush()) {}
 
     ~DrawArea();
     void setPaintHandler( PaintHandler* paintHandler );
-
+    void setFrame(Frame *frame);
     virtual void mousePressEvent( QMouseEvent* event );
     virtual void mouseMoveEvent( QMouseEvent* event );
     virtual void mouseReleaseEvent( QMouseEvent* event );

@@ -185,17 +185,17 @@ class DrawAction : public Action {
  DrawAction(Layer *layer, std::shared_ptr<QPixmap> before) :
   layer(layer), before(before) {}
 
- void finish( std::shared_ptr<QPixmap> after) {
+ void finish(std::shared_ptr<QPixmap> after) {
      this->after = after;
  }
 
   void undo() {
-    layer->image = before;
+    layer->image = std::shared_ptr<QPixmap>(new QPixmap(*before));
     layer->update();
   }
 
   void redo() {
-    layer->image = after;
+    layer->image = std::shared_ptr<QPixmap>(new QPixmap(*after));
     layer->update();
   }
 
