@@ -6,8 +6,8 @@
 
 MainWindow::MainWindow() : animation(emitter), drawArea(new DrawArea(animation.activeFrame())) {
     initActions();
-    initSignals();
     initWidgets();
+    initSignals();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -54,11 +54,6 @@ void MainWindow::initActions() {
         animation.activeFrame()->clear();
     });
 
-}
-
-void MainWindow::initSignals() {
-    connect(drawArea, &DrawArea::addAction,
-            &actionHistory, &ActionHistory::addAction);
 }
 
 void MainWindow::initWidgets() {
@@ -117,4 +112,42 @@ void MainWindow::initWidgets() {
 
     setWindowTitle(tr("Polito"));
     resize(755, 665);
+}
+
+void MainWindow::initSignals() {
+    connect(drawArea, &DrawArea::addAction,
+            &actionHistory, &ActionHistory::addAction);
+
+    connect(layerMenu, &LayerMenu::layerAddedSignal,
+            this, [this](int index) {
+                Frame *frame = animation.activeFrame();
+                if (index > 0 && index <= frame->numlayers()) {
+                    frame->addLayer(index);
+                }
+    });
+
+    connect(layerMenu, &LayerMenu::layersSwappedSignal,
+            this, [this](int from, int to) {
+                Frame *frame = animation.activeFrame();
+                if (from > 0 && from < frame->numlayers() &&
+                    to > 0 && to < frame->numlayers()) {
+                    frame->moveLayer(from, to);
+                }
+    });
+
+    connect(layerMenu, &LayerMenu::layerDeletedSignal,
+            this, [this](int index) {
+                Frame *frame = animation.activeFrame();
+                if (index > 0 && index <= frame->numlayers() && frame->numlayers() > 0) {
+                    frame->removeLayer(index);
+                }
+     });
+
+    connect(layerMenu, &LayerMenu::activeLayerChangedSignal,
+            this, [this](int to) {
+                Frame *frame = animation.activeFrame();
+                if (to > 0 && to < frame->numlayers()) {
+                    frame->setActiveLayer(to);
+                }
+    });
 }
