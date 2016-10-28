@@ -48,6 +48,8 @@ private:
     void redrawLayerMenu();
     void deleteLayer(QGroupBox* layerToBeDeleted);
     void addLayer(QString layerName);
+    void highlightGroupBox(QGroupBox*);
+    void unhighlightGroupBox(QGroupBox*);
 
 
 };

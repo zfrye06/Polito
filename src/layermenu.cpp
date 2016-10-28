@@ -29,6 +29,7 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     addLayer("Layer1");
     //We initialize the active layer to be 0:
     indexOfActiveLayer = 0;
+    highlightGroupBox(layers.at(0));
     emit activeLayerChangedSignal(indexOfActiveLayer);
 }
 
@@ -86,12 +87,30 @@ void LayerMenu::addLayer(QString layerName){
 }
 
 void LayerMenu::activeLayerChanged(){
+    QGroupBox* oldBox = layers.at(indexOfActiveLayer);
+
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
     indexOfActiveLayer = layers.indexOf(thisBox);
     emit activeLayerChangedSignal(indexOfActiveLayer);
 
     //Add code to change color of QGroupBox at indexOfActiveLayer
     //layers.at(indexOfActiveLayer)->palette();
+    highlightGroupBox(thisBox);
+    unhighlightGroupBox(oldBox);
+}
+
+void LayerMenu::highlightGroupBox(QGroupBox* newActiveLayerBox){
+    QPalette Pal(palette());
+    Pal.setColor(QPalette::Background, Qt::blue);
+    newActiveLayerBox->setAutoFillBackground(true);
+    newActiveLayerBox->setPalette(Pal);
+    newActiveLayerBox->show();
+}
+
+void LayerMenu::unhighlightGroupBox(QGroupBox* oldActiveLayerBox){
+    oldActiveLayerBox->setAutoFillBackground(false);
+    oldActiveLayerBox->setPalette(oldActiveLayerBox->style()->standardPalette());
+    oldActiveLayerBox->show();
 }
 
 void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
