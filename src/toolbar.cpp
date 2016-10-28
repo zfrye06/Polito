@@ -49,4 +49,5 @@ void Toolbar::initConnections(){
 
 void Toolbar::getColor(){
     currentColor = colorPicker->getColor();
+    emit colorChanged(currentColor);
 }

@@ -118,6 +118,11 @@ void MainWindow::initSignals() {
     connect(drawArea, &DrawArea::addAction,
             &actionHistory, &ActionHistory::addAction);
 
+    connect(toolbar, &Toolbar::colorChanged,
+            this, [this](QColor to){
+                drawArea->paintHandler().settings.color = to;
+    });
+
     connect(layerMenu, &LayerMenu::layerAddedSignal,
             this, [this](int index) {
                 Frame *frame = animation.activeFrame();

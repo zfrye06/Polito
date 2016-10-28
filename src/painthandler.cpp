@@ -1,5 +1,14 @@
 #include "painthandler.h"
 
+PaintSettings PaintSettings::defaults() {
+    PaintSettings s;
+    s.color = Qt::red;
+    s.brushWidth = 5;
+    return s;
+}
+
+PaintHandler::PaintHandler() : settings(PaintSettings::defaults()) {}
+
 PaintHandler::~PaintHandler() {
 }
 
@@ -21,7 +30,7 @@ void PaintBrush::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPoin
 
 void PaintBrush::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) {
     QPainter painter(&image);
-    painter.setPen(QPen(Qt::red, 5, Qt::SolidLine, Qt::RoundCap,
+    painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
                       Qt::RoundJoin));
     painter.drawLine(lastMousePoint, pos);
     lastMousePoint = pos;

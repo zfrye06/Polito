@@ -7,16 +7,21 @@ DrawArea::~DrawArea() {
     delete currentPaintHandler;
 }
 
-void DrawArea::setPaintHandler(PaintHandler* currentPaintHandler) {
+void DrawArea::setPaintHandler(PaintHandler *handler) {
+    handler->settings = currentPaintHandler->settings;
     delete currentPaintHandler;
     this->currentPaintHandler = currentPaintHandler;
+}
+
+PaintHandler &DrawArea::paintHandler() {
+    return *currentPaintHandler;
 }
 
 void DrawArea::setFrame(Frame *frame) {
     this->frame = frame;
 }
 
-void DrawArea::mousePressEvent(QMouseEvent* event) {
+void DrawArea::mousePressEvent(QMouseEvent *event) {
     if (!currentPaintHandler) {
         return;
     }
@@ -30,7 +35,7 @@ void DrawArea::mousePressEvent(QMouseEvent* event) {
     this->viewport()->update();
 }
 
-void DrawArea::mouseMoveEvent(QMouseEvent* event) {
+void DrawArea::mouseMoveEvent(QMouseEvent *event) {
     if (!currentPaintHandler) {
         return;
     }
@@ -41,7 +46,7 @@ void DrawArea::mouseMoveEvent(QMouseEvent* event) {
     this->viewport()->update();
 }
 
-void DrawArea::mouseReleaseEvent(QMouseEvent* event) {
+void DrawArea::mouseReleaseEvent(QMouseEvent *event) {
     if (!currentPaintHandler) {
         return;
     }

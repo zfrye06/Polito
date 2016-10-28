@@ -11,19 +11,24 @@
 
 class DrawArea : public QGraphicsView {
     Q_OBJECT
+
  public:
-    Frame *frame;
-    PaintHandler *currentPaintHandler;
-    DrawAction *currentAction;
 
     DrawArea(Frame *frame);
     ~DrawArea();
-    void setPaintHandler( PaintHandler* paintHandler );
+    void setPaintHandler(PaintHandler *paintHandler);
+    PaintHandler &paintHandler();
     void setFrame(Frame *frame);
     virtual void mousePressEvent( QMouseEvent* event );
     virtual void mouseMoveEvent( QMouseEvent* event );
     virtual void mouseReleaseEvent( QMouseEvent* event );
 
+ private:
+
+    Frame *frame; // does not own
+    PaintHandler *currentPaintHandler; // owns
+    DrawAction *currentAction; // owns
+    
  signals:
     void addAction( Action* action );
 };

@@ -13,7 +13,9 @@ public:
     explicit Toolbar(QWidget *parent = 0);
 
 signals:
-
+    
+    void colorChanged(QColor);
+    
 public slots:
     void getColor();
 
