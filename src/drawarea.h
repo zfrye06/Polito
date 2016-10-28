@@ -27,9 +27,6 @@ public slots:
     void setPaintHandler( PaintHandler* paintHandler );
 
 signals:
-=======
- signals:
->>>>>>> 3154578df3c63b59c5436ab7169fd2976118814f
     void addAction( Action* action );
 };
 
