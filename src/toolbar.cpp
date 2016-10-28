@@ -53,6 +53,7 @@ void Toolbar::initConnections(){
     connect(colorButton, &QPushButton::pressed, this, &Toolbar::getColor);
     connect(eraseButton, &QPushButton::pressed, this, &Toolbar::setEraser);
     connect(brushButton, &QPushButton::pressed, this, &Toolbar::setBrush);
+    connect(fillButton, &QPushButton::pressed, this, &Toolbar::setFill);
 }
 
 void Toolbar::setBrush() {
@@ -61,6 +62,10 @@ void Toolbar::setBrush() {
 
 void Toolbar::setEraser() {
     emit setPaintHandler( new Eraser() );
+}
+
+void Toolbar::setFill() {
+    emit setPaintHandler( new PaintBucket() );
 }
 
 void Toolbar::getColor(){
