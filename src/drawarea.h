@@ -3,19 +3,20 @@
 
 #include <QGraphicsView>
 #include <QMouseEvent>
-#include "animation.h"
+#include <QObject>
+#include "action.h"
+#include "frame.h"
+#include "layer.h"
 #include "painthandler.h"
 
 class DrawArea : public QGraphicsView {
     Q_OBJECT
  public:
-    PaintHandler *currentPaintHandler;
     Frame *frame;
+    PaintHandler *currentPaintHandler;
     DrawAction *currentAction;
 
- DrawArea(Frame *frame) :
-    frame(frame), currentPaintHandler(new PaintBrush()) {}
-
+    DrawArea(Frame *frame);
     ~DrawArea();
     void setPaintHandler( PaintHandler* paintHandler );
     void setFrame(Frame *frame);
@@ -23,8 +24,10 @@ class DrawArea : public QGraphicsView {
     virtual void mouseMoveEvent( QMouseEvent* event );
     virtual void mouseReleaseEvent( QMouseEvent* event );
 
-signals:
+ signals:
     void addAction( Action* action );
 };
+
+
 
 #endif

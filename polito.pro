@@ -22,6 +22,8 @@ SOURCES += src/main.cpp\
     src/scrubber.cpp \
     src/previewarea.cpp \
     src/animation.cpp \
+    src/frame.cpp \
+    src/layer.cpp \
     src/toolbar.cpp
 
 HEADERS  += src/mainwindow.h \
@@ -33,6 +35,9 @@ HEADERS  += src/mainwindow.h \
     src/scrubber.h \
     src/previewarea.h \
     src/animation.h \
+    src/frame.h \
+    src/layer.h \
+    src/animationeventemitter.h \
     src/toolbar.h
 
 FORMS    += src/mainwindow.ui \

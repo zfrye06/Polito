@@ -1,12 +1,15 @@
 #include "drawarea.h"
 
+DrawArea::DrawArea(Frame *frame):
+    frame(frame), currentPaintHandler(new PaintBrush()) {}
+
 DrawArea::~DrawArea() {
     delete currentPaintHandler;
 }
 
 void DrawArea::setPaintHandler(PaintHandler* currentPaintHandler) {
     delete currentPaintHandler;
-    currentPaintHandler = currentPaintHandler;
+    this->currentPaintHandler = currentPaintHandler;
 }
 
 void DrawArea::setFrame(Frame *frame) {
