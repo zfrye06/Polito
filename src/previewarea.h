@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QLayout>
 #include <QGraphicsView>
+#include <QTimer>
 #include <memory>
 #include <vector>
 #include "animation.h"
@@ -19,9 +20,18 @@ public:
 signals:
 
 public slots:
+    void playAnimation();
+    void pauseAnimation();
+    void goToNextFrameIsPlaying();
+    void goToNextFrame();
+    void goToPreviousFrame();
 
 private:
+    bool isPlaying = false;
+    int currentFrameNumber = 0;
+
     const vector<unique_ptr<Frame>> &frames;
+    QTimer* timer;
 
     QVBoxLayout* previewLayout;
     QHBoxLayout* buttonLayout;
