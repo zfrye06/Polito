@@ -7,16 +7,6 @@
 #include <QIcon>
 #include <QPixmap>
 
-/*To do:
- * The only important information LayerMenu sends out to the model
- * is index numbers: the index of whatever layer has just been deleted,
- * added, the indexes of layers that have been swapped when one moves up or down,
- * or the index of the layer that has become the active layer. So what
- * is the best way to share this information with the model? Emit a signal
- * every time layer index information is changed? Have public instance variables
- * storing the state of each relevant index?
- * */
-
 LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     addLayerButton = new QPushButton(this);
     addLayerButton->setText("Add Layer");
@@ -162,9 +152,6 @@ void LayerMenu::unhighlightGroupBox(QGroupBox* oldActiveLayerBox){
 
 void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
 {
-//    if (layers.size() == 1) {
-//        return;
-//    }
     int index = layers.indexOf(layerToBeDeleted);
     layerNames.remove(index);
     foreach(auto child, layerToBeDeleted->children()){
@@ -228,6 +215,7 @@ void LayerMenu::moveLayerUpButtonClicked(){
         layerNames[index] = layerNames[index-1];
         layerNames[index-1] = temp;
         redrawLayerMenu();
+        emit layersSwappedSignal(index, index-1);
     }
 }
 
@@ -239,5 +227,6 @@ void LayerMenu::moveLayerDownButtonClicked(){
         layerNames[index] = layerNames[index+1];
         layerNames[index+1] = temp;
         redrawLayerMenu();
+        emit layersSwappedSignal(index, index+1);
     }
 }
