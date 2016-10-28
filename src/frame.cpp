@@ -101,11 +101,7 @@ void Frame::setActiveLayer(int index) {
     if (index < 0 || index >= (int)layers.size()) {
         throw std::invalid_argument("Index out of bounds");
     }
-    if (index != activeLayerIndex) {
-        layers[activeLayerIndex]->setEnabled(false);
-        activeLayerIndex = index;
-        layers[activeLayerIndex]->setEnabled(true);
-    }
+    activeLayerIndex = index;
 }
 
 int Frame::activeLayerIdx() const {
@@ -128,7 +124,7 @@ void Frame::clear() {
     gscene.clear();
     layers.clear();
     addLayer();
-    setActiveLayer(0);
+    activeLayerIndex = 0;
 }
 
 QGraphicsScene& Frame::scene() { return gscene; }
