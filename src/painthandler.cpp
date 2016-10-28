@@ -38,3 +38,22 @@ void PaintBrush::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPoint
 
 void PaintBrush::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) {
 }
+
+Eraser::~Eraser() {
+}
+
+void Eraser::mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos ) {
+    lastMousePoint = pos;
+}
+
+void Eraser::mouseMoveEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos ) {
+    QPainter painter(&image);
+    painter.setCompositionMode(QPainter::CompositionMode_Clear);
+    painter.setPen(QPen(Qt::white, 5, Qt::SolidLine, Qt::RoundCap,
+                      Qt::RoundJoin));
+    painter.drawLine(lastMousePoint, pos);
+    lastMousePoint = pos;
+}
+
+void Eraser::mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos ) {
+}

@@ -68,6 +68,8 @@ void MainWindow::initWidgets() {
 
     drawArea->setScene(&animation.activeFrame()->scene());
 
+    connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
+
     layout->addWidget(splitter);
 
     splitter->setOrientation(Qt::Vertical);

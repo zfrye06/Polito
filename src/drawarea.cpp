@@ -7,10 +7,10 @@ DrawArea::~DrawArea() {
     delete currentPaintHandler;
 }
 
-void DrawArea::setPaintHandler(PaintHandler *handler) {
+void DrawArea::setPaintHandler( PaintHandler* handler ) {
     handler->settings = currentPaintHandler->settings;
     delete currentPaintHandler;
-    this->currentPaintHandler = currentPaintHandler;
+    currentPaintHandler = handler;
 }
 
 PaintHandler &DrawArea::paintHandler() {

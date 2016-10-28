@@ -7,6 +7,8 @@
 #include <QButtonGroup>
 #include <QColorDialog>
 
+#include "painthandler.h"
+
 class Toolbar : public QWidget {
     Q_OBJECT
 public:
@@ -15,7 +17,8 @@ public:
 signals:
     
     void colorChanged(QColor);
-    
+    void setPaintHandler( PaintHandler* paintHandler );
+
 public slots:
     void getColor();
 
@@ -28,14 +31,18 @@ private:
 
     QPushButton* moveButton;
     QPushButton* brushButton;
+    QPushButton* eraseButton;
     QPushButton* fillButton;
     QPushButton* colorButton;
 
     QIcon brushIcon = QIcon(QPixmap(":/icons/brush"));
+    QIcon eraseIcon = QIcon(QPixmap(":/icons/erase"));
     QIcon moveIcon = QIcon(QPixmap(":/icons/pan"));
     QIcon fillIcon = QIcon(QPixmap(":/icons/fill"));
     QIcon colorIcon = QIcon(QPixmap(":/icons/palette"));
 
+    void setBrush();
+    void setEraser();
     void initWidgets();
     void initConnections();
 };

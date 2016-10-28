@@ -9,6 +9,7 @@
 
 struct PaintSettings {
     QColor color;
+    int brushWidth;
 
     static PaintSettings defaults();
 };
@@ -25,12 +26,23 @@ public:
 };
 
 class PaintBrush: public PaintHandler {
- public:
+private:
     QPointF lastMousePoint;
+public:
     virtual ~PaintBrush();
     virtual void mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
     virtual void mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
     virtual void mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+};
+
+class Eraser: public PaintHandler {
+private:
+    QPointF lastMousePoint;
+public:
+    virtual ~Eraser();
+    virtual void mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );
+    virtual void mouseMoveEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );
+    virtual void mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );
 };
 
 #endif
