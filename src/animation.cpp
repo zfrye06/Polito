@@ -11,8 +11,8 @@ QRectF Layer::boundingRect() const {
     return QRectF(image->rect());
 }
 
-std::shared_ptr<QPixmap> Layer::pixmap() {
-    return image;
+QPixmap &Layer::pixmap() {
+    return *image.get();
 }
 
 void Layer::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,

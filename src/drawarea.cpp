@@ -18,7 +18,7 @@ void DrawArea::mousePressEvent(QMouseEvent* event) {
         return;
     }
     
-    auto imgCpy = std::shared_ptr<QPixmap>(new QPixmap(*frame->activeLayer()->pixmap()));
+    auto imgCpy = std::shared_ptr<QPixmap>(new QPixmap(frame->activeLayer()->pixmap()));
     currentAction = new DrawAction(frame->activeLayer(), imgCpy);
     
     QPointF pos = mapToScene(event->pos());
@@ -46,7 +46,7 @@ void DrawArea::mouseReleaseEvent(QMouseEvent* event) {
     QPointF pos = mapToScene(event->pos());
     currentPaintHandler->mouseReleaseEvent(frame->activeLayer()->pixmap(), event->buttons(), pos );
 
-    auto imgCpy = std::shared_ptr<QPixmap>(new QPixmap(*frame->activeLayer()->pixmap()));
+    auto imgCpy = std::shared_ptr<QPixmap>(new QPixmap(frame->activeLayer()->pixmap()));
     currentAction->finish(imgCpy);
     emit addAction(currentAction);
     

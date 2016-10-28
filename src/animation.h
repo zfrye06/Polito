@@ -51,7 +51,7 @@ class Layer : public QGraphicsItem {
     Layer(AnimationEventEmitter &);
     QRectF boundingRect() const override;
     void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
-    std::shared_ptr<QPixmap> pixmap();
+    QPixmap &pixmap();
 
  private:
 
