@@ -148,7 +148,7 @@ void LayerMenu::activeLayerChanged(){
 
 void LayerMenu::highlightGroupBox(QGroupBox* newActiveLayerBox){
     QPalette Pal(palette());
-    Pal.setColor(QPalette::Background, Qt::blue);
+    Pal.setColor(QPalette::Background, QColor(120,130,250,100));
     newActiveLayerBox->setAutoFillBackground(true);
     newActiveLayerBox->setPalette(Pal);
     newActiveLayerBox->show();
@@ -162,9 +162,9 @@ void LayerMenu::unhighlightGroupBox(QGroupBox* oldActiveLayerBox){
 
 void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
 {
-    if (layers.size() == 1) {
-        return;
-    }
+//    if (layers.size() == 1) {
+//        return;
+//    }
     int index = layers.indexOf(layerToBeDeleted);
     layerNames.remove(index);
     foreach(auto child, layerToBeDeleted->children()){
@@ -175,6 +175,7 @@ void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
     delete layerToBeDeleted;
     layers.remove(index);
     emit layerDeletedSignal(index);
+    //If the active layer was deleted, we make the bottom layer the active layer
     if (index == indexOfActiveLayer){
         if(layers.size() > 0){
             indexOfActiveLayer = 0;

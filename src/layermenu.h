@@ -52,6 +52,10 @@ private:
     void addLayer(QString layerName);
     void highlightGroupBox(QGroupBox*);
     void unhighlightGroupBox(QGroupBox*);
+
+    //Helper methods for redrawLayerMenu()
+    //without modifying the layerNames vector
+    //or emitting unnecessary/harmful signals:
     void deleteLayerWithoutEmittingSignals(QGroupBox*);
     void addLayerWithoutEmittingSignals(QString layerName);
 
