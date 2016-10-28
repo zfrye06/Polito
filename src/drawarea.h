@@ -18,11 +18,13 @@ public:
     }
 
     ~DrawArea();
-    void setPaintHandler( PaintHandler* paintHandler );
 
     virtual void mousePressEvent( QMouseEvent* event );
     virtual void mouseMoveEvent( QMouseEvent* event );
     virtual void mouseReleaseEvent( QMouseEvent* event );
+
+public slots:
+    void setPaintHandler( PaintHandler* paintHandler );
 
 signals:
     void addAction( Action* action );

@@ -5,8 +5,8 @@ DrawArea::~DrawArea() {
 }
 
 void DrawArea::setPaintHandler( PaintHandler* currentPaintHandler ) {
-    delete currentPaintHandler;
-    currentPaintHandler = currentPaintHandler;
+    delete this->currentPaintHandler;
+    this->currentPaintHandler = currentPaintHandler;
 }
 
 void DrawArea::mousePressEvent( QMouseEvent* event ) {

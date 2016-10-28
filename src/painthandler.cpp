@@ -29,3 +29,22 @@ void PaintBrush::mouseMoveEvent( std::shared_ptr<QPixmap> image, Qt::MouseButton
 
 void PaintBrush::mouseReleaseEvent( std::shared_ptr<QPixmap> image, Qt::MouseButtons buttons, QPointF pos ) {
 }
+
+Eraser::~Eraser() {
+}
+
+void Eraser::mousePressEvent( std::shared_ptr<QPixmap> image, Qt::MouseButtons buttons, QPointF pos ) {
+    lastMousePoint = pos;
+}
+
+void Eraser::mouseMoveEvent( std::shared_ptr<QPixmap> image, Qt::MouseButtons buttons, QPointF pos ) {
+    QPainter painter(image.get());
+    painter.setCompositionMode(QPainter::CompositionMode_Clear);
+    painter.setPen(QPen(Qt::white, 5, Qt::SolidLine, Qt::RoundCap,
+                      Qt::RoundJoin));
+    painter.drawLine(lastMousePoint, pos);
+    lastMousePoint = pos;
+}
+
+void Eraser::mouseReleaseEvent( std::shared_ptr<QPixmap> image, Qt::MouseButtons buttons, QPointF pos ) {
+}
