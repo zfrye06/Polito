@@ -27,7 +27,9 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     layerMenuLayout->addWidget(addLayerButton);
     this->setLayout(layerMenuLayout);
     addLayer("Layer1");
+    //We initialize the active layer to be 0:
     indexOfActiveLayer = 0;
+    emit activeLayerChangedSignal(indexOfActiveLayer);
 }
 
 void LayerMenu::redrawLayerMenu(){
@@ -79,12 +81,17 @@ void LayerMenu::addLayer(QString layerName){
 
     layerMenuLayout->addWidget(groupBox);
 
-    //emitAddLayerSignal(new AddLayerAction());
+    int indexOfAddedLayer = layers.indexOf(groupBox);
+    emit layerAddedSignal(indexOfAddedLayer);
 }
 
 void LayerMenu::activeLayerChanged(){
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
     indexOfActiveLayer = layers.indexOf(thisBox);
+    emit activeLayerChangedSignal(indexOfActiveLayer);
+
+    //Add code to change color of QGroupBox at indexOfActiveLayer
+    //layers.at(indexOfActiveLayer)->palette();
 }
 
 void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
@@ -99,6 +106,7 @@ void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
     delete layerToBeDeleted->layout();
     delete layerToBeDeleted;
     layers.remove(index);
+    emit layerDeletedSignal(index);
 }
 
 void LayerMenu::addLayerButtonClicked() {
@@ -107,7 +115,6 @@ void LayerMenu::addLayerButtonClicked() {
 
 void LayerMenu::deleteLayerButtonClicked() {
     deleteLayer(qobject_cast<QGroupBox*>(sender()->parent()));
-    //emit an action for undo/redo
 }
 
 void LayerMenu::textChanged(){

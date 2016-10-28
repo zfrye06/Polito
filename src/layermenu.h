@@ -17,30 +17,20 @@ class LayerMenu : public QWidget {
     Q_OBJECT
 public:
     explicit LayerMenu(QWidget *parent = 0);
-    //The active layer is the one where the
-    //cursor is blinking in the text box with the blue border
-    //The bottom layer (listed at the top of the LayerMenu)
-    //has index 0.
-    int indexOfActiveLayer;
-
-//    void emitAddLayerSignal(AddLayerAction* action){
-//        emit addLayerSignal(action);
-//    }
 
 signals:
-
-   // void addLayerSignal(AddLayerAction*);
+    void layerAddedSignal (int indexOfAddedLayer);
+    void layersSwappedSignal (int indexOfLayer1, int indexOfLayer2);
+    void layerDeletedSignal (int indexOfDeletedLayer);
+    void activeLayerChangedSignal (int indexOfActiveLayer);
 
 public slots:
     void addLayerButtonClicked();
     void deleteLayerButtonClicked();
-    //void layerBoxClicked();
     void textChanged();
     void moveLayerUpButtonClicked();
     void moveLayerDownButtonClicked();
     void activeLayerChanged();
-//    void selectionChangedSlot(const QItemSelection&, const QItemSelection&);
-
 
 protected:
 
@@ -52,7 +42,8 @@ private:
     QVector<QString> layerNames;
     QPushButton* addLayerButton;
     QVBoxLayout* layerMenuLayout;
-    //QGroupBox* selectedLayer;
+    int indexOfActiveLayer;
+
 
     void redrawLayerMenu();
     void deleteLayer(QGroupBox* layerToBeDeleted);
