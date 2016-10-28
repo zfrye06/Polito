@@ -22,6 +22,8 @@ signals:
     void layerAddedSignal (int indexOfAddedLayer);
     void layersSwappedSignal (int indexOfLayer1, int indexOfLayer2);
     void layerDeletedSignal (int indexOfDeletedLayer);
+    //If there is no active layer (because all layers have been deleted)
+    //then a -1 is emitted.
     void activeLayerChangedSignal (int indexOfActiveLayer);
 
 public slots:
@@ -50,6 +52,8 @@ private:
     void addLayer(QString layerName);
     void highlightGroupBox(QGroupBox*);
     void unhighlightGroupBox(QGroupBox*);
+    void deleteLayerWithoutEmittingSignals(QGroupBox*);
+    void addLayerWithoutEmittingSignals(QString layerName);
 
 
 };
