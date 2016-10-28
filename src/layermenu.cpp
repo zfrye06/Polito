@@ -8,21 +8,13 @@
 #include <QPixmap>
 
 /*To do:
- * Allow deleting layers;
- * use another button or just delete key?
- * Actually hook up LayerMenu to model.
- * Fix drag-and-drop copying layer names.
- * Add destructor?
- * Do I need all these instance variables
- * dynamically allocated in constructor,
- * or just declare them statically in constructor?
- * How do I get access to the animation vector<Frame>?
- * Pass a reference into the layer menu constructor?
- * Each Frame has its own set of layers that are
- * totally independent from the layers of other frames, right?
- * Add a button to change the active layer, allow only one at a time
- * (unfortunately, QGroupBoxes do not emit a suitable signal for clicked)
- *
+ * The only important information LayerMenu sends out to the model
+ * is index numbers: the index of whatever layer has just been deleted,
+ * added, the indexes of layers that have been swapped when one moves up or down,
+ * or the index of the layer that has become the active layer. So what
+ * is the best way to share this information with the model? Emit a signal
+ * every time layer index information is changed? Have public instance variables
+ * storing the state of each relevant index?
  * */
 
 LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
@@ -35,10 +27,7 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     layerMenuLayout->addWidget(addLayerButton);
     this->setLayout(layerMenuLayout);
     addLayer("Layer1");
-
-    //    QItemSelectionModel *selectionModel = listOfLayers->selectionModel();
-    //    connect(selectionModel, SIGNAL(selectionChanged (const QItemSelection &, const QItemSelection &)),
-    //            this, SLOT(selectionChangedSlot(const QItemSelection &, const QItemSelection &)));
+    indexOfActiveLayer = 0;
 }
 
 void LayerMenu::redrawLayerMenu(){
@@ -56,16 +45,14 @@ void LayerMenu::addLayer(QString layerName){
     groupBox->setParent(this);
     //groupBox->setContentsMargins(0,0,0,0);
     //groupBox->setCheckable(true);
-    //connect(groupBox, &QGroupBox::clicked, this, &LayerMenu::layerBoxClicked);
-    layers.append(groupBox);
 
-    // QLabel* showHide = new QLabel("show/hide");
+    layers.append(groupBox);
 
     QLineEdit* label = new QLineEdit(layerName);
     label->setParent(groupBox);
     layerNames.append(layerName);
     connect(label, &QLineEdit::textChanged, this, &LayerMenu::textChanged);
-    //connect(label, &QLineEdit::clicked, this, &LayerMenu::layerBoxClicked);
+    connect(label, &QLineEdit::cursorPositionChanged, this, &LayerMenu::activeLayerChanged);
 
     QPushButton* moveLayerUpButton = new QPushButton();
     moveLayerUpButton->setIcon(upArrow);
@@ -96,26 +83,9 @@ void LayerMenu::addLayer(QString layerName){
 }
 
 void LayerMenu::activeLayerChanged(){
-
+    QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
+    indexOfActiveLayer = layers.indexOf(thisBox);
 }
-
-//void LayerMenu::layerBoxClicked(){
-//    QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender());
-//    if (selectedLayer == NULL){
-//        selectedLayer = thisBox;
-//    }
-//    else{
-//        //old selected layer restore old format
-
-
-//    }
-//    //now highlight the new selected layer and then assign it
-//    QPalette p = thisBox->palette();
-//    p.setColor(QPalette::Dark, Qt::white);
-//    thisBox->setPalette(p);
-//    selectedLayer = thisBox;
-//}
-
 
 void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
 {
@@ -146,10 +116,6 @@ void LayerMenu::textChanged(){
     int index = layers.indexOf(thisBox);
     layerNames[index] = newText;
 }
-
-//void LayerMenu::selectionChangedSlot(const QItemSelection& selected, const QItemSelection& deselected){
-//    //selectedIndices = selected.indexes();
-//}
 
 void LayerMenu::moveLayerUpButtonClicked(){
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
