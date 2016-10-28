@@ -86,7 +86,7 @@ void Frame::removeLayerInternal(Layer *layer, int index) {
     for (auto i = index; i < (int)layers.size(); i++) {
         layers[i]->setZValue(i);
     }
-    if (index > activeLayerIndex) {
+    if (index < activeLayerIndex) {
         activeLayerIndex--;
     }
     else if (index == activeLayerIndex) {

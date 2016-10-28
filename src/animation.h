@@ -19,6 +19,8 @@ class Animation {
 
     void addFrame(int index);
 
+    void moveFrame(int fromIndex, int toIndex);
+
     void removeFrame(int index);
 
     void setActiveFrame(int index);
