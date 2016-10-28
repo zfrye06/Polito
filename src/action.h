@@ -22,9 +22,24 @@
  */
 class Action {
 public:
+
+    /**
+     * @brief This may be unused on your actions, but when they are deconstructed
+     * they may need to release some memory.
+     */
     virtual ~Action();
-    virtual void undo();
-    virtual void redo();
+
+    /**
+     * @brief This should load the state saved before the action completed.
+     */
+    virtual void undo() = 0;
+
+    /**
+     * @brief This should load the state saved after the action completed, there may
+     * be extra implemented functions to help with this.
+     * DrawAction::finish()).
+     */
+    virtual void redo() = 0;
 };
 
 /**

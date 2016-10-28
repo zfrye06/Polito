@@ -20,16 +20,15 @@ public:
     
     PaintHandler();
     virtual ~PaintHandler();
-    virtual void mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
-    virtual void mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
-    virtual void mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+    virtual void mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) = 0;
+    virtual void mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) = 0;
+    virtual void mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) = 0;
 };
 
 class PaintBrush: public PaintHandler {
 private:
     QPointF lastMousePoint;
 public:
-    virtual ~PaintBrush();
     virtual void mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
     virtual void mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
     virtual void mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
@@ -39,7 +38,6 @@ class Eraser: public PaintHandler {
 private:
     QPointF lastMousePoint;
 public:
-    virtual ~Eraser();
     virtual void mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );
     virtual void mouseMoveEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );
     virtual void mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );

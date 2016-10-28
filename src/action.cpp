@@ -8,25 +8,7 @@
 
 #include "action.h"
 
-/**
- * @brief This may be unused on your actions, but when they are deconstructed
- * they may need to release some memory.
- */
 Action::~Action() {
-}
-
-/**
- * @brief This should load the state saved before the action completed.
- */
-void Action::undo() {
-}
-
-/**
- * @brief This should load the state saved after the action completed, there may
- * be extra implemented functions to help with this. (For example
- * ScribbleAction::finish()).
- */
-void Action::redo() {
 }
 
 ActionHistory::ActionHistory() {
