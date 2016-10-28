@@ -2,9 +2,9 @@
 #include <QObject>
 
 Toolbar::Toolbar(QWidget *parent) : QWidget(parent){
-    initWidgets();
-    initConnections();
-    setParent(parent);
+    this->initWidgets();
+    this->initConnections();
+    this->setParent(parent);
 }
 
 void Toolbar::initWidgets(){
@@ -73,6 +73,5 @@ void Toolbar::setEraser() {
 }
 
 void Toolbar::getColor(){
-    currentColor = colorPicker->getColor();
-    emit colorChanged(currentColor);
+    emit colorChanged(colorPicker->getColor());
 }

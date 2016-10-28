@@ -27,8 +27,6 @@ private:
     QButtonGroup* buttonGroup;
     QColorDialog* colorPicker;
 
-    QColor currentColor;
-
     QPushButton* moveButton;
     QPushButton* brushButton;
     QPushButton* eraseButton;
