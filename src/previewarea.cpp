@@ -43,8 +43,8 @@ void PreviewArea::initWidgets(){
 
     buttonLayout->addWidget(playButton);
     buttonLayout->addWidget(pauseButton);
-    buttonLayout->addWidget(nextFrame);
     buttonLayout->addWidget(previousFrame);
+    buttonLayout->addWidget(nextFrame);
 
     previewLayout->addWidget(currentFrame);
     previewLayout->addLayout(buttonLayout);

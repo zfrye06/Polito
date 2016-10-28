@@ -34,12 +34,18 @@ private:
     QPushButton* eraseButton;
     QPushButton* fillButton;
     QPushButton* colorButton;
+    QPushButton* circleButton;
+    QPushButton* squareButton;
+    QPushButton* lineButton;
 
     QIcon brushIcon = QIcon(QPixmap(":/icons/brush"));
     QIcon eraseIcon = QIcon(QPixmap(":/icons/erase"));
     QIcon moveIcon = QIcon(QPixmap(":/icons/pan"));
     QIcon fillIcon = QIcon(QPixmap(":/icons/fill"));
     QIcon colorIcon = QIcon(QPixmap(":/icons/palette"));
+    QIcon circleIcon = QIcon(QPixmap(":/icons/circle"));
+    QIcon squareIcon = QIcon(QPixmap(":/icons/square"));
+    QIcon lineIcon = QIcon(QPixmap(":/icons/line"));
 
     void setBrush();
     void setEraser();

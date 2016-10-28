@@ -13,39 +13,48 @@ void Toolbar::initWidgets(){
     buttonGroup = new QButtonGroup(this);
     colorPicker = new QColorDialog(this);
 
-    moveButton = new QPushButton;
-    brushButton = new QPushButton;
-    eraseButton = new QPushButton;
-    fillButton = new QPushButton;
-    colorButton = new QPushButton;
+    moveButton = new QPushButton(moveIcon, "");
+    brushButton = new QPushButton(brushIcon, "");
+    eraseButton = new QPushButton(eraseIcon, "");
+    fillButton = new QPushButton(fillIcon, "");
+    colorButton = new QPushButton(colorIcon, "");
+    circleButton = new QPushButton(circleIcon, "");
+    lineButton = new QPushButton(lineIcon, "");
+    squareButton = new QPushButton(squareIcon, "");
 
     fillButton->setCheckable(true);
     brushButton->setCheckable(true);
     eraseButton->setCheckable(true);
     moveButton->setCheckable(true);
+    circleButton->setCheckable(true);
+    lineButton->setCheckable(true);
+    squareButton->setCheckable(true);
 
     brushButton->setFixedSize(size);
     eraseButton->setFixedSize(size);
     fillButton->setFixedSize(size);
     moveButton->setFixedSize(size);
     colorButton->setFixedSize(size);
-
-    brushButton->setIcon(brushIcon);
-    moveButton->setIcon(moveIcon);
-    eraseButton->setIcon(eraseIcon);
-    fillButton->setIcon(fillIcon);
-    colorButton->setIcon(colorIcon);
+    circleButton->setFixedSize(size);
+    squareButton->setFixedSize(size);
+    lineButton->setFixedSize(size);
 
     buttonGroup->addButton(brushButton);
     buttonGroup->addButton(moveButton);
     buttonGroup->addButton(eraseButton);
     buttonGroup->addButton(fillButton);
+    buttonGroup->addButton(circleButton);
+    buttonGroup->addButton(squareButton);
+    buttonGroup->addButton(lineButton);
     buttonGroup->setExclusive(true);
 
     toolsLayout->addWidget(brushButton);
     toolsLayout->addWidget(eraseButton);
     toolsLayout->addWidget(moveButton);
     toolsLayout->addWidget(fillButton);
+    toolsLayout->addWidget(circleButton);
+    toolsLayout->addWidget(squareButton);
+    toolsLayout->addWidget(lineButton);
     toolsLayout->addWidget(colorButton);
 }
 
