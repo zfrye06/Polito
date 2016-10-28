@@ -59,6 +59,7 @@ private:
     QSplitter *lowerArea;
     
     void initActions();
+    void initSignals();
     void initWidgets();
 };
 
