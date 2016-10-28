@@ -17,9 +17,11 @@ class LayerMenu : public QWidget {
     Q_OBJECT
 public:
     explicit LayerMenu(QWidget *parent = 0);
-    void deleteLayer(QGroupBox* layerToBeDeleted);
-    void addLayer(QString layerName);
-    void redrawLayerMenu();
+    //The active layer is the one where the
+    //cursor is blinking in the text box with the blue border
+    //The bottom layer (listed at the top of the LayerMenu)
+    //has index 0.
+    int indexOfActiveLayer;
 
 //    void emitAddLayerSignal(AddLayerAction* action){
 //        emit addLayerSignal(action);
@@ -32,29 +34,31 @@ signals:
 public slots:
     void addLayerButtonClicked();
     void deleteLayerButtonClicked();
-    void layerBoxClicked();
+    //void layerBoxClicked();
     void textChanged();
     void moveLayerUpButtonClicked();
     void moveLayerDownButtonClicked();
+    void activeLayerChanged();
 //    void selectionChangedSlot(const QItemSelection&, const QItemSelection&);
 
 
 protected:
 
 private:
-    //Each QGroupBox
     QIcon upArrow = QIcon(QPixmap(":/icons/up"));
     QIcon downArrow = QIcon(QPixmap(":/icons/down"));
     QIcon deleteX = QIcon(QPixmap(":/icons/delete"));
     QVector<QGroupBox*> layers;
     QVector<QString> layerNames;
     QPushButton* addLayerButton;
-    //QPushButton* moveLayerUpButton;
-    //QPushButton* moveLayerDownButton;
     QVBoxLayout* layerMenuLayout;
-    QGroupBox* selectedLayer;
-    //The layer that has most recently been deleted.
-    //QGroupBox* deletedLayer;
+    //QGroupBox* selectedLayer;
+
+    void redrawLayerMenu();
+    void deleteLayer(QGroupBox* layerToBeDeleted);
+    void addLayer(QString layerName);
+
+
 };
 
 #endif // LAYERMENU_H
