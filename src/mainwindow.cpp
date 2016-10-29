@@ -127,34 +127,21 @@ void MainWindow::initSignals() {
 
     connect(layerMenu, &LayerMenu::layerAddedSignal,
             this, [this](int index) {
-                Frame *frame = animation.activeFrame();
-                if (index > 0 && index <= frame->numlayers()) {
-                    frame->addLayer(index);
-                }
+                animation.activeFrame()->addLayer(index);
     });
 
     connect(layerMenu, &LayerMenu::layersSwappedSignal,
             this, [this](int from, int to) {
-                Frame *frame = animation.activeFrame();
-                if (from >= 0 && from < frame->numlayers() &&
-                    to >= 0 && to < frame->numlayers()) {
-                    frame->moveLayer(from, to);
-                }
+                animation.activeFrame()->moveLayer(from, to);
     });
 
     connect(layerMenu, &LayerMenu::layerDeletedSignal,
             this, [this](int index) {
-                Frame *frame = animation.activeFrame();
-                if (index > 0 && index <= frame->numlayers() && frame->numlayers() > 0) {
-                    frame->removeLayer(index);
-                }
+                animation.activeFrame()->removeLayer(index);
      });
 
     connect(layerMenu, &LayerMenu::activeLayerChangedSignal,
             this, [this](int to) {
-                Frame *frame = animation.activeFrame();
-                if (to > 0 && to < frame->numlayers()) {
-                    frame->setActiveLayer(to);
-                }
+                animation.activeFrame()->setActiveLayer(to);
     });
 }
