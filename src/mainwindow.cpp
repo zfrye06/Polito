@@ -136,8 +136,8 @@ void MainWindow::initSignals() {
     connect(layerMenu, &LayerMenu::layersSwappedSignal,
             this, [this](int from, int to) {
                 Frame *frame = animation.activeFrame();
-                if (from > 0 && from < frame->numlayers() &&
-                    to > 0 && to < frame->numlayers()) {
+                if (from >= 0 && from < frame->numlayers() &&
+                    to >= 0 && to < frame->numlayers()) {
                     frame->moveLayer(from, to);
                 }
     });
