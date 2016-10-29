@@ -4,7 +4,7 @@
 #include "mainwindow.h"
 #include "imagesizedialog.h"
 
-MainWindow::MainWindow() : animation(emitter), drawArea(new DrawArea(animation.activeFrame())) {
+MainWindow::MainWindow() : animation(emitter), drawArea(new DrawArea(&animation.activeFrame())) {
     initActions();
     initWidgets();
     initSignals();
@@ -51,7 +51,7 @@ void MainWindow::initActions() {
     clearScreenAct->setShortcut(tr("Ctrl+L"));
     connect(clearScreenAct, &QAction::triggered,
             this, [this] {
-        animation.activeFrame()->clear();
+        animation.activeFrame().clear();
     });
 
 }
@@ -66,7 +66,7 @@ void MainWindow::initWidgets() {
     layerMenu = new LayerMenu(window);
     previewArea = new PreviewArea(window, animation.getFrames());
 
-    drawArea->setScene(&animation.activeFrame()->scene());
+    drawArea->setScene(&animation.activeFrame().scene());
 
     connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
 
@@ -127,21 +127,21 @@ void MainWindow::initSignals() {
 
     connect(layerMenu, &LayerMenu::layerAddedSignal,
             this, [this](int index) {
-                animation.activeFrame()->addLayer(index);
+                animation.activeFrame().addLayer(index);
     });
 
     connect(layerMenu, &LayerMenu::layersSwappedSignal,
             this, [this](int from, int to) {
-                animation.activeFrame()->moveLayer(from, to);
+                animation.activeFrame().moveLayer(from, to);
     });
 
     connect(layerMenu, &LayerMenu::layerDeletedSignal,
             this, [this](int index) {
-                animation.activeFrame()->removeLayer(index);
+                animation.activeFrame().removeLayer(index);
      });
 
     connect(layerMenu, &LayerMenu::activeLayerChangedSignal,
             this, [this](int to) {
-                animation.activeFrame()->setActiveLayer(to);
+                animation.activeFrame().setActiveLayer(to);
     });
 }

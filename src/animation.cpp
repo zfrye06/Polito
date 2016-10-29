@@ -61,8 +61,8 @@ void Animation::setActiveFrame(int index) {
     activeFrameIndex = index;
 }
 
-Frame* Animation::activeFrame() {
-    return frames[activeFrameIndex].get();
+Frame &Animation::activeFrame() {
+    return *frames[activeFrameIndex];
 }
 
 void Animation::resize(int dim) {

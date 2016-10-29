@@ -25,7 +25,7 @@ class Animation {
 
     void setActiveFrame(int index);
 
-    Frame* activeFrame();
+    Frame &activeFrame();
 
     // Resizes every frame in this animation to the given dimension.
     // TODO: Add appropriately-typed size parameter.
