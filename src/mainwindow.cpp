@@ -4,7 +4,7 @@
 #include "mainwindow.h"
 #include "imagesizedialog.h"
 
-MainWindow::MainWindow() : animation(emitter), drawArea(new DrawArea(&animation.activeFrame())) {
+MainWindow::MainWindow() : animation(emitter) {
     initActions();
     initWidgets();
     initSignals();
@@ -63,8 +63,10 @@ void MainWindow::initWidgets() {
     upperArea = new QSplitter(window);
     lowerArea = new QSplitter(window);
     toolbar = new Toolbar(window);
-    layerMenu = new LayerMenu(window);
+    drawArea = new DrawArea(&animation.activeFrame());
+    scrubber = new Scrubber(window);
     previewArea = new PreviewArea(window, animation.getFrames());
+    layerMenu = new LayerMenu(window);
 
     drawArea->setScene(&animation.activeFrame().scene());
 
@@ -120,9 +122,42 @@ void MainWindow::initSignals() {
     connect(drawArea, &DrawArea::addAction,
             &actionHistory, &ActionHistory::addAction);
 
+    connect(&emitter, &AnimationEventEmitter::addFrameEvent,
+            &actionHistory, &ActionHistory::addAction);
+
+    connect(&emitter, &AnimationEventEmitter::moveFrameEvent,
+            &actionHistory, &ActionHistory::addAction);
+
+    connect(&emitter, &AnimationEventEmitter::removeFrameEvent,
+            &actionHistory, &ActionHistory::addAction);
+
+    connect(&emitter, &AnimationEventEmitter::addLayerEvent,
+            &actionHistory, &ActionHistory::addAction);
+
+    connect(&emitter, &AnimationEventEmitter::moveLayerEvent,
+            &actionHistory, &ActionHistory::addAction);
+
+    connect(&emitter, &AnimationEventEmitter::removeLayerEvent,
+            &actionHistory, &ActionHistory::addAction);
+
     connect(toolbar, &Toolbar::colorChanged,
             this, [this](QColor to){
                 drawArea->paintHandler().settings.color = to;
+    });
+
+    connect(scrubber, &Scrubber::frameAdded,
+            this, [this](int index) {
+                animation.addFrame(index);
+    });
+
+    connect(scrubber, &Scrubber::frameMoved,
+            this, [this](int from, int to) {
+                animation.moveFrame(from, to);
+    });
+
+    connect(scrubber, &Scrubber::frameRemoved,
+            this, [this](int index) {
+                animation.removeFrame(index);
     });
 
     connect(layerMenu, &LayerMenu::layerAddedSignal,
@@ -144,4 +179,5 @@ void MainWindow::initSignals() {
             this, [this](int to) {
                 animation.activeFrame().setActiveLayer(to);
     });
+
 }

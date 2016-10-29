@@ -10,12 +10,14 @@
 #include <QGridLayout>
 #include <QSplitter>
 #include "action.h"
-#include "drawarea.h"
 #include "animation.h"
+#include "drawarea.h"
 #include "imagesizedialog.h"
-#include "toolbar.h"
 #include "layermenu.h"
 #include "previewarea.h"
+#include "scrubber.h"
+#include "toolbar.h"
+
 
 class DrawArea;
 
@@ -37,12 +39,14 @@ private:
     AnimationEventEmitter emitter;
     Animation animation;
     ActionHistory actionHistory;
+    
     Toolbar *toolbar;
-    PreviewArea *previewArea;
-
     DrawArea *drawArea;
-    ImageSizeDialog *d;
+    Scrubber *scrubber;
+    PreviewArea *previewArea;
     LayerMenu *layerMenu;
+    
+    ImageSizeDialog *d;
     QMenu *saveAsMenu;
     QMenu *fileMenu;
     QMenu *editMenu;

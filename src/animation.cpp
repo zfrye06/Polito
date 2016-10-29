@@ -11,9 +11,17 @@ void Animation::addFrame() {
 }
 
 void Animation::addFrame(int index) {
+    if (index < 0 || index > frames.size()) {
+        throw std::invalid_argument("Index out of bounds.");
+    }
     std::unique_ptr<Frame> f(new Frame(emitter));
+    addFrameInternal(std::move(f), index);
+    emitter.emitAddFrameEvent(new AddFrameAction(this, index));
+}
+
+void Animation::addFrameInternal(std::unique_ptr<Frame> f, int index) {
     frames.insert(frames.begin() + index, std::move(f));
-    if (activeFrameIndex == index){
+    if (activeFrameIndex >= index){
         activeFrameIndex++;  
     } 
 }
@@ -23,6 +31,11 @@ void Animation::moveFrame(int fromIndex, int toIndex) {
         toIndex < 0 || toIndex >= (int)frames.size()) {
         throw std::invalid_argument("Index out of bounds.");
     }
+    moveFrame(fromIndex, toIndex);
+    emitter.emitMoveFrameEvent(new MoveFrameAction(this, fromIndex, toIndex));
+}
+
+void Animation::moveFrameInternal(int fromIndex, int toIndex) {
     auto frame = std::move(frames[fromIndex]);
     frames.erase(frames.begin() + fromIndex);
     frames.insert(frames.begin() + toIndex, std::move(frame));
@@ -46,12 +59,18 @@ void Animation::removeFrame(int index) {
     if (index < 0 || index >= (int)frames.size()) {
         throw std::invalid_argument("Index out of bounds.");
     }
+    auto frame = std::move(frames[index]);
+    frames.erase(frames.begin() + index);
+    emitter.emitRemoveFrameEvent(new RemoveFrameAction(this, std::move(frame), index));
+}
+
+void Animation::removeFrameInternal(int index) {
     frames.erase(frames.begin() + index);
     if (index < activeFrameIndex ||
         (index == activeFrameIndex &&
          activeFrameIndex == (int)frames.size())) {
         activeFrameIndex--;
-    }
+    }    
 }
 
 void Animation::setActiveFrame(int index) {

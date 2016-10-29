@@ -10,6 +10,10 @@ public:
 
 signals:
 
+    void frameAdded(int index);
+    void frameMoved(int fromIndex, int toIndex);
+    void frameRemoved(int index);
+
 public slots:
 };
 
