@@ -1,5 +1,6 @@
 #include "toolbar.h"
 #include <QObject>
+#include <QPalette>
 
 Toolbar::Toolbar(QWidget *parent) : QWidget(parent){
     this->initWidgets();
@@ -17,7 +18,15 @@ void Toolbar::initWidgets(){
     brushButton = new QPushButton(brushIcon, "");
     eraseButton = new QPushButton(eraseIcon, "");
     fillButton = new QPushButton(fillIcon, "");
-    colorButton = new QPushButton(colorIcon, "");
+    colorButton = new QPushButton();
+
+    QPalette pal;
+    pal.setColor(QPalette::Button, Qt::red);
+    colorButton->setFlat(true);
+    colorButton->setAutoFillBackground(true);
+    colorButton->setPalette(pal);
+    colorButton->update();
+
     circleButton = new QPushButton(circleIcon, "");
     lineButton = new QPushButton(lineIcon, "");
     squareButton = new QPushButton(squareIcon, "");
@@ -48,6 +57,7 @@ void Toolbar::initWidgets(){
     buttonGroup->addButton(lineButton);
     buttonGroup->setExclusive(true);
 
+    toolsLayout->addWidget(colorButton);
     toolsLayout->addWidget(brushButton);
     toolsLayout->addWidget(eraseButton);
     toolsLayout->addWidget(moveButton);
@@ -55,7 +65,7 @@ void Toolbar::initWidgets(){
     toolsLayout->addWidget(circleButton);
     toolsLayout->addWidget(squareButton);
     toolsLayout->addWidget(lineButton);
-    toolsLayout->addWidget(colorButton);
+
 }
 
 void Toolbar::initConnections(){
@@ -78,5 +88,12 @@ void Toolbar::setFill() {
 }
 
 void Toolbar::getColor(){
-    emit colorChanged(colorPicker->getColor());
+    QColor newColor = colorPicker->getColor();
+
+    QPalette pal = colorButton->palette();
+    pal.setColor(QPalette::Button, newColor);
+    colorButton->setPalette(pal);
+    colorButton->update();
+
+    emit colorChanged(newColor);
 }
