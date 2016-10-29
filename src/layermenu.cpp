@@ -23,18 +23,6 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     emit activeLayerChangedSignal(indexOfActiveLayer);
 }
 
-void LayerMenu::redrawLayerMenu(){
-    //QVector<QString> layerNamesCopy = QVector<QString>(layerNames);
-    foreach(QGroupBox* qgb, layers){
-        deleteLayerWithoutEmittingSignals(qgb); //will it cause a problem that this causes lots of
-    }
-    foreach(QString qs, layerNames){
-        addLayerWithoutEmittingSignals(qs);
-    }
-    QGroupBox* activeLayerBox = layers.at(indexOfActiveLayer);
-    highlightGroupBox(activeLayerBox);
-}
-
 void LayerMenu::addLayer(QString layerName){
     QGroupBox* groupBox = new QGroupBox();
     groupBox->setParent(this);
@@ -83,45 +71,6 @@ void LayerMenu::addLayer(QString layerName){
         highlightGroupBox(groupBox);
         emit activeLayerChangedSignal(indexOfActiveLayer);
     }
-}
-
-void LayerMenu::addLayerWithoutEmittingSignals(QString layerName){
-    QGroupBox* groupBox = new QGroupBox();
-    groupBox->setParent(this);
-    //groupBox->setContentsMargins(0,0,0,0);
-    //groupBox->setCheckable(true);
-
-    layers.append(groupBox);
-
-    QLineEdit* label = new QLineEdit(layerName);
-    label->setParent(groupBox);
-    connect(label, &QLineEdit::textChanged, this, &LayerMenu::textChanged);
-    connect(label, &QLineEdit::cursorPositionChanged, this, &LayerMenu::activeLayerChanged);
-
-    QPushButton* moveLayerUpButton = new QPushButton();
-    moveLayerUpButton->setIcon(upArrow);
-    moveLayerUpButton->setParent(groupBox);
-    connect(moveLayerUpButton, &QPushButton::released,this, &LayerMenu::moveLayerUpButtonClicked);
-
-    QPushButton* moveLayerDownButton = new QPushButton();
-    moveLayerDownButton->setIcon(downArrow);
-    moveLayerDownButton->setParent(groupBox);
-    connect(moveLayerDownButton, &QPushButton::released,this, &LayerMenu::moveLayerDownButtonClicked);
-
-    QPushButton* deleteLayerButton = new QPushButton();
-    deleteLayerButton->setIcon(deleteX);
-    deleteLayerButton->setParent(groupBox);
-    connect(deleteLayerButton, &QPushButton::released, this, &LayerMenu::deleteLayerButtonClicked);
-
-    QGridLayout* hbox = new QGridLayout();
-    hbox->addWidget(label, 0, 0, 1, 3, Qt::AlignCenter);
-    hbox->addWidget(moveLayerUpButton, 1, 0);
-    hbox->addWidget(moveLayerDownButton, 1, 1);
-    hbox->addWidget(deleteLayerButton, 1, 2);
-
-    groupBox->setLayout(hbox);
-
-    layerMenuLayout->addWidget(groupBox);
 }
 
 void LayerMenu::activeLayerChanged(){
@@ -179,18 +128,6 @@ void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
     }
 }
 
-void LayerMenu::deleteLayerWithoutEmittingSignals(QGroupBox* layerToBeDeleted)
-{
-    int index = layers.indexOf(layerToBeDeleted);
-    foreach(auto child, layerToBeDeleted->children()){
-        delete child;
-    }
-    layerMenuLayout->removeWidget(layerToBeDeleted);
-    delete layerToBeDeleted->layout();
-    delete layerToBeDeleted;
-    layers.remove(index);
-}
-
 void LayerMenu::addLayerButtonClicked() {
     addLayer("New Layer");
 }
@@ -217,7 +154,7 @@ void LayerMenu::moveLayerUpButtonClicked(){
         QString temp = layerNames[index];
         layerNames[index] = layerNames[index-1];
         layerNames[index-1] = temp;
-        redrawLayerMenu();
+        highlightGroupBox(layers.at(indexOfActiveLayer));
         emit layersSwappedSignal(index, index-1);
     }
 }
@@ -229,7 +166,7 @@ void LayerMenu::moveLayerDownButtonClicked(){
         QString temp = layerNames[index];
         layerNames[index] = layerNames[index+1];
         layerNames[index+1] = temp;
-        redrawLayerMenu();
+        highlightGroupBox(layers.at(indexOfActiveLayer));
         emit layersSwappedSignal(index, index+1);
     }
 }

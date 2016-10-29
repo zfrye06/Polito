@@ -55,19 +55,10 @@ private:
     int indexOfActiveLayer;
 
 
-    void redrawLayerMenu();
     void deleteLayer(QGroupBox* layerToBeDeleted);
     void addLayer(QString layerName);
     void highlightGroupBox(QGroupBox*);
     void unhighlightGroupBox(QGroupBox*);
-
-    //Helper methods to redrawLayerMenu()
-    //without modifying the layerNames vector
-    //or emitting unnecessary/harmful signals:
-    void deleteLayerWithoutEmittingSignals(QGroupBox*);
-    void addLayerWithoutEmittingSignals(QString layerName);
-
-
 };
 
 #endif // LAYERMENU_H
