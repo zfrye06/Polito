@@ -64,13 +64,6 @@ void LayerMenu::addLayer(QString layerName){
 
     int indexOfAddedLayer = layers.indexOf(groupBox);
     emit layerAddedSignal(indexOfAddedLayer);
-
-    //if layers was empty, we should set the new layer to be the active layer
-    if(layers.size() == 1){
-        indexOfActiveLayer = 0;
-        highlightGroupBox(groupBox);
-        emit activeLayerChangedSignal(indexOfActiveLayer);
-    }
 }
 
 void LayerMenu::activeLayerChanged(){
@@ -106,25 +99,14 @@ void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
     }
     int index = layers.indexOf(layerToBeDeleted);
     layerNames.remove(index);
-    foreach(auto child, layerToBeDeleted->children()){
-        delete child;
-    }
-    layerMenuLayout->removeWidget(layerToBeDeleted);
-    delete layerToBeDeleted->layout();
-    delete layerToBeDeleted;
     layers.remove(index);
+    layerMenuLayout->removeWidget(layerToBeDeleted);
+    delete layerToBeDeleted;
     emit layerDeletedSignal(index);
-    //If the active layer was deleted, we make the bottom layer the active layer
     if (index == indexOfActiveLayer){
-        if(layers.size() > 0){
-            indexOfActiveLayer = 0;
-            highlightGroupBox(layers.at(indexOfActiveLayer));
-            emit activeLayerChangedSignal(indexOfActiveLayer);
-        }
-        else{
-            emit activeLayerChangedSignal(-1); //the last layer was deleted
-            //so there is no active layer.
-        }
+        indexOfActiveLayer = index < layers.size() ? index : index - 1;
+        highlightGroupBox(layers.at(indexOfActiveLayer));
+        emit activeLayerChangedSignal(indexOfActiveLayer);
     }
 }
 
