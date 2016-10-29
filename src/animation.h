@@ -8,6 +8,7 @@
 #include <vector>
 #include "action.h"
 #include "animationeventemitter.h"
+#include "animationwidgets.h"
 #include "frame.h"
 
 class AddFrameAction;
@@ -66,63 +67,95 @@ class AddFrameAction : public Action {
  public:
 
  AddFrameAction(Animation *animation, int index) :
-    animation(animation), index(index) {}
+    animation(animation), index(index), widget(nullptr) {}
 
     void undo() {
         frame.swap(animation->frames[index]);
         animation->removeFrameInternal(index);
+        if (widget != nullptr) {
+            widget->removeFrame(index);
+        }
     }
 
     void redo() {
         animation->addFrameInternal(std::move(frame), index);
+        if (widget != nullptr) {
+            widget->addFrame(index);
+        }
+    }
+
+    void setAnimationWidget(AnimationWidget *w) {
+        widget = w;
     }
 
  private:
     Animation *animation;
     std::unique_ptr<Frame> frame;
     int index;
-    bool ownsLayer;
+    AnimationWidget *widget;
 };
 
 class MoveFrameAction : public Action {
  public:
 
  MoveFrameAction(Animation *animation, int fromIndex, int toIndex) :
-    animation(animation), fromIndex(fromIndex), toIndex(toIndex) {}
+    animation(animation), fromIndex(fromIndex), toIndex(toIndex), widget(nullptr) {}
 
     void undo() {
         animation->moveFrameInternal(toIndex, fromIndex);
+        if (widget != nullptr) {
+            widget->moveFrame(toIndex, fromIndex);
+        }
     }
 
     void redo() {
         animation->moveFrameInternal(fromIndex, toIndex);
+        if (widget != nullptr) {
+            widget->moveFrame(fromIndex, toIndex);
+        }
+    }
+
+    void setAnimationWidget(AnimationWidget *w) {
+        widget = w;
     }
 
  private:
     Animation *animation;
     int fromIndex;
     int toIndex;
+    AnimationWidget *widget;
 };
 
 class RemoveFrameAction : public Action {
  public:
 
  RemoveFrameAction(Animation *animation, std::unique_ptr<Frame> frame, int index) :
-    animation(animation), frame(std::move(frame)), index(index) {}
+    animation(animation), frame(std::move(frame)), index(index), widget(nullptr) {}
 
     void undo() {
         animation->addFrameInternal(std::move(frame), index);
+        if (widget != nullptr) {
+            widget->addFrame(index);
+        }
     }
 
     void redo() {
         frame.swap(animation->frames[index]);
         animation->removeFrameInternal(index);
+        if (widget != nullptr) {
+            widget->removeFrame(index);
+        }
+    }
+
+    void setAnimationWidget(AnimationWidget *w) {
+        widget = w;
     }
 
  private:
     Animation *animation;
     std::unique_ptr<Frame> frame;
     int index;
+    AnimationWidget *widget;
 };
 
 #endif // ANIMATION_H

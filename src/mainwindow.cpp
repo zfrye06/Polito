@@ -123,13 +123,22 @@ void MainWindow::initSignals() {
             &actionHistory, &ActionHistory::addAction);
 
     connect(&emitter, &AnimationEventEmitter::addFrameEvent,
-            &actionHistory, &ActionHistory::addAction);
+            this, [this](AddFrameAction *a){
+                a->setAnimationWidget(scrubber);
+                actionHistory.addAction(a);
+    });
 
     connect(&emitter, &AnimationEventEmitter::moveFrameEvent,
-            &actionHistory, &ActionHistory::addAction);
+            this, [this](MoveFrameAction *a){
+                a->setAnimationWidget(scrubber);
+                actionHistory.addAction(a);
+    });
 
     connect(&emitter, &AnimationEventEmitter::removeFrameEvent,
-            &actionHistory, &ActionHistory::addAction);
+            this, [this](RemoveFrameAction *a){
+                a->setAnimationWidget(scrubber);
+                actionHistory.addAction(a);
+    });
 
     connect(&emitter, &AnimationEventEmitter::addLayerEvent,
             &actionHistory, &ActionHistory::addAction);

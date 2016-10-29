@@ -38,7 +38,8 @@ HEADERS  += src/mainwindow.h \
     src/frame.h \
     src/layer.h \
     src/animationeventemitter.h \
-    src/toolbar.h
+    src/toolbar.h \
+    src/animationwidgets.h
 
 FORMS    += src/mainwindow.ui \
     src/imagesizedialog.ui
