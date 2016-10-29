@@ -152,6 +152,9 @@ void LayerMenu::unhighlightGroupBox(QGroupBox* oldActiveLayerBox){
 
 void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
 {
+    if (layers.size() == 1) {
+        return;
+    }
     int index = layers.indexOf(layerToBeDeleted);
     layerNames.remove(index);
     foreach(auto child, layerToBeDeleted->children()){
