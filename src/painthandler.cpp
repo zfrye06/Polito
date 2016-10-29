@@ -60,11 +60,12 @@ void PaintBucket::floodFill( QImage &image, QPainter &painter, QColor target, QC
     unprocessedPixels.push(position);
     while(unprocessedPixels.size() != 0){
         QPoint currentPoint = unprocessedPixels.pop();
-        QColor currentColor = image.pixelColor(currentPoint.x(), currentPoint.y());
-
-        if(!currentColor.isValid()){
+        
+        if (!image.valid(currentPoint)) {
             continue;
         }
+            
+        QColor currentColor = image.pixelColor(currentPoint.x(), currentPoint.y());
 
         if(currentColor != target || currentColor == replacement){
             continue;

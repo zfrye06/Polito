@@ -44,8 +44,6 @@ public:
 };
 
 class PaintBucket: public PaintHandler {
-private:
-    QPointF lastMousePoint;
 public:
     virtual void mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );
     virtual void mouseMoveEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );
