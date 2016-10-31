@@ -43,4 +43,13 @@ public:
     virtual void mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );
 };
 
+class PaintBucket: public PaintHandler {
+public:
+    virtual void mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );
+    virtual void mouseMoveEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );
+    virtual void mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos );
+
+    void floodFill(QImage &image, QPainter &painter, QColor target, QColor replacement, QPoint position);
+};
+
 #endif

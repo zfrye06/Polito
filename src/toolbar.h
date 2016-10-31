@@ -47,6 +47,7 @@ private:
 
     void setBrush();
     void setEraser();
+    void setFill();
     void initWidgets();
     void initConnections();
 };

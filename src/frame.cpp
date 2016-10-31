@@ -53,8 +53,8 @@ void Frame::moveLayerInternal(int fromIndex, int toIndex) {
             activeLayerIndex--;
         }
     } else {
-        for (auto i = toIndex; i < fromIndex; i++) {
-            layers[i + 1] = layers[i];
+        for (auto i = fromIndex; i > toIndex; i--) {
+            layers[i] = layers[i - 1];
             layers[i]->setZValue(i);
         }
         if (activeLayerIndex >= toIndex && activeLayerIndex < fromIndex) {
