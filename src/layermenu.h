@@ -12,7 +12,6 @@
 #include <QGroupBox>
 #include <QIcon>
 
-
 class LayerMenu : public QWidget {
     Q_OBJECT
 public:
