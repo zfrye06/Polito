@@ -43,7 +43,7 @@ private:
     QIcon upArrow = QIcon(QPixmap(":/icons/up"));
     QIcon downArrow = QIcon(QPixmap(":/icons/down"));
     QIcon deleteX = QIcon(QPixmap(":/icons/delete"));
-    QVector<QGroupBox*> layers;
+    //QVector<QGroupBox*> layers;
     QVector<QString> layerNames;
     QPushButton* addLayerButton;
     QVBoxLayout* layerMenuLayout;
@@ -55,6 +55,8 @@ private:
     void highlightGroupBox(QGroupBox*);
     void unhighlightGroupBox(QGroupBox*);
     void swapLayers(int, int, QGroupBox*);
+    int getIndex(QGroupBox*);
+    QGroupBox* getBox(int index);
 };
 
 #endif // LAYERMENU_H

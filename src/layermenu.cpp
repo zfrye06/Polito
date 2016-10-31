@@ -21,7 +21,7 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     addLayer("Layer1");
     //We initialize the active layer to be 0:
     indexOfActiveLayer = 0;
-    highlightGroupBox(layers.at(0));
+    highlightGroupBox(getBox(0));
     emit activeLayerChangedSignal(indexOfActiveLayer);
 }
 
@@ -31,7 +31,7 @@ void LayerMenu::addLayer(QString layerName){
     //groupBox->setContentsMargins(0,0,0,0);
     //groupBox->setCheckable(true);
 
-    layers.push_back(groupBox);
+    //layers.push_back(groupBox);
 
     QLineEdit* label = new QLineEdit(layerName);
     label->setParent(groupBox);
@@ -65,16 +65,31 @@ void LayerMenu::addLayer(QString layerName){
 
     layerMenuLayout->addWidget(groupBox);
 
-    int indexOfAddedLayer = layers.indexOf(groupBox);
+    int indexOfAddedLayer = getIndex(groupBox);
     emit layerAddedSignal(indexOfAddedLayer);
+}
+
+int LayerMenu::getIndex(QGroupBox* thisBox){
+    //Because the "Add Layer" button is the first widget
+    //in layerMenuLayout, we must subtract 1 to get the index of
+    //a QGroupBox counting from 0.
+    return layerMenuLayout->indexOf(thisBox) - 1;
+}
+
+QGroupBox* LayerMenu::getBox(int index){
+    //Because the "Add Layer" button is the first widget
+    //in layerMenuLayout, we must add 1 to get the
+    //a QGroupBox counting from index 0.
+    return qobject_cast<QGroupBox*>(layerMenuLayout->itemAt(index + 1)->widget());
+
 }
 
 void LayerMenu::activeLayerChanged(){
     int oldActiveLayerIndex = indexOfActiveLayer;
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
-    indexOfActiveLayer = layers.indexOf(thisBox);
+    indexOfActiveLayer = getIndex(thisBox);
     if (oldActiveLayerIndex != indexOfActiveLayer){
-        QGroupBox* oldBox = layers.at(oldActiveLayerIndex);
+        QGroupBox* oldBox = getBox(oldActiveLayerIndex);
         highlightGroupBox(thisBox);
         unhighlightGroupBox(oldBox);
         emit activeLayerChangedSignal(indexOfActiveLayer);
@@ -97,12 +112,11 @@ void LayerMenu::unhighlightGroupBox(QGroupBox* oldActiveLayerBox){
 
 void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
 {
-    if (layers.size() == 1) {
+    if (layerNames.size() == 1) {
         return;
     }
-    int index = layers.indexOf(layerToBeDeleted);
+    int index = getIndex(layerToBeDeleted);
     layerNames.remove(index);
-    layers.remove(index);
     layerMenuLayout->removeWidget(layerToBeDeleted);
     foreach(QObject* child, layerToBeDeleted->children()){
         delete child;
@@ -110,8 +124,8 @@ void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
     delete layerToBeDeleted;
     emit layerDeletedSignal(index);
     if (index == indexOfActiveLayer){
-        indexOfActiveLayer = index < layers.size() ? index : index - 1;
-        highlightGroupBox(layers.at(indexOfActiveLayer));
+        indexOfActiveLayer = index < layerNames.size() ? index : index - 1;
+        highlightGroupBox(getBox(indexOfActiveLayer));
         emit activeLayerChangedSignal(indexOfActiveLayer);
     }
 }
@@ -127,13 +141,13 @@ void LayerMenu::deleteLayerButtonClicked() {
 void LayerMenu::textEditedSlot(){
     QString newText = qobject_cast<QLineEdit*>(sender())->text();
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
-    int index = layers.indexOf(thisBox);
+    int index = getIndex(thisBox);
     layerNames[index] = newText;
 }
 
 void LayerMenu::moveLayerUpButtonClicked(){
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
-    int index = layers.indexOf(thisBox);
+    int index = getIndex(thisBox);
     //        QMessageBox::information(
     //            this,
     //            tr("Index is"),
@@ -145,32 +159,27 @@ void LayerMenu::moveLayerUpButtonClicked(){
 
 void LayerMenu::moveLayerDownButtonClicked(){
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
-    int index = layers.indexOf(thisBox);
-    if (index < layers.size() - 1){
+    int index = getIndex(thisBox);
+    if (index < layerNames.size() - 1){
         swapLayers(index, index+1, thisBox);
     }
 }
 
 void LayerMenu::swapLayers(int index1, int index2, QGroupBox* thisBox){
+
+    QGroupBox* otherBox = getBox(index2);
+
+    //First swap the strings in layerNames
     QString temp = layerNames[index1];
     layerNames[index1] = layerNames[index2];
     layerNames[index2] = temp;
 
-
-    QGroupBox* otherBox = layers[index2];
-    //use .at rather than [] to ensure a shallow copy
-    layers[index1] = otherBox;
-    layers[index2] = thisBox;
-    //This swaps the data in the underlying data structures:
-
-
-    //Now this swaps the text that appears in the LayerMenu QLineEdit widgets:
+    //Now swap the text in the QLineEdits
     QLineEdit* thisLineEdit;
     foreach(QObject* qo, thisBox->children()){
         thisLineEdit = qobject_cast<QLineEdit*>(qo);
         break; //just get the first child; I don't know a better way to do this.
     }
-
 
     QLineEdit* otherLineEdit;
     foreach(QObject* qo, otherBox->children()){
@@ -179,24 +188,26 @@ void LayerMenu::swapLayers(int index1, int index2, QGroupBox* thisBox){
     }
 
     thisLineEdit->setText(layerNames[index1]);
-    //thisLineEdit->setText("test");
     otherLineEdit->setText(layerNames[index2]);
-    //otherLineEdit->setText("test2");
 
+    //Now swap the GroupBoxWidgets
+    layerMenuLayout->removeWidget(thisBox);
+    layerMenuLayout->removeWidget(otherBox);
+    layerMenuLayout->insertWidget(index1, otherBox);
+    layerMenuLayout->insertWidget(index2, thisBox);
 
     //    QMessageBox::information(
     //         this,
     //         tr("Index is"),
     //         tr(std::to_string(index1).c_str()) );
 
+    //Finally, if we swapped the active layer, highlight it
+    //in its new position and emit an activeLayerChangedSignal
     if (index1 == indexOfActiveLayer){
-        unhighlightGroupBox(layers[indexOfActiveLayer]);
+        unhighlightGroupBox(getBox(indexOfActiveLayer));
         indexOfActiveLayer = index2;
-        highlightGroupBox(layers[indexOfActiveLayer]);
+        highlightGroupBox(getBox(indexOfActiveLayer));
         emit activeLayerChangedSignal(indexOfActiveLayer);
     }
-
-    //std::swap(layerNames[index1], layerNames[index2]);
-    //std::swap(layers[index1], layers[index2]);
     emit layersSwappedSignal(index1, index2);
 }
