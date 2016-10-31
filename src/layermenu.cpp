@@ -28,17 +28,14 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
 void LayerMenu::addLayer(QString layerName){
     QGroupBox* groupBox = new QGroupBox();
     groupBox->setParent(this);
-    //groupBox->setContentsMargins(0,0,0,0);
-    //groupBox->setCheckable(true);
-
-    //layers.push_back(groupBox);
 
     QLineEdit* label = new QLineEdit(layerName);
     label->setParent(groupBox);
     layerNames.push_back(layerName);
     connect(label, &QLineEdit::textEdited, this, &LayerMenu::textEditedSlot);
-    //cursorPositionChanged here just means "when text box is clicked."
-    connect(label, &QLineEdit::cursorPositionChanged, this, &LayerMenu::activeLayerChanged);
+    //cursorPositionChanged here is just used for "when text box is clicked"
+    //since there's no "released" event in QLineEdit
+    connect(label, &QLineEdit::cursorPositionChanged, this, &LayerMenu::textBoxClicked);
 
     QPushButton* moveLayerUpButton = new QPushButton();
     moveLayerUpButton->setIcon(upArrow);
@@ -55,13 +52,13 @@ void LayerMenu::addLayer(QString layerName){
     deleteLayerButton->setParent(groupBox);
     connect(deleteLayerButton, &QPushButton::released, this, &LayerMenu::deleteLayerButtonClicked);
 
-    QGridLayout* hbox = new QGridLayout();
-    hbox->addWidget(label, 0, 0, 1, 3, Qt::AlignCenter);
-    hbox->addWidget(moveLayerUpButton, 1, 0);
-    hbox->addWidget(moveLayerDownButton, 1, 1);
-    hbox->addWidget(deleteLayerButton, 1, 2);
+    QGridLayout* gridBox = new QGridLayout();
+    gridBox->addWidget(label, 0, 0, 1, 3, Qt::AlignCenter);
+    gridBox->addWidget(moveLayerUpButton, 1, 0);
+    gridBox->addWidget(moveLayerDownButton, 1, 1);
+    gridBox->addWidget(deleteLayerButton, 1, 2);
 
-    groupBox->setLayout(hbox);
+    groupBox->setLayout(gridBox);
 
     layerMenuLayout->addWidget(groupBox);
 
@@ -83,14 +80,14 @@ QGroupBox* LayerMenu::getBox(int index){
     return qobject_cast<QGroupBox*>(layerMenuLayout->itemAt(index + 1)->widget());
 }
 
-void LayerMenu::activeLayerChanged(){
+void LayerMenu::textBoxClicked(){
     int oldActiveLayerIndex = indexOfActiveLayer;
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
     indexOfActiveLayer = getIndex(thisBox);
     if (oldActiveLayerIndex != indexOfActiveLayer){
         QGroupBox* oldBox = getBox(oldActiveLayerIndex);
-        highlightGroupBox(thisBox);
         unhighlightGroupBox(oldBox);
+        highlightGroupBox(thisBox);
         emit activeLayerChangedSignal(indexOfActiveLayer);
     }
 }
@@ -173,38 +170,35 @@ void LayerMenu::swapLayers(int index1, int index2, QGroupBox* thisBox){
     layerNames[index1] = layerNames[index2];
     layerNames[index2] = temp;
 
-    //Now swap the text in the QLineEdits
-    QLineEdit* thisLineEdit;
-    foreach(QObject* qo, thisBox->children()){
-        thisLineEdit = qobject_cast<QLineEdit*>(qo);
-        break; //just get the first child; I don't know a better way to do this.
-    }
+//    //Now swap the text in the QLineEdits
+//    QLineEdit* thisLineEdit;
+//    foreach(QObject* qo, thisBox->children()){
+//        thisBox->childAt()
+//        thisLineEdit = qobject_cast<QLineEdit*>(qo);
+//        break; //just get the first child; I don't know a better way to do this.
+//    }
 
-    QLineEdit* otherLineEdit;
-    foreach(QObject* qo, otherBox->children()){
-        otherLineEdit = qobject_cast<QLineEdit*>(qo);
-        break; //just get the first child; I don't know a better way to do this.
-    }
+//    QLineEdit* otherLineEdit;
+//    foreach(QObject* qo, otherBox->children()){
+//        otherLineEdit = qobject_cast<QLineEdit*>(qo);
+//        break; //just get the first child; I don't know a better way to do this.
+//    }
 
-    thisLineEdit->setText(layerNames[index1]);
-    otherLineEdit->setText(layerNames[index2]);
+    QLineEdit* thisLineEdit = qobject_cast<QLineEdit*>(thisBox->layout()->itemAt(0)->widget());
+    QLineEdit* otherLineEdit = qobject_cast<QLineEdit*>(otherBox->layout()->itemAt(0)->widget());
+
+    thisLineEdit->setText(layerNames[index2]);
+    otherLineEdit->setText(layerNames[index1]);
 
     //Now swap the GroupBoxWidgets
     int thisInsertionPoint = layerMenuLayout->indexOf(thisBox);
-    int otherInsertionPoint = layerMenuLayout->indexOf(otherBox);
     layerMenuLayout->removeWidget(thisBox);
-    layerMenuLayout->removeWidget(otherBox);
-    //+1 because the AddButton is always at index 0 in the layout
     if (index1 < index2){ //move down
-        layerMenuLayout->insertWidget(thisInsertionPoint, otherBox);
         layerMenuLayout->insertWidget(thisInsertionPoint + 1, thisBox);
     }
     else{//move up
-        layerMenuLayout->insertWidget(otherInsertionPoint, thisBox);
-        layerMenuLayout->insertWidget(otherInsertionPoint + 1, otherBox);
+        layerMenuLayout->insertWidget(thisInsertionPoint - 1, thisBox);
     }
-
-
     //    QMessageBox::information(
     //         this,
     //         tr("Index is"),

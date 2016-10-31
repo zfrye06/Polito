@@ -35,7 +35,7 @@ public slots:
     void textEditedSlot();
     void moveLayerUpButtonClicked();
     void moveLayerDownButtonClicked();
-    void activeLayerChanged();
+    void textBoxClicked();
 
 protected:
 
@@ -43,12 +43,10 @@ private:
     QIcon upArrow = QIcon(QPixmap(":/icons/up"));
     QIcon downArrow = QIcon(QPixmap(":/icons/down"));
     QIcon deleteX = QIcon(QPixmap(":/icons/delete"));
-    //QVector<QGroupBox*> layers;
     QVector<QString> layerNames;
     QPushButton* addLayerButton;
     QVBoxLayout* layerMenuLayout;
     int indexOfActiveLayer;
-
 
     void deleteLayer(QGroupBox* layerToBeDeleted);
     void addLayer(QString layerName);
