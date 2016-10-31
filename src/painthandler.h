@@ -52,4 +52,41 @@ public:
     void floodFill(QImage &image, QPainter &painter, QColor target, QColor replacement, QPoint position);
 };
 
+class PaintSquare: public PaintHandler{
+private:
+    QPointF lastMousePoint;
+    QPixmap baseImage;
+public:
+    virtual void mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+    virtual void mouseMoveEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+    virtual void mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+};
+
+class PaintCircle: public PaintHandler{
+private:
+    QPointF lastMousePoint;
+    QPixmap baseImage;
+public:
+    virtual void mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+    virtual void mouseMoveEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+    virtual void mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+};
+
+class PaintLine: public PaintHandler{
+private:
+    QPointF lastMousePoint;
+    QPixmap baseImage;
+public:
+    virtual void mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+    virtual void mouseMoveEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+    virtual void mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+};
+
+struct PixelInfo{
+    PixelInfo();
+    PixelInfo(QPoint p, QString s) : point(p), direction(s){;}
+    QPoint point;
+    QString direction = "";
+};
+
 #endif

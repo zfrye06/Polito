@@ -56,33 +56,46 @@ void PaintBucket::mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPo
 }
 
 void PaintBucket::floodFill( QImage &image, QPainter &painter, QColor target, QColor replacement, QPoint position ){
-    QStack<QPoint> unprocessedPixels;
-    unprocessedPixels.push(position);
+    QStack<PixelInfo> unprocessedPixels;
+    PixelInfo first(position, "");
+    unprocessedPixels.push(first);
     while(unprocessedPixels.size() != 0){
-        QPoint currentPoint = unprocessedPixels.pop();
+        PixelInfo currentPoint = unprocessedPixels.pop();
         
-        if (!image.valid(currentPoint)) {
+        if (!image.valid(currentPoint.point)) {
             continue;
         }
             
-        QColor currentColor = image.pixelColor(currentPoint.x(), currentPoint.y());
+        QColor currentColor = image.pixelColor(currentPoint.point.x(), currentPoint.point.y());
 
         if(currentColor != target || currentColor == replacement){
             continue;
         }
 
-        painter.drawPoint(currentPoint);
-        image.setPixelColor(currentPoint, replacement);
+        painter.drawPoint(currentPoint.point);
+        image.setPixelColor(currentPoint.point, replacement);
 
-        QPoint north(currentPoint.x(), currentPoint.y() - 1);
-        QPoint south(currentPoint.x(), currentPoint.y() + 1);
-        QPoint east(currentPoint.x() + 1, currentPoint.y());
-        QPoint west(currentPoint.x() - 1, currentPoint.y());
+        QPoint northPoint(currentPoint.point.x(), currentPoint.point.y() - 1);
+        QPoint southPoint(currentPoint.point.x(), currentPoint.point.y() + 1);
+        QPoint eastPoint(currentPoint.point.x() + 1, currentPoint.point.y());
+        QPoint westPoint(currentPoint.point.x() - 1, currentPoint.point.y());
 
-        unprocessedPixels.push(north);
-        unprocessedPixels.push(south);
-        unprocessedPixels.push(east);
-        unprocessedPixels.push(west);
+        if(currentPoint.direction != "south"){
+            PixelInfo north(northPoint, "north");
+            unprocessedPixels.push(north);
+        }
+        if(currentPoint.direction != "north"){
+            PixelInfo south(southPoint, "south");
+            unprocessedPixels.push(south);
+        }
+        if(currentPoint.direction != "west"){
+            PixelInfo east(eastPoint, "east");
+            unprocessedPixels.push(east);
+        }
+        if(currentPoint.direction != "east"){
+            PixelInfo west(westPoint, "west");
+            unprocessedPixels.push(west);
+        }
     }
 }
 
@@ -92,4 +105,75 @@ void PaintBucket::mouseMoveEvent( QPixmap &image, Qt::MouseButtons buttons, QPoi
 
 void PaintBucket::mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos ){
 
+}
+
+void PaintSquare::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    baseImage = image;
+    lastMousePoint = pos;
+}
+
+void PaintSquare::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    image = baseImage;
+    QPainter painter(&image);
+    painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
+                      Qt::RoundJoin));
+    QRectF rect(lastMousePoint, pos);
+    painter.drawRect(rect);
+}
+
+void PaintSquare::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    QPainter painter(&image);
+    painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
+                      Qt::RoundJoin));
+    QRectF rect(lastMousePoint, pos);
+    painter.drawRect(rect);
+}
+
+void PaintCircle::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    baseImage = image;
+    lastMousePoint = pos;
+}
+
+void PaintCircle::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    image = baseImage;
+    QPainter painter(&image);
+    painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
+                      Qt::RoundJoin));
+    QRectF ellipse(lastMousePoint, pos);
+    painter.drawEllipse(ellipse);
+}
+
+void PaintCircle::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    QPainter painter(&image);
+    painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
+                      Qt::RoundJoin));
+    QRectF ellipse(lastMousePoint, pos);
+    painter.drawEllipse(ellipse);
+}
+
+void PaintLine::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    baseImage = image;
+    lastMousePoint = pos;
+}
+
+void PaintLine::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    image = baseImage;
+    QPainter painter(&image);
+    painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
+                      Qt::RoundJoin));
+    QLineF line(lastMousePoint, pos);
+    painter.drawLine(line);
+}
+
+void PaintLine::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    QPainter painter(&image);
+    painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
+                      Qt::RoundJoin));
+    QLineF line(lastMousePoint, pos);
+    painter.drawLine(line);
+}
+
+PixelInfo::PixelInfo(){
+    QPoint p(0,0);
+    point = p;
 }
