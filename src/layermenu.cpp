@@ -81,7 +81,6 @@ QGroupBox* LayerMenu::getBox(int index){
     //in layerMenuLayout, we must add 1 to get the
     //a QGroupBox counting from index 0.
     return qobject_cast<QGroupBox*>(layerMenuLayout->itemAt(index + 1)->widget());
-
 }
 
 void LayerMenu::activeLayerChanged(){
@@ -191,10 +190,20 @@ void LayerMenu::swapLayers(int index1, int index2, QGroupBox* thisBox){
     otherLineEdit->setText(layerNames[index2]);
 
     //Now swap the GroupBoxWidgets
+    int thisInsertionPoint = layerMenuLayout->indexOf(thisBox);
+    int otherInsertionPoint = layerMenuLayout->indexOf(otherBox);
     layerMenuLayout->removeWidget(thisBox);
     layerMenuLayout->removeWidget(otherBox);
-    layerMenuLayout->insertWidget(index1, otherBox);
-    layerMenuLayout->insertWidget(index2, thisBox);
+    //+1 because the AddButton is always at index 0 in the layout
+    if (index1 < index2){ //move down
+        layerMenuLayout->insertWidget(thisInsertionPoint, otherBox);
+        layerMenuLayout->insertWidget(thisInsertionPoint + 1, thisBox);
+    }
+    else{//move up
+        layerMenuLayout->insertWidget(otherInsertionPoint, thisBox);
+        layerMenuLayout->insertWidget(otherInsertionPoint + 1, otherBox);
+    }
+
 
     //    QMessageBox::information(
     //         this,
