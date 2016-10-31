@@ -8,6 +8,7 @@
 #include <QPixmap>
 
 LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
+
     addLayerButton = new QPushButton(this);
     addLayerButton->setText("Add Layer");
     connect(addLayerButton, &QPushButton::released,this, &LayerMenu::addLayerButtonClicked);
@@ -16,6 +17,7 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     layerMenuLayout->setAlignment(Qt::AlignTop);
     layerMenuLayout->addWidget(addLayerButton);
     this->setLayout(layerMenuLayout);
+
     addLayer("Layer1");
     //We initialize the active layer to be 0:
     indexOfActiveLayer = 0;
@@ -29,12 +31,13 @@ void LayerMenu::addLayer(QString layerName){
     //groupBox->setContentsMargins(0,0,0,0);
     //groupBox->setCheckable(true);
 
-    layers.append(groupBox);
+    layers.push_back(groupBox);
 
     QLineEdit* label = new QLineEdit(layerName);
     label->setParent(groupBox);
-    layerNames.append(layerName);
-    connect(label, &QLineEdit::textChanged, this, &LayerMenu::textChanged);
+    layerNames.push_back(layerName);
+    connect(label, &QLineEdit::textEdited, this, &LayerMenu::textEditedSlot);
+    //cursorPositionChanged here just means "when text box is clicked."
     connect(label, &QLineEdit::cursorPositionChanged, this, &LayerMenu::activeLayerChanged);
 
     QPushButton* moveLayerUpButton = new QPushButton();
@@ -80,7 +83,7 @@ void LayerMenu::activeLayerChanged(){
 
 void LayerMenu::highlightGroupBox(QGroupBox* newActiveLayerBox){
     QPalette Pal(palette());
-    Pal.setColor(QPalette::Background, QColor(120,130,250,100));
+    Pal.setColor(QPalette::Background, QColor(110,135,255,100));
     newActiveLayerBox->setAutoFillBackground(true);
     newActiveLayerBox->setPalette(Pal);
     newActiveLayerBox->show();
@@ -101,6 +104,9 @@ void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
     layerNames.remove(index);
     layers.remove(index);
     layerMenuLayout->removeWidget(layerToBeDeleted);
+    foreach(QObject* child, layerToBeDeleted->children()){
+        delete child;
+    }
     delete layerToBeDeleted;
     emit layerDeletedSignal(index);
     if (index == indexOfActiveLayer){
@@ -118,7 +124,7 @@ void LayerMenu::deleteLayerButtonClicked() {
     deleteLayer(qobject_cast<QGroupBox*>(sender()->parent()));
 }
 
-void LayerMenu::textChanged(){
+void LayerMenu::textEditedSlot(){
     QString newText = qobject_cast<QLineEdit*>(sender())->text();
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
     int index = layers.indexOf(thisBox);
@@ -133,11 +139,7 @@ void LayerMenu::moveLayerUpButtonClicked(){
     //            tr("Index is"),
     //            tr(std::to_string(index).c_str()) );
     if (index > 0){
-        QString temp = layerNames[index];
-        layerNames[index] = layerNames[index-1];
-        layerNames[index-1] = temp;
-        highlightGroupBox(layers.at(indexOfActiveLayer));
-        emit layersSwappedSignal(index, index-1);
+        swapLayers(index, index-1, thisBox);
     }
 }
 
@@ -145,10 +147,56 @@ void LayerMenu::moveLayerDownButtonClicked(){
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
     int index = layers.indexOf(thisBox);
     if (index < layers.size() - 1){
-        QString temp = layerNames[index];
-        layerNames[index] = layerNames[index+1];
-        layerNames[index+1] = temp;
-        highlightGroupBox(layers.at(indexOfActiveLayer));
-        emit layersSwappedSignal(index, index+1);
+        swapLayers(index, index+1, thisBox);
     }
+}
+
+void LayerMenu::swapLayers(int index1, int index2, QGroupBox* thisBox){
+    QString temp = layerNames[index1];
+    layerNames[index1] = layerNames[index2];
+    layerNames[index2] = temp;
+
+
+    QGroupBox* otherBox = layers[index2];
+    //use .at rather than [] to ensure a shallow copy
+    layers[index1] = otherBox;
+    layers[index2] = thisBox;
+    //This swaps the data in the underlying data structures:
+
+
+    //Now this swaps the text that appears in the LayerMenu QLineEdit widgets:
+    QLineEdit* thisLineEdit;
+    foreach(QObject* qo, thisBox->children()){
+        thisLineEdit = qobject_cast<QLineEdit*>(qo);
+        break; //just get the first child; I don't know a better way to do this.
+    }
+
+
+    QLineEdit* otherLineEdit;
+    foreach(QObject* qo, otherBox->children()){
+        otherLineEdit = qobject_cast<QLineEdit*>(qo);
+        break; //just get the first child; I don't know a better way to do this.
+    }
+
+    thisLineEdit->setText(layerNames[index1]);
+    //thisLineEdit->setText("test");
+    otherLineEdit->setText(layerNames[index2]);
+    //otherLineEdit->setText("test2");
+
+
+    //    QMessageBox::information(
+    //         this,
+    //         tr("Index is"),
+    //         tr(std::to_string(index1).c_str()) );
+
+    if (index1 == indexOfActiveLayer){
+        unhighlightGroupBox(layers[indexOfActiveLayer]);
+        indexOfActiveLayer = index2;
+        highlightGroupBox(layers[indexOfActiveLayer]);
+        emit activeLayerChangedSignal(indexOfActiveLayer);
+    }
+
+    //std::swap(layerNames[index1], layerNames[index2]);
+    //std::swap(layers[index1], layers[index2]);
+    emit layersSwappedSignal(index1, index2);
 }
