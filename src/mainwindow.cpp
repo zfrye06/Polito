@@ -71,6 +71,13 @@ void MainWindow::imageSize() {
     connect(d,&ImageSizeDialog::done,this,&MainWindow::finishImageSize);
 }
 
+void MainWindow::bindings(){
+    kd = new KeyBindingDialog;
+    kd->activateWindow();
+    kd->showNormal();
+    kd->setVisible(true);
+}
+
 void MainWindow::finishImageSize(int w, int h) {
     animation->resize(w);
 }
@@ -84,6 +91,9 @@ void MainWindow::initActions() {
 
     imageSizeAct = new QAction(tr("&Image Size..."), this);
     connect(imageSizeAct, SIGNAL(triggered()), this, SLOT(imageSize()));
+
+    keyBindAct = new QAction(tr("&Set Key Bindings"), this);
+    connect(keyBindAct, &QAction::triggered, this, &MainWindow::bindings);
 
     undoAct = new QAction(tr("&Undo"), this);
     undoAct->setShortcuts(QKeySequence::Undo);
@@ -160,6 +170,7 @@ void MainWindow::initWidgets() {
 
     optionMenu = new QMenu(tr("&Options"), this);
     optionMenu->addAction(clearScreenAct);
+    optionMenu->addAction(keyBindAct);
 
     menuBar()->addMenu(fileMenu);
     menuBar()->addMenu(editMenu);

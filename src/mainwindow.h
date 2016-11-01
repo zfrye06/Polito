@@ -18,6 +18,7 @@
 #include "previewarea.h"
 #include "scrubber.h"
 #include "toolbar.h"
+#include "keybindingdialogue.h"
 
 
 class DrawArea;
@@ -36,6 +37,7 @@ private slots:
     void loadProject();
     void imageSize();
     void finishImageSize(int w, int h);
+    void bindings();
 
 private:
 
@@ -50,6 +52,7 @@ private:
     LayerMenu *layerMenu;
     
     ImageSizeDialog *d;
+    KeyBindingDialog *kd;
     QMenu *saveAsMenu;
     QMenu *fileMenu;
     QMenu *editMenu;
@@ -59,6 +62,7 @@ private:
     QAction *undoAct;
     QAction *redoAct;
     QAction *imageSizeAct;
+    QAction *keyBindAct;
     QAction *exitAct;
     QAction *clearScreenAct;
     QWidget *window;
