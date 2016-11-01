@@ -100,7 +100,7 @@ void Animation::save(std::ostream& out) const {
         QImage image = frame->image();
         for (int row = 0; row < image.height(); row++) {
             for (int col = 0; col < image.width(); col++) {
-                QColor color(image.pixel(row, col));
+                QColor color = image.pixelColor(row, col);
                 out << color.red() << " " <<
                        color.green() << " " <<
                        color.blue() << " " <<
@@ -130,7 +130,7 @@ void Animation::load(std::istream& in) {
     }
     std::vector<std::unique_ptr<Frame>> tempFrames;
     for (int i = 0; i < numFrames; i++) {
-        QImage image(width, height, QImage::Format_ARGB32);
+        QImage image(width, height, QImage::Format_RGBA8888);
         image.fill(Qt::transparent);
         for (int row = 0; row < image.height(); row++) {
             for (int col = 0; col < image.width(); col++) {

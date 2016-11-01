@@ -138,7 +138,7 @@ QGraphicsScene& Frame::scene() { return gscene; }
 QImage Frame::image() {
     gscene.clearSelection();
     gscene.setSceneRect(gscene.itemsBoundingRect());
-    QImage image(gscene.sceneRect().size().toSize(), QImage::Format_ARGB32);
+    QImage image(gscene.sceneRect().size().toSize(), QImage::Format_RGBA8888);
     image.fill(Qt::transparent);
     QPainter painter(&image);
     gscene.render(&painter);
