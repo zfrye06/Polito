@@ -1,11 +1,9 @@
 #ifndef LAYERMENU_H
 #define LAYERMENU_H
 
-#include <QPoint>
 #include <QWidget>
 #include <QListView>
 #include <QPushButton>
-#include <QStringListModel>
 #include <QVBoxLayout>
 #include <iostream>
 #include <QLineEdit>
@@ -32,7 +30,6 @@ signals:
 public slots:
     void addLayerButtonClicked();
     void deleteLayerButtonClicked();
-    void textEditedSlot();
     void moveLayerUpButtonClicked();
     void moveLayerDownButtonClicked();
     void textBoxClicked();
@@ -43,10 +40,10 @@ private:
     QIcon upArrow = QIcon(QPixmap(":/icons/up"));
     QIcon downArrow = QIcon(QPixmap(":/icons/down"));
     QIcon deleteX = QIcon(QPixmap(":/icons/delete"));
-    QVector<QString> layerNames;
     QPushButton* addLayerButton;
     QVBoxLayout* layerMenuLayout;
     int indexOfActiveLayer;
+    int numLayers;
 
     void deleteLayer(QGroupBox* layerToBeDeleted);
     void addLayer(QString layerName);

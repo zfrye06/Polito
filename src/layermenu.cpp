@@ -8,6 +8,7 @@
 #include <QPixmap>
 
 LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
+    numLayers = 0;
 
     addLayerButton = new QPushButton(this);
     addLayerButton->setText("Add Layer");
@@ -26,13 +27,13 @@ LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
 }
 
 void LayerMenu::addLayer(QString layerName){
+    numLayers++;
+
     QGroupBox* groupBox = new QGroupBox();
     groupBox->setParent(this);
 
     QLineEdit* label = new QLineEdit(layerName);
     label->setParent(groupBox);
-    layerNames.push_back(layerName);
-    connect(label, &QLineEdit::textEdited, this, &LayerMenu::textEditedSlot);
     //cursorPositionChanged here is just used for "when text box is clicked"
     //since there's no "released" event in QLineEdit
     connect(label, &QLineEdit::cursorPositionChanged, this, &LayerMenu::textBoxClicked);
@@ -108,11 +109,10 @@ void LayerMenu::unhighlightGroupBox(QGroupBox* oldActiveLayerBox){
 
 void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
 {
-    if (layerNames.size() == 1) {
+    if (numLayers == 1) {
         return;
     }
     int index = getIndex(layerToBeDeleted);
-    layerNames.remove(index);
     layerMenuLayout->removeWidget(layerToBeDeleted);
     foreach(QObject* child, layerToBeDeleted->children()){
         delete child;
@@ -120,7 +120,7 @@ void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
     delete layerToBeDeleted;
     emit layerDeletedSignal(index);
     if (index == indexOfActiveLayer){
-        indexOfActiveLayer = index < layerNames.size() ? index : index - 1;
+        indexOfActiveLayer = index < numLayers ? index : index - 1;
         highlightGroupBox(getBox(indexOfActiveLayer));
         emit activeLayerChangedSignal(indexOfActiveLayer);
     }
@@ -132,13 +132,6 @@ void LayerMenu::addLayerButtonClicked() {
 
 void LayerMenu::deleteLayerButtonClicked() {
     deleteLayer(qobject_cast<QGroupBox*>(sender()->parent()));
-}
-
-void LayerMenu::textEditedSlot(){
-    QString newText = qobject_cast<QLineEdit*>(sender())->text();
-    QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
-    int index = getIndex(thisBox);
-    layerNames[index] = newText;
 }
 
 void LayerMenu::moveLayerUpButtonClicked(){
@@ -156,28 +149,14 @@ void LayerMenu::moveLayerUpButtonClicked(){
 void LayerMenu::moveLayerDownButtonClicked(){
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
     int index = getIndex(thisBox);
-    if (index < layerNames.size() - 1){
+    if (index < numLayers - 1){
         swapLayers(index, index+1);
     }
 }
 
 void LayerMenu::swapLayers(int index1, int index2){
     QGroupBox* thisBox = getBox(index1);
-    QGroupBox* otherBox = getBox(index2);
 
-    //First swap the strings in layerNames
-    QString temp = layerNames[index1];
-    layerNames[index1] = layerNames[index2];
-    layerNames[index2] = temp;
-
-//    //Next set the new text in the LineEdits
-//    QLineEdit* thisLineEdit = qobject_cast<QLineEdit*>(thisBox->layout()->itemAt(0)->widget());
-//    QLineEdit* otherLineEdit = qobject_cast<QLineEdit*>(otherBox->layout()->itemAt(0)->widget());
-
-//    thisLineEdit->setText(layerNames[index2]);
-//    otherLineEdit->setText(layerNames[index1]);
-
-    //Now swap the GroupBoxWidgets
     int thisInsertionPoint = layerMenuLayout->indexOf(thisBox);
     layerMenuLayout->removeWidget(thisBox);
     if (index1 < index2){ //move down
