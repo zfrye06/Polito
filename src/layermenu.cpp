@@ -170,20 +170,6 @@ void LayerMenu::swapLayers(int index1, int index2, QGroupBox* thisBox){
     layerNames[index1] = layerNames[index2];
     layerNames[index2] = temp;
 
-//    //Now swap the text in the QLineEdits
-//    QLineEdit* thisLineEdit;
-//    foreach(QObject* qo, thisBox->children()){
-//        thisBox->childAt()
-//        thisLineEdit = qobject_cast<QLineEdit*>(qo);
-//        break; //just get the first child; I don't know a better way to do this.
-//    }
-
-//    QLineEdit* otherLineEdit;
-//    foreach(QObject* qo, otherBox->children()){
-//        otherLineEdit = qobject_cast<QLineEdit*>(qo);
-//        break; //just get the first child; I don't know a better way to do this.
-//    }
-
     QLineEdit* thisLineEdit = qobject_cast<QLineEdit*>(thisBox->layout()->itemAt(0)->widget());
     QLineEdit* otherLineEdit = qobject_cast<QLineEdit*>(otherBox->layout()->itemAt(0)->widget());
 
@@ -195,9 +181,26 @@ void LayerMenu::swapLayers(int index1, int index2, QGroupBox* thisBox){
     layerMenuLayout->removeWidget(thisBox);
     if (index1 < index2){ //move down
         layerMenuLayout->insertWidget(thisInsertionPoint + 1, thisBox);
+        if (index1 == indexOfActiveLayer){
+            indexOfActiveLayer++;
+            emit activeLayerChangedSignal(indexOfActiveLayer);
+        }
+        else if (index2 == indexOfActiveLayer){
+            indexOfActiveLayer--;
+            emit activeLayerChangedSignal(indexOfActiveLayer);
+        }
     }
     else{//move up
         layerMenuLayout->insertWidget(thisInsertionPoint - 1, thisBox);
+        if (index1 == indexOfActiveLayer){
+            indexOfActiveLayer--;
+            emit activeLayerChangedSignal(indexOfActiveLayer);
+        }
+        else if (index2 == indexOfActiveLayer){
+            indexOfActiveLayer++;
+            emit activeLayerChangedSignal(indexOfActiveLayer);
+        }
+        emit activeLayerChangedSignal(indexOfActiveLayer);
     }
     //    QMessageBox::information(
     //         this,
@@ -206,11 +209,6 @@ void LayerMenu::swapLayers(int index1, int index2, QGroupBox* thisBox){
 
     //Finally, if we swapped the active layer, highlight it
     //in its new position and emit an activeLayerChangedSignal
-    if (index1 == indexOfActiveLayer){
-        unhighlightGroupBox(getBox(indexOfActiveLayer));
-        indexOfActiveLayer = index2;
-        highlightGroupBox(getBox(indexOfActiveLayer));
-        emit activeLayerChangedSignal(indexOfActiveLayer);
-    }
+
     emit layersSwappedSignal(index1, index2);
 }
