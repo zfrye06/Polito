@@ -81,12 +81,28 @@ void Animation::setActiveFrame(int index) {
     activeFrameIndex = index;
 }
 
+int Animation::activeFrameIdx() const {
+    return activeFrameIndex;
+}
+
 Frame &Animation::activeFrame() {
     return *frames[activeFrameIndex];
 }
 
-void Animation::resize(int dim) {
+void Animation::resize(int dimension) {
+    if (dimension< 64) {
+        throw std::invalid_argument("Resize dimension must be at least 64.");
+    }
+    int before = dim;
+    resizeInternal(dimension);
+    emitter.emiteResizeEvent(new ResizeAction(this, before, dimension));
+}
 
+void Animation::resizeInternal(int dimension) {
+    this->dim = dimension;
+    for (auto& frame : frames) {
+        frame->resize(dim);
+    }
 }
 
 int Animation::numframes() const {

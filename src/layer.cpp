@@ -9,6 +9,11 @@ Layer::Layer(int dim) :
 Layer::Layer(QImage image) :
     image(std::shared_ptr<QPixmap>(new QPixmap(QPixmap::fromImage(image)))) {}
 
+void Layer::resize(int dimension) {
+    image = std::make_shared<QPixmap>(
+                image->scaled(dimension, dimension, Qt::KeepAspectRatio));
+}
+
 QRectF Layer::boundingRect() const {
     return QRectF(image->rect());
 }

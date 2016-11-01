@@ -34,9 +34,21 @@ void MainWindow::loadProject() {
             ifstream in(file.front().toStdString());
             std::unique_ptr<Animation> toLoad(new Animation(emitter));
             toLoad->load(in);
+            actionHistory.clear();
             drawArea->setFrame(&toLoad->activeFrame());
             drawArea->setScene(&toLoad->activeFrame().scene());
             previewArea->setFrames(&toLoad->getFrames());
+            scrubber->clear();
+            for (int i = 0; i < animation->numframes(); i++) {
+               scrubber->addFrame(i);
+            }
+            scrubber->setActiveFrame(animation->activeFrameIdx());
+            layerMenu->clear();
+            Frame &activeFrame = animation->activeFrame();
+            for (int i = 0; i < activeFrame.numlayers(); i++) {
+                layerMenu->addLayer();
+            }
+            layerMenu->setActiveLayer(activeFrame.activeLayerIdx());
             animation.swap(toLoad);
         } catch (const std::exception &ex) {
             std::cerr << "Unable to load project: " << ex.what() << std::endl;
@@ -51,6 +63,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 void MainWindow::imageSize() {
     int width = drawArea->width();
     int height = drawArea->height();
+    // TOOD: This leaks. Not deleted until the main window is.
     ImageSizeDialog* d = new ImageSizeDialog(this, width, height);
     d->activateWindow();
     d->showNormal();
@@ -59,10 +72,7 @@ void MainWindow::imageSize() {
 }
 
 void MainWindow::finishImageSize(int w, int h) {
-//    ScribbleAction* a = new ScribbleAction(scribbleArea);
-//    scribbleArea->resizeImage(w,h);
-//    a->finish();
-//    actionHistory.addAction(a);
+    animation->resize(w);
 }
 
 void MainWindow::initActions() {
@@ -190,6 +200,12 @@ void MainWindow::initSignals() {
 
     connect(&emitter, &AnimationEventEmitter::removeLayerEvent,
             &actionHistory, &ActionHistory::addAction);
+
+    connect(&emitter, &AnimationEventEmitter::resizeEvent,
+            this, [this](ResizeAction *action){
+                action->setWidgetToUpdate(drawArea);
+                actionHistory.addAction(action);
+            });
 
     connect(toolbar, &Toolbar::colorChanged,
             this, [this](QColor to){

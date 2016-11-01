@@ -70,6 +70,9 @@ class Frame {
     // or -1 if no duration is set.
     int duration() const;
 
+    // Resizes the image this frame represents to the given dimension.
+    void resize(int dim);
+
     // Removes all layers from this frame and adds a single empty layer.
     void clear();
 

@@ -15,6 +15,10 @@ class LayerMenu : public QWidget {
 public:
     explicit LayerMenu(QWidget *parent = 0);
 
+    void addLayer();
+    void setActiveLayer(int);
+    void clear();
+
     //These signals allow the LayerMenu to send information to the model
     //every time the ordering or number of layers in the LayerMenu is changed.
     //All information is given in terms of index numbers, with 0 representing

@@ -19,3 +19,7 @@ void Scrubber::removeFrame(int index) {
 void Scrubber::setActiveFrame(int index) {
     
 }
+
+void Scrubber::clear() {
+
+}

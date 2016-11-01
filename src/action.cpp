@@ -73,3 +73,14 @@ void ActionHistory::redo() {
   emit update();
   undoStack.push_back( a );
 }
+
+void ActionHistory::clear() {
+    for ( auto a : redoStack ) {
+        delete a;
+    }
+    for ( auto a : undoStack ) {
+        delete a;
+    }
+    redoStack.clear();
+    undoStack.clear();
+}

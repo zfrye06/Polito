@@ -184,3 +184,15 @@ void LayerMenu::swapLayers(int index1, int index2){
     }
     emit layersSwappedSignal(index1, index2);
 }
+
+void LayerMenu::addLayer() {
+
+}
+
+void LayerMenu::setActiveLayer(int index) {
+
+}
+
+void LayerMenu::clear() {
+
+}

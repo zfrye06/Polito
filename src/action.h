@@ -57,6 +57,11 @@ public:
     ActionHistory();
     ~ActionHistory();
 
+    /**
+     * @brief Removes all actions from the history.
+     */
+    void clear();
+
 signals:
     void update();
 

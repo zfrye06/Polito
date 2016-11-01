@@ -14,11 +14,13 @@
 class AddFrameAction;
 class MoveFrameAction;
 class RemoveFrameAction;
+class ResizeAction;
 
 class Animation {
     friend class AddFrameAction;
     friend class MoveFrameAction;
     friend class RemoveFrameAction;
+    friend class ResizeAction;
  public:
 
     static const int DEFAULT_DIMENSION = 512;
@@ -36,10 +38,11 @@ class Animation {
 
     void setActiveFrame(int index);
 
+    int activeFrameIdx() const;
+
     Frame &activeFrame();
 
-    // Resizes every frame in this animation to the given dimension.
-    // TODO: Add appropriately-typed size parameter.
+    // Resizes every frame in this animation to the given dimension
     void resize(int dim);
 
     int numframes() const;
@@ -59,6 +62,7 @@ class Animation {
     void addFrameInternal(std::unique_ptr<Frame>, int index);
     void moveFrameInternal(int fromIndex, int toIndex);
     void removeFrameInternal(int index);
+    void resizeInternal(int dim);
 
     std::vector<std::unique_ptr<Frame>> frames;
     int activeFrameIndex;
@@ -159,6 +163,37 @@ class RemoveFrameAction : public Action {
     std::unique_ptr<Frame> frame;
     int index;
     AnimationWidget *widget;
+};
+
+class ResizeAction : public Action {
+public:
+
+    ResizeAction(Animation *animation, int dimBefore, int dimAfter) :
+        animation(animation), dimBefore(dimBefore), dimAfter(dimAfter), widget(nullptr) {}
+
+    void undo() {
+        animation->resizeInternal(dimBefore);
+        if (widget != nullptr) {
+            widget->updateDisplay();
+        }
+    }
+
+    void redo() {
+        animation->resizeInternal(dimAfter);
+        if (widget != nullptr) {
+            widget->updateDisplay();
+        }
+    }
+
+    void setWidgetToUpdate(UpdatableWidget *w) {
+        widget = w;
+    }
+
+private:
+   Animation *animation;
+   int dimBefore;
+   int dimAfter;
+   UpdatableWidget *widget;
 };
 
 #endif // ANIMATION_H

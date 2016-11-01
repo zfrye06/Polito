@@ -17,9 +17,15 @@ class Layer : public QGraphicsItem {
  public:
 
     Layer(int dim);
+
     Layer(QImage);
+
+    void resize(int dim);
+
     QRectF boundingRect() const override;
+
     void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
+
     QPixmap &pixmap();
 
  private:

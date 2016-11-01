@@ -21,6 +21,10 @@ void DrawArea::setFrame(Frame *frame) {
     this->frame = frame;
 }
 
+void DrawArea::updateDisplay() {
+   viewport()->repaint();
+}
+
 void DrawArea::mousePressEvent(QMouseEvent *event) {
     if (!currentPaintHandler) {
         return;

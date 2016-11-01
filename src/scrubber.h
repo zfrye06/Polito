@@ -15,6 +15,7 @@ public:
     void moveFrame(int from, int to) override;
     void removeFrame(int index) override;
     void setActiveFrame(int index) override;
+    void clear();
 
 signals:
 

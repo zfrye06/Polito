@@ -5,11 +5,12 @@
 #include <QMouseEvent>
 #include <QObject>
 #include "action.h"
+#include "animationwidgets.h"
 #include "frame.h"
 #include "layer.h"
 #include "painthandler.h"
 
-class DrawArea : public QGraphicsView {
+class DrawArea : public QGraphicsView, public UpdatableWidget {
     Q_OBJECT
 
  public:
@@ -18,6 +19,7 @@ class DrawArea : public QGraphicsView {
     ~DrawArea();
     PaintHandler &paintHandler();
     void setFrame(Frame *frame);
+    void updateDisplay() override;
     virtual void mousePressEvent( QMouseEvent* event );
     virtual void mouseMoveEvent( QMouseEvent* event );
     virtual void mouseReleaseEvent( QMouseEvent* event );
