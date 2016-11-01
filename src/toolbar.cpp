@@ -69,13 +69,13 @@ void Toolbar::initWidgets(){
 }
 
 void Toolbar::initConnections(){
-    connect(colorButton, &QPushButton::pressed, this, &Toolbar::getColor);
-    connect(eraseButton, &QPushButton::pressed, this, &Toolbar::setEraser);
-    connect(brushButton, &QPushButton::pressed, this, &Toolbar::setBrush);
-    connect(fillButton, &QPushButton::pressed, this, &Toolbar::setFill);
-    connect(squareButton, &QPushButton::pressed, this, &Toolbar::setSquare);
-    connect(circleButton, &QPushButton::pressed, this, &Toolbar::setCircle);
-    connect(lineButton, &QPushButton::pressed, this, &Toolbar::setLine);
+    connect(colorButton, &QPushButton::clicked, this, &Toolbar::getColor);
+    connect(eraseButton, &QPushButton::clicked, this, &Toolbar::setEraser);
+    connect(brushButton, &QPushButton::clicked, this, &Toolbar::setBrush);
+    connect(fillButton, &QPushButton::clicked, this, &Toolbar::setFill);
+    connect(squareButton, &QPushButton::clicked, this, &Toolbar::setSquare);
+    connect(circleButton, &QPushButton::clicked, this, &Toolbar::setCircle);
+    connect(lineButton, &QPushButton::clicked, this, &Toolbar::setLine);
 }
 
 void Toolbar::setBrush() {
