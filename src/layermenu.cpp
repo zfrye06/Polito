@@ -1,11 +1,9 @@
 #include "layermenu.h"
-#include <vector>
 #include <QMessageBox>
 #include <QLineEdit>
 #include <QPalette>
 #include <QLabel>
 #include <QIcon>
-#include <QPixmap>
 
 LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent) {
     numLayers = 0;
@@ -112,6 +110,7 @@ void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
     if (numLayers == 1) {
         return;
     }
+    numLayers--;
     int index = getIndex(layerToBeDeleted);
     layerMenuLayout->removeWidget(layerToBeDeleted);
     foreach(QObject* child, layerToBeDeleted->children()){
@@ -119,11 +118,17 @@ void LayerMenu::deleteLayer(QGroupBox* layerToBeDeleted)
     }
     delete layerToBeDeleted;
     emit layerDeletedSignal(index);
-    if (index == indexOfActiveLayer){
+    if (index > indexOfActiveLayer){
+        return;
+    }
+    else if (index < indexOfActiveLayer){
+        indexOfActiveLayer--;
+    }
+    else if (index == indexOfActiveLayer){
         indexOfActiveLayer = index < numLayers ? index : index - 1;
         highlightGroupBox(getBox(indexOfActiveLayer));
-        emit activeLayerChangedSignal(indexOfActiveLayer);
     }
+    emit activeLayerChangedSignal(indexOfActiveLayer);
 }
 
 void LayerMenu::addLayerButtonClicked() {
@@ -137,10 +142,6 @@ void LayerMenu::deleteLayerButtonClicked() {
 void LayerMenu::moveLayerUpButtonClicked(){
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
     int index = getIndex(thisBox);
-    //        QMessageBox::information(
-    //            this,
-    //            tr("Index is"),
-    //            tr(std::to_string(index).c_str()) );
     if (index > 0){
         swapLayers(index, index-1);
     }
