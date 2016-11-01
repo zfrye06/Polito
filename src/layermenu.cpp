@@ -170,12 +170,12 @@ void LayerMenu::swapLayers(int index1, int index2){
     layerNames[index1] = layerNames[index2];
     layerNames[index2] = temp;
 
-    //Next set the new text in the LineEdits
-    QLineEdit* thisLineEdit = qobject_cast<QLineEdit*>(thisBox->layout()->itemAt(0)->widget());
-    QLineEdit* otherLineEdit = qobject_cast<QLineEdit*>(otherBox->layout()->itemAt(0)->widget());
+//    //Next set the new text in the LineEdits
+//    QLineEdit* thisLineEdit = qobject_cast<QLineEdit*>(thisBox->layout()->itemAt(0)->widget());
+//    QLineEdit* otherLineEdit = qobject_cast<QLineEdit*>(otherBox->layout()->itemAt(0)->widget());
 
-    thisLineEdit->setText(layerNames[index2]);
-    otherLineEdit->setText(layerNames[index1]);
+//    thisLineEdit->setText(layerNames[index2]);
+//    otherLineEdit->setText(layerNames[index1]);
 
     //Now swap the GroupBoxWidgets
     int thisInsertionPoint = layerMenuLayout->indexOf(thisBox);
@@ -201,7 +201,6 @@ void LayerMenu::swapLayers(int index1, int index2){
             indexOfActiveLayer++;
             emit activeLayerChangedSignal(indexOfActiveLayer);
         }
-        emit activeLayerChangedSignal(indexOfActiveLayer);
     }
     emit layersSwappedSignal(index1, index2);
 }
