@@ -143,6 +143,7 @@ void MainWindow::initWidgets() {
     upperArea->addWidget(drawArea);
     upperArea->addWidget(layerMenu);
 
+    lowerArea->addWidget(scrubber);
     lowerArea->addWidget(previewArea);
 
     fileMenu = new QMenu(tr("&File"), this);
