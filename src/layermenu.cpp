@@ -149,7 +149,7 @@ void LayerMenu::moveLayerUpButtonClicked(){
     //            tr("Index is"),
     //            tr(std::to_string(index).c_str()) );
     if (index > 0){
-        swapLayers(index, index-1, thisBox);
+        swapLayers(index, index-1);
     }
 }
 
@@ -157,12 +157,12 @@ void LayerMenu::moveLayerDownButtonClicked(){
     QGroupBox* thisBox = qobject_cast<QGroupBox*>(sender()->parent());
     int index = getIndex(thisBox);
     if (index < layerNames.size() - 1){
-        swapLayers(index, index+1, thisBox);
+        swapLayers(index, index+1);
     }
 }
 
-void LayerMenu::swapLayers(int index1, int index2, QGroupBox* thisBox){
-
+void LayerMenu::swapLayers(int index1, int index2){
+    QGroupBox* thisBox = getBox(index1);
     QGroupBox* otherBox = getBox(index2);
 
     //First swap the strings in layerNames
@@ -170,6 +170,7 @@ void LayerMenu::swapLayers(int index1, int index2, QGroupBox* thisBox){
     layerNames[index1] = layerNames[index2];
     layerNames[index2] = temp;
 
+    //Next set the new text in the LineEdits
     QLineEdit* thisLineEdit = qobject_cast<QLineEdit*>(thisBox->layout()->itemAt(0)->widget());
     QLineEdit* otherLineEdit = qobject_cast<QLineEdit*>(otherBox->layout()->itemAt(0)->widget());
 
@@ -202,13 +203,5 @@ void LayerMenu::swapLayers(int index1, int index2, QGroupBox* thisBox){
         }
         emit activeLayerChangedSignal(indexOfActiveLayer);
     }
-    //    QMessageBox::information(
-    //         this,
-    //         tr("Index is"),
-    //         tr(std::to_string(index1).c_str()) );
-
-    //Finally, if we swapped the active layer, highlight it
-    //in its new position and emit an activeLayerChangedSignal
-
     emit layersSwappedSignal(index1, index2);
 }

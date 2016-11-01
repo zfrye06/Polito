@@ -52,7 +52,7 @@ private:
     void addLayer(QString layerName);
     void highlightGroupBox(QGroupBox*);
     void unhighlightGroupBox(QGroupBox*);
-    void swapLayers(int, int, QGroupBox*);
+    void swapLayers(int, int);
     int getIndex(QGroupBox*);
     QGroupBox* getBox(int index);
 };
