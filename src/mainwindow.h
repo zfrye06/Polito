@@ -9,6 +9,7 @@
 #include <QWidget>
 #include <QGridLayout>
 #include <QSplitter>
+#include <memory>
 #include "action.h"
 #include "animation.h"
 #include "drawarea.h"
@@ -31,13 +32,15 @@ protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
+    void saveProject();
+    void loadProject();
     void imageSize();
     void finishImageSize(int w, int h);
 
 private:
 
     AnimationEventEmitter emitter;
-    Animation animation;
+    std::unique_ptr<Animation> animation;
     ActionHistory actionHistory;
     
     Toolbar *toolbar;
@@ -51,6 +54,8 @@ private:
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *optionMenu;
+    QAction *saveAct;
+    QAction *loadAct;
     QAction *undoAct;
     QAction *redoAct;
     QAction *imageSizeAct;

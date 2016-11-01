@@ -21,6 +21,8 @@ class Animation {
     friend class RemoveFrameAction;
  public:
 
+    static const int DEFAULT_DIMENSION = 512;
+
     // Constructs an animation with a single frame.
     Animation(AnimationEventEmitter &emitter);
 
@@ -60,6 +62,7 @@ class Animation {
 
     std::vector<std::unique_ptr<Frame>> frames;
     int activeFrameIndex;
+    int dim;
     AnimationEventEmitter &emitter;
 };
 

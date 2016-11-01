@@ -15,8 +15,8 @@ using namespace std;
 class PreviewArea : public QWidget {
     Q_OBJECT
 public:
-    explicit PreviewArea(QWidget *parent, vector<unique_ptr<Frame>> &publicFrames);
-
+    explicit PreviewArea(QWidget *parent, vector<unique_ptr<Frame>> *publicFrames);
+    void setFrames(vector<unique_ptr<Frame>> *publicFrames);
 signals:
 
 public slots:
@@ -30,7 +30,7 @@ private:
     bool isPlaying = false;
     int currentFrameNumber = 0;
 
-    const vector<unique_ptr<Frame>> &frames;
+    vector<unique_ptr<Frame>> *frames;
     QTimer* timer;
 
     QVBoxLayout* previewLayout;

@@ -7,11 +7,10 @@
 
 using namespace std;
 
-PreviewArea::PreviewArea(QWidget *parent, std::vector<std::unique_ptr<Frame>> &publicFrames) : QWidget(parent), frames(publicFrames){
+PreviewArea::PreviewArea(QWidget *parent, std::vector<std::unique_ptr<Frame>> *publicFrames) :
+    QWidget(parent), frames(publicFrames){
     initWidgets();
     initConnections();
-    setParent(parent);
-
 }
 
 void PreviewArea::initWidgets(){
@@ -119,4 +118,8 @@ void PreviewArea::goToPreviousFrame(){
         currentFrameNumber--;
     }
     cout << currentFrameNumber << endl;
+}
+
+void PreviewArea::setFrames(vector<unique_ptr<Frame>> *frames) {
+    this->frames = frames;
 }

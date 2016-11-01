@@ -16,7 +16,8 @@ class Layer : public QGraphicsItem {
     friend class DrawAction;
  public:
 
-    Layer();
+    Layer(int dim);
+    Layer(QImage);
     QRectF boundingRect() const override;
     void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *) override;
     QPixmap &pixmap();

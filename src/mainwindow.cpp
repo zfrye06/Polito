@@ -1,13 +1,47 @@
 
 #include <QtWidgets>
+#include <iostream>
+#include <fstream>
 
 #include "mainwindow.h"
 #include "imagesizedialog.h"
 
-MainWindow::MainWindow() : animation(emitter) {
+MainWindow::MainWindow() :
+    animation(std::unique_ptr<Animation>(new Animation(emitter))) {
     initActions();
     initWidgets();
     initSignals();
+}
+
+void MainWindow::saveProject() {
+    try {
+        QString fileName = QFileDialog::getSaveFileName(this);
+        ofstream out(fileName.toStdString());
+        animation->save(out);
+        out.close();
+    } catch (const std::exception &ex) {
+        std::cerr << "Unable to save project: " << ex.what() << std::endl;
+    }
+}
+
+void MainWindow::loadProject() {
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::FileMode::ExistingFile);
+    if (dialog.exec()) {
+        QStringList file = dialog.selectedFiles();
+        if (file.size() != 1) return;
+        try {
+            ifstream in(file.front().toStdString());
+            std::unique_ptr<Animation> toLoad(new Animation(emitter));
+            toLoad->load(in);
+            drawArea->setFrame(&toLoad->activeFrame());
+            drawArea->setScene(&toLoad->activeFrame().scene());
+            previewArea->setFrames(&toLoad->getFrames());
+            animation.swap(toLoad);
+        } catch (const std::exception &ex) {
+            std::cerr << "Unable to load project: " << ex.what() << std::endl;
+        }
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -32,6 +66,12 @@ void MainWindow::finishImageSize(int w, int h) {
 }
 
 void MainWindow::initActions() {
+    saveAct = new QAction(tr("Save Project"), this);
+    connect(saveAct, &QAction::triggered, this, &MainWindow::saveProject);
+
+    loadAct = new QAction(tr("Load Project"), this);
+    connect(loadAct, &QAction::triggered, this, &MainWindow::loadProject);
+
     imageSizeAct = new QAction(tr("&Image Size..."), this);
     connect(imageSizeAct, SIGNAL(triggered()), this, SLOT(imageSize()));
 
@@ -51,7 +91,7 @@ void MainWindow::initActions() {
     clearScreenAct->setShortcut(tr("Ctrl+L"));
     connect(clearScreenAct, &QAction::triggered,
             this, [this] {
-        animation.activeFrame().clear();
+        animation->activeFrame().clear();
     });
 
 }
@@ -63,12 +103,12 @@ void MainWindow::initWidgets() {
     upperArea = new QSplitter(window);
     lowerArea = new QSplitter(window);
     toolbar = new Toolbar(window);
-    drawArea = new DrawArea(&animation.activeFrame());
+    drawArea = new DrawArea(&animation->activeFrame());
     scrubber = new Scrubber(window);
-    previewArea = new PreviewArea(window, animation.getFrames());
+    previewArea = new PreviewArea(window, &animation->getFrames());
     layerMenu = new LayerMenu(window);
 
-    drawArea->setScene(&animation.activeFrame().scene());
+    drawArea->setScene(&animation->activeFrame().scene());
 
     connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
 
@@ -96,6 +136,8 @@ void MainWindow::initWidgets() {
     lowerArea->addWidget(previewArea);
 
     fileMenu = new QMenu(tr("&File"), this);
+    fileMenu->addAction(saveAct);
+    fileMenu->addAction(loadAct);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
 
@@ -156,37 +198,37 @@ void MainWindow::initSignals() {
 
     connect(scrubber, &Scrubber::frameAdded,
             this, [this](int index) {
-                animation.addFrame(index);
+                animation->addFrame(index);
     });
 
     connect(scrubber, &Scrubber::frameMoved,
             this, [this](int from, int to) {
-                animation.moveFrame(from, to);
+                animation->moveFrame(from, to);
     });
 
     connect(scrubber, &Scrubber::frameRemoved,
             this, [this](int index) {
-                animation.removeFrame(index);
+                animation->removeFrame(index);
     });
 
     connect(layerMenu, &LayerMenu::layerAddedSignal,
             this, [this](int index) {
-                animation.activeFrame().addLayer(index);
+                animation->activeFrame().addLayer(index);
     });
 
     connect(layerMenu, &LayerMenu::layersSwappedSignal,
             this, [this](int from, int to) {
-                animation.activeFrame().moveLayer(from, to);
+                animation->activeFrame().moveLayer(from, to);
     });
 
     connect(layerMenu, &LayerMenu::layerDeletedSignal,
             this, [this](int index) {
-                animation.activeFrame().removeLayer(index);
+                animation->activeFrame().removeLayer(index);
      });
 
     connect(layerMenu, &LayerMenu::activeLayerChangedSignal,
             this, [this](int to) {
-                animation.activeFrame().setActiveLayer(to);
+                animation->activeFrame().setActiveLayer(to);
     });
 
 }

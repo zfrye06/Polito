@@ -1,7 +1,8 @@
 
 #include "animation.h"
 
-Animation::Animation(AnimationEventEmitter &emitter) : activeFrameIndex(-1), emitter(emitter) {
+Animation::Animation(AnimationEventEmitter &emitter) :
+    activeFrameIndex(-1),  dim(Animation::DEFAULT_DIMENSION), emitter(emitter) {
     addFrame();
     activeFrameIndex = 0;
 }
@@ -14,7 +15,7 @@ void Animation::addFrame(int index) {
     if (index < 0 || index > frames.size()) {
         throw std::invalid_argument("Index out of bounds.");
     }
-    std::unique_ptr<Frame> f(new Frame(emitter));
+    std::unique_ptr<Frame> f(new Frame(emitter, dim));
     addFrameInternal(std::move(f), index);
     emitter.emitAddFrameEvent(new AddFrameAction(this, index));
 }
@@ -22,13 +23,13 @@ void Animation::addFrame(int index) {
 void Animation::addFrameInternal(std::unique_ptr<Frame> f, int index) {
     frames.insert(frames.begin() + index, std::move(f));
     if (activeFrameIndex >= index){
-        activeFrameIndex++;  
-    } 
+        activeFrameIndex++;
+    }
 }
 
 void Animation::moveFrame(int fromIndex, int toIndex) {
     if (fromIndex < 0 || fromIndex >= (int)frames.size() ||
-        toIndex < 0 || toIndex >= (int)frames.size()) {
+                    toIndex < 0 || toIndex >= (int)frames.size()) {
         throw std::invalid_argument("Index out of bounds.");
     }
     moveFrame(fromIndex, toIndex);
@@ -67,10 +68,10 @@ void Animation::removeFrame(int index) {
 void Animation::removeFrameInternal(int index) {
     frames.erase(frames.begin() + index);
     if (index < activeFrameIndex ||
-        (index == activeFrameIndex &&
-         activeFrameIndex == (int)frames.size())) {
+                    (index == activeFrameIndex &&
+                     activeFrameIndex == (int)frames.size())) {
         activeFrameIndex--;
-    }    
+    }
 }
 
 void Animation::setActiveFrame(int index) {
@@ -93,7 +94,24 @@ int Animation::numframes() const {
 }
 
 void Animation::save(std::ostream& out) const {
-    out << "TODO" << std::endl;
+    out << dim << " " << dim << std::endl; // height and width
+    out << numframes() << std::endl;
+    for (auto& frame : frames) {
+        QImage image = frame->image();
+        for (int row = 0; row < image.height(); row++) {
+            for (int col = 0; col < image.width(); col++) {
+                QColor color(image.pixel(row, col));
+                out << color.red() << " " <<
+                       color.green() << " " <<
+                       color.blue() << " " <<
+                       color.alpha();
+                if (col != image.width() - 1) {
+                    out << " ";
+                }
+            }
+            out << std::endl;
+        }
+    }
 }
 
 void Animation::saveExtendedFormat(std::ostream& out) const {
@@ -101,11 +119,40 @@ void Animation::saveExtendedFormat(std::ostream& out) const {
 }
 
 void Animation::saveGif(std::ostream& out) const {
-    out << "TODO" << std::endl;
 }
 
 void Animation::load(std::istream& in) {
-
+    int width, height, numFrames;
+    in >> width >> height >> numFrames;
+    if (in.fail() || width != height || numFrames == 0) {
+        throw std::runtime_error(
+                    "Unable to load: file contained misformatted width, height, nframes header.");
+    }
+    std::vector<std::unique_ptr<Frame>> tempFrames;
+    for (int i = 0; i < numFrames; i++) {
+        QImage image(width, height, QImage::Format_ARGB32);
+        image.fill(Qt::transparent);
+        for (int row = 0; row < image.height(); row++) {
+            for (int col = 0; col < image.width(); col++) {
+                int red, green, blue, alpha;
+                in >> red >> green >> blue >> alpha;
+                if (in.fail()) {
+                    throw std::runtime_error(
+                                "Unable to load: file contained misformatted or mis-sized frame section.");
+                }
+                QColor color(red, green, blue, alpha);
+                image.setPixelColor(row, col, color);
+            }
+        }
+        std::unique_ptr<Frame> frame(new Frame(emitter, image));
+        tempFrames.push_back(std::move(frame));
+    }
+    dim = height;
+    activeFrameIndex = 0;
+    frames.clear();
+    for (int i = 0; i < tempFrames.size(); i++) {
+        frames.push_back(std::move(tempFrames.at(i)));
+    }
 }
 
 std::vector<std::unique_ptr<Frame>>& Animation::getFrames(){

@@ -1,10 +1,13 @@
 
 #include "layer.h"
 
-Layer::Layer() :
-    image(std::make_shared<QPixmap>(500, 500)) {
+Layer::Layer(int dim) :
+    image(std::make_shared<QPixmap>(dim, dim)) {
     image->fill(Qt::transparent);
 }
+
+Layer::Layer(QImage image) :
+    image(std::shared_ptr<QPixmap>(new QPixmap(QPixmap::fromImage(image)))) {}
 
 QRectF Layer::boundingRect() const {
     return QRectF(image->rect());

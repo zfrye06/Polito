@@ -3,6 +3,7 @@
 #define FRAME_H
 
 #include <QGraphicsScene>
+#include <QImage>
 #include <vector>
 #include "action.h"
 #include "animationeventemitter.h"
@@ -22,7 +23,11 @@ class Frame {
  public:
 
     // Constructs a new frame with a single layer.
-    Frame(AnimationEventEmitter &emitter);
+    Frame(AnimationEventEmitter &emitter, int dim);
+
+    // Constructs a new frame with a single layer matching
+    // the given image.
+    Frame(AnimationEventEmitter &emitter, QImage);
 
     // Adds a single layer to the top of this frame.
     // Does not change the active layer.
@@ -68,7 +73,11 @@ class Frame {
     // Removes all layers from this frame and adds a single empty layer.
     void clear();
 
+    // Returns this frame's underlying QGraphicsScene.
     QGraphicsScene& scene();
+
+    // Returns the image this frame represents.
+    QImage image();
 
  private:
 
@@ -89,6 +98,7 @@ class Frame {
     QGraphicsScene gscene;
     int activeLayerIndex;
     int durationMs;
+    int dim;
 };
 
 class AddLayerAction : public Action {

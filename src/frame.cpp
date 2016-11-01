@@ -2,9 +2,15 @@
 #include "frame.h"
 #include <stdexcept>
 
-Frame::Frame(AnimationEventEmitter &emitter) :
-    emitter(emitter), activeLayerIndex(0), durationMs(-1) {
+Frame::Frame(AnimationEventEmitter &emitter, int dim) :
+    emitter(emitter), activeLayerIndex(0), durationMs(-1), dim(dim) {
     addLayer();
+    activeLayerIndex = 0;
+}
+
+Frame::Frame(AnimationEventEmitter &emitter, QImage image) :
+    emitter(emitter), activeLayerIndex(0), durationMs(-1) {
+    addLayerInternal(new Layer(image), 0);
     activeLayerIndex = 0;
 }
 
@@ -16,7 +22,7 @@ void Frame::addLayer(int index) {
     if (index < 0 || index > (int)layers.size()) {
         throw std::invalid_argument("Index out of bounds.");
     }
-    Layer *layer = new Layer();
+    Layer *layer = new Layer(dim);
     addLayerInternal(layer, index);
     emitter.emitAddLayerEvent(new AddLayerAction(this, layer, index));
 }
@@ -35,7 +41,7 @@ void Frame::addLayerInternal(Layer *layer, int index) {
 
 void Frame::moveLayer(int fromIndex, int toIndex) {
     if (fromIndex < 0 || fromIndex >= (int)layers.size() ||
-        toIndex < 0 || toIndex >= (int)layers.size()) {
+                    toIndex < 0 || toIndex >= (int)layers.size()) {
         throw std::invalid_argument("Index out of bounds");
     }
     moveLayerInternal(fromIndex, toIndex);
@@ -62,7 +68,7 @@ void Frame::moveLayerInternal(int fromIndex, int toIndex) {
         }
     }
     if (activeLayerIndex == fromIndex) {
-        activeLayerIndex = toIndex; 
+        activeLayerIndex = toIndex;
     }
     layers[toIndex] = layer;
     layer->setZValue(toIndex);
@@ -128,3 +134,13 @@ void Frame::clear() {
 }
 
 QGraphicsScene& Frame::scene() { return gscene; }
+
+QImage Frame::image() {
+    gscene.clearSelection();
+    gscene.setSceneRect(gscene.itemsBoundingRect());
+    QImage image(gscene.sceneRect().size().toSize(), QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+    QPainter painter(&image);
+    gscene.render(&painter);
+    return image;
+}
