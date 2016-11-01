@@ -185,8 +185,19 @@ void LayerMenu::swapLayers(int index1, int index2){
     emit layersSwappedSignal(index1, index2);
 }
 
-void LayerMenu::addLayer() {
+// TODO: Implement these FrameWidget methods. These allow actions to update
+// the UI state when undone.
 
+void LayerMenu::addLayer(int index) {
+
+}
+
+void LayerMenu::moveLayer(int from, int to) {
+    
+}
+
+void LayerMenu::removeLayer(int index) {
+    
 }
 
 void LayerMenu::setActiveLayer(int index) {

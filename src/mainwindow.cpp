@@ -46,7 +46,7 @@ void MainWindow::loadProject() {
             layerMenu->clear();
             Frame &activeFrame = animation->activeFrame();
             for (int i = 0; i < activeFrame.numlayers(); i++) {
-                layerMenu->addLayer();
+                layerMenu->addLayer(i);
             }
             layerMenu->setActiveLayer(activeFrame.activeLayerIdx());
             animation.swap(toLoad);

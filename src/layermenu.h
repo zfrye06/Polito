@@ -9,14 +9,17 @@
 #include <QLineEdit>
 #include <QGroupBox>
 #include <QIcon>
+#include "animationwidgets.h"
 
-class LayerMenu : public QWidget {
+class LayerMenu : public QWidget, public FrameWidget {
     Q_OBJECT
 public:
     explicit LayerMenu(QWidget *parent = 0);
 
-    void addLayer();
-    void setActiveLayer(int);
+    void addLayer(int index) override;
+    void moveLayer(int from, int to) override;
+    void removeLayer(int index) override;
+    void setActiveLayer(int index) override;
     void clear();
 
     //These signals allow the LayerMenu to send information to the model

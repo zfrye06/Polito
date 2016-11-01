@@ -7,6 +7,7 @@
 #include <vector>
 #include "action.h"
 #include "animationeventemitter.h"
+#include "animationwidgets.h"
 #include "layer.h"
 
 class AddLayerAction;
@@ -108,7 +109,7 @@ class AddLayerAction : public Action {
  public:
 
  AddLayerAction(Frame *frame, Layer *layer, int index) :
-    frame(frame), layer(layer), index(index), ownsLayer(false) {}
+    frame(frame), layer(layer), index(index), ownsLayer(false), widget(nullptr) {}
 
     ~AddLayerAction() {
         if (ownsLayer) {
@@ -119,11 +120,21 @@ class AddLayerAction : public Action {
     void undo() {
         frame->removeLayerInternal(layer, index);
         ownsLayer = true;
+        if (widget != nullptr) {
+            widget->removeLayer(index);
+        }
     }
 
     void redo() {
         frame->addLayerInternal(layer, index);
         ownsLayer = false;
+        if (widget != nullptr) {
+            widget->addLayer(index);
+        }
+    }
+
+    void setFrameWidget(FrameWidget *w) {
+        widget = w;
     }
 
  private:
@@ -131,33 +142,45 @@ class AddLayerAction : public Action {
     Layer *layer;
     int index;
     bool ownsLayer;
+    FrameWidget *widget;
 };
 
 class MoveLayerAction : public Action {
  public:
 
  MoveLayerAction(Frame *frame, int fromIndex, int toIndex) :
-    frame(frame), fromIndex(fromIndex), toIndex(toIndex) {}
+    frame(frame), fromIndex(fromIndex), toIndex(toIndex), widget(nullptr) {}
 
     void undo() {
         frame->moveLayerInternal(toIndex, fromIndex);
+        if (widget != nullptr) {
+            widget->moveLayer(toIndex, fromIndex);
+        }
     }
 
     void redo() {
         frame->moveLayerInternal(fromIndex, toIndex);
+        if (widget != nullptr) {
+            widget->moveLayer(fromIndex, toIndex);
+        }
+    }
+
+    void setFrameWidget(FrameWidget *w) {
+        widget = w;
     }
 
  private:
     Frame *frame;
     int fromIndex;
     int toIndex;
+    FrameWidget *widget;
 };
 
 class RemoveLayerAction : public Action {
  public:
 
  RemoveLayerAction(Frame *frame, Layer *layer, int index) :
-    frame(frame), layer(layer), index(index), ownsLayer(true) {}
+    frame(frame), layer(layer), index(index), ownsLayer(true), widget(nullptr) {}
 
     ~RemoveLayerAction() {
         if (ownsLayer) {
@@ -168,11 +191,21 @@ class RemoveLayerAction : public Action {
     void undo() {
         frame->addLayerInternal(layer, index);
         ownsLayer = false;
+        if (widget != nullptr) {
+            widget->addLayer(index);
+        }
     }
 
     void redo() {
         frame->removeLayerInternal(layer, index);
         ownsLayer = true;
+        if (widget != nullptr) {
+            widget->removeLayer(index);
+        }
+    }
+
+    void setFrameWidget(FrameWidget *w) {
+        widget = w;
     }
 
  private:
@@ -180,6 +213,7 @@ class RemoveLayerAction : public Action {
     Layer *layer;
     int index;
     bool ownsLayer;
+    FrameWidget *widget;
 };
 
 #endif // FRAME_H
