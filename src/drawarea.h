@@ -20,9 +20,9 @@ class DrawArea : public QGraphicsView, public UpdatableWidget {
     PaintHandler &paintHandler();
     void setFrame(Frame *frame);
     void updateDisplay() override;
-    virtual void mousePressEvent( QMouseEvent* event );
-    virtual void mouseMoveEvent( QMouseEvent* event );
-    virtual void mouseReleaseEvent( QMouseEvent* event );
+    virtual void mousePressEvent( QMouseEvent* event ) override;
+    virtual void mouseMoveEvent( QMouseEvent* event ) override;
+    virtual void mouseReleaseEvent( QMouseEvent* event ) override;
 
 public slots:
     void setPaintHandler( PaintHandler* paintHandler );
