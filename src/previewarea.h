@@ -9,17 +9,20 @@
 #include <memory>
 #include <vector>
 #include "animation.h"
+#include "frame.h"
 
 using namespace std;
 
 class PreviewArea : public QWidget {
     Q_OBJECT
 public:
+    void setPreview();
     explicit PreviewArea(QWidget *parent, vector<unique_ptr<Frame>> *publicFrames);
     void setFrames(vector<unique_ptr<Frame>> *publicFrames);
 signals:
 
 public slots:
+    void updatePreview();
     void playAnimation();
     void pauseAnimation();
     void goToNextFrameIsPlaying();

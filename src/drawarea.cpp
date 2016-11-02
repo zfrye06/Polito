@@ -37,6 +37,7 @@ void DrawArea::mousePressEvent(QMouseEvent *event) {
     currentPaintHandler->mousePressEvent(frame->activeLayer()->pixmap(), event->buttons(), pos );
     
     this->viewport()->update();
+    emit updatePreview();
 }
 
 void DrawArea::mouseMoveEvent(QMouseEvent *event) {
@@ -48,6 +49,7 @@ void DrawArea::mouseMoveEvent(QMouseEvent *event) {
     currentPaintHandler->mouseMoveEvent(frame->activeLayer()->pixmap(), event->buttons(), pos );
     
     this->viewport()->update();
+    emit updatePreview();
 }
 
 void DrawArea::mouseReleaseEvent(QMouseEvent *event) {
@@ -63,4 +65,5 @@ void DrawArea::mouseReleaseEvent(QMouseEvent *event) {
     emit addAction(currentAction);
     
     this->viewport()->update();
+    emit updatePreview();
 }

@@ -11,6 +11,8 @@ MainWindow::MainWindow() :
     initActions();
     initWidgets();
     initSignals();
+
+    previewArea->setPreview();
 }
 
 void MainWindow::saveProject() {
@@ -183,6 +185,9 @@ void MainWindow::initWidgets() {
 }
 
 void MainWindow::initSignals() {
+
+    connect(drawArea, &DrawArea::updatePreview, previewArea, &PreviewArea::updatePreview);
+
     connect(drawArea, &DrawArea::addAction,
             &actionHistory, &ActionHistory::addAction);
 

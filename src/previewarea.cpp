@@ -3,6 +3,8 @@
 #include <QLayout>
 #include <QTimer>
 #include <iostream>
+#include <memory>
+#include <QRectF>
 #include "previewarea.h"
 
 using namespace std;
@@ -50,8 +52,6 @@ void PreviewArea::initWidgets(){
 }
 
 void PreviewArea::initConnections(){
-    //timer = new QTimer(this);
-    //connect(timer, SIGNAL(timeout()), this, SLOT(goToNextFrame()));
     connect(playButton, &QPushButton::released, this, &PreviewArea::playAnimation);
     connect(pauseButton, &QPushButton::released, this, &PreviewArea::pauseAnimation);
     connect(nextFrame, &QPushButton::released, this, &PreviewArea::goToNextFrame);
@@ -59,14 +59,32 @@ void PreviewArea::initConnections(){
 
 }
 
+void PreviewArea::setPreview(){
+    QRectF rect(previewLayout->itemAt(0)->geometry());
+    QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
+    currentFrame->setScene(scene);
+    float widthScale = rect.x() / scene->width();
+    float heightScale = rect.y() / scene->height();
+    currentFrame->scale(.5,.5);
+//    if(widthScale > heightScale){
+//        currentFrame->scale(widthScale, widthScale);
+//    }
+//    else{
+//        currentFrame->scale(heightScale, heightScale);
+//    }
+}
+
+void PreviewArea::updatePreview(){
+    currentFrame->viewport()->update();
+}
+
 void PreviewArea::playAnimation(){
     if(!isPlaying){
         cout << "Begin Play..." << endl;
         isPlaying = true;
-
-        //int duration = frames[currentFrameNumber]->duration();
+        int duration = frames->at(currentFrameNumber)->duration();
         cout << currentFrameNumber << endl;
-        QTimer::singleShot(200, this, SLOT(goToNextFrameIsPlaying()));
+        QTimer::singleShot(duration, this, SLOT(goToNextFrameIsPlaying()));
     }
     else{
         cout << "Already Playing..." << endl;
@@ -80,13 +98,13 @@ void PreviewArea::pauseAnimation(){
 
 void PreviewArea::goToNextFrameIsPlaying(){
     if(isPlaying){
-        if(currentFrameNumber == 6){
+        if(currentFrameNumber == frames->size()){
             currentFrameNumber = 0;
         }
         else{
             currentFrameNumber++;
         }
-        cout << currentFrameNumber << endl;
+        currentFrame->setScene(&frames->at(currentFrameNumber)->scene());
         QTimer::singleShot(200, this, SLOT(goToNextFrameIsPlaying()));
     }
     else{

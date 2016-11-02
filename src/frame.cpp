@@ -3,13 +3,13 @@
 #include <stdexcept>
 
 Frame::Frame(AnimationEventEmitter &emitter, int dim) :
-    emitter(emitter), activeLayerIndex(0), durationMs(-1), dim(dim) {
+    emitter(emitter), activeLayerIndex(0), durationMs(1000), dim(dim) {
     addLayer();
     activeLayerIndex = 0;
 }
 
 Frame::Frame(AnimationEventEmitter &emitter, QImage image) :
-    emitter(emitter), activeLayerIndex(0), durationMs(-1) {
+    emitter(emitter), activeLayerIndex(0), durationMs(1000) {
     addLayerInternal(new Layer(image), 0);
     activeLayerIndex = 0;
 }
