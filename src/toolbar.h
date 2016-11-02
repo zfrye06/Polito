@@ -21,6 +21,7 @@ signals:
 
 public slots:
     void getColor();
+    void setBrush();
 
 private:
     QVBoxLayout* toolsLayout;
@@ -45,7 +46,6 @@ private:
     QIcon squareIcon = QIcon(QPixmap(":/icons/square"));
     QIcon lineIcon = QIcon(QPixmap(":/icons/line"));
 
-    void setBrush();
     void setEraser();
     void setFill();
     void setSquare();
