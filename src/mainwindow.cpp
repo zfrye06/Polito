@@ -129,7 +129,7 @@ void MainWindow::initActions() {
 
     brushAct = new QAction(tr("&Select Brush Tool"), this);
     brushAct->setShortcut(tr("Ctrl+B"));
-    connect(brushAct, &QAction::triggered, this, [this]{drawArea->setPaintHandler(new PaintBrush);});
+    connect(brushAct, &QAction::triggered, toolbar, &Toolbar::setBrush);
 
     fileMenu->addAction(saveAct);
     fileMenu->addAction(loadAct);
@@ -140,6 +140,8 @@ void MainWindow::initActions() {
     editMenu->addAction(redoAct);
     editMenu->addSeparator();
     editMenu->addAction(imageSizeAct);
+    editMenu->addAction(chooseColor);
+    editMenu->addAction(brushAct);
 
     optionMenu->addAction(clearScreenAct);
     optionMenu->addAction(keyBindAct);

@@ -79,6 +79,7 @@ void Toolbar::initConnections(){
 }
 
 void Toolbar::setBrush() {
+    brushButton->setChecked(true);
     emit setPaintHandler( new PaintBrush() );
 }
 
