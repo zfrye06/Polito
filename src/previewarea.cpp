@@ -5,6 +5,7 @@
 #include <iostream>
 #include <memory>
 #include <QRectF>
+#include <QtGlobal>
 #include "previewarea.h"
 
 using namespace std;
@@ -63,11 +64,15 @@ void PreviewArea::setPreview(){
     QRectF rect(previewLayout->itemAt(0)->geometry());
     QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
     currentFrame->setScene(scene);
-    currentFrame->scale(rect.width() / scene->width(), rect.height() / scene->height());
+    int asdf = scene->width();
+    width = 80 / asdf;
+    height = 80 / scene->height();
+    currentFrame->scale(width, height);
 }
 
 void PreviewArea::updatePreview(){
     currentFrame->viewport()->update();
+    QRectF rect(previewLayout->itemAt(0)->geometry());
 }
 
 void PreviewArea::playAnimation(){
