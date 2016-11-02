@@ -5,15 +5,22 @@
 #include <QScrollArea>
 #include <QListWidget>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QPushButton>
 #include <QModelIndexList>
 #include <QDropEvent>
+#include <vector>
+#include <memory>
+#include "animation.h"
 #include "animationwidgets.h"
+
+using namespace std;
 
 class Scrubber : public QWidget, public AnimationWidget {
     Q_OBJECT
 public:
-    explicit Scrubber(QWidget *parent = 0);
+    explicit Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames);
+    void setFrames(vector<unique_ptr<Frame>> *publicFrames);
 
     // Calling any of these will not emit the
     // corresponding signal.
@@ -43,7 +50,10 @@ private:
     QPushButton* moveFrameLeft;
     QScrollArea* scrollArea;
     QListWidget* list;
-    QVBoxLayout* layout;
+    QHBoxLayout* layout;
+    QVBoxLayout* buttons;
+
+    vector<unique_ptr<Frame>> *frames;
 };
 
 #endif // SCRUBBER_H

@@ -8,8 +8,8 @@
 
 MainWindow::MainWindow() :
     animation(std::unique_ptr<Animation>(new Animation(emitter))) {
-    initActions();
     initWidgets();
+    initActions();
     initSignals();
 
     previewArea->setPreview();
@@ -84,7 +84,6 @@ void MainWindow::imageSize() {
 }
 
 void MainWindow::bindings(){
-    kd = new KeyBindingDialog;
     kd->activateWindow();
     kd->showNormal();
     kd->setVisible(true);
@@ -92,6 +91,10 @@ void MainWindow::bindings(){
 
 void MainWindow::setColorBind(const QKeySequence &keySequence){
     chooseColor->setShortcut(keySequence);
+}
+
+void MainWindow::setBrushBind(const QKeySequence &keySequence){
+    brushAct->setShortcut(keySequence);
 }
 
 void MainWindow::finishImageSize(int w, int h) {
@@ -114,12 +117,6 @@ void MainWindow::initActions() {
     keyBindAct = new QAction(tr("&Set Key Bindings"), this);
     connect(keyBindAct, &QAction::triggered, this, &MainWindow::bindings);
 
-//    connect(kd, &KeyBindingDialog::colorChanged, this, &MainWindow::setColorBind);
-
-    chooseColor = new QAction(tr("&Choose Color"), this);
-    chooseColor->setShortcut(tr("&Ctrl+P"));
-//    connect(chooseColor, &QAction::triggered, toolbar, &Toolbar::getColor);
-
     undoAct = new QAction(tr("&Undo"), this);
     undoAct->setShortcuts(QKeySequence::Undo);
     connect(undoAct, &QAction::triggered, &actionHistory, &ActionHistory::undo);
@@ -139,7 +136,28 @@ void MainWindow::initActions() {
         animation->activeFrame().clear();
     });
 
+    chooseColor = new QAction(tr("&Choose Color"), this);
+    chooseColor->setShortcut(tr("Ctrl+P"));
+    connect(chooseColor, &QAction::triggered, toolbar, &Toolbar::getColor);
 
+    brushAct = new QAction(tr("&Select Brush Tool"), this);
+    brushAct->setShortcut(tr("Ctrl+B"));
+    connect(brushAct, &QAction::triggered, toolbar, &Toolbar::setBrush);
+
+    fileMenu->addAction(saveAct);
+    fileMenu->addAction(loadAct);
+    fileMenu->addSeparator();
+    fileMenu->addAction(exitAct);
+
+    editMenu->addAction(undoAct);
+    editMenu->addAction(redoAct);
+    editMenu->addSeparator();
+    editMenu->addAction(imageSizeAct);
+    editMenu->addAction(chooseColor);
+    editMenu->addAction(brushAct);
+
+    optionMenu->addAction(clearScreenAct);
+    optionMenu->addAction(keyBindAct);
 }
 
 void MainWindow::initWidgets() {
@@ -150,11 +168,11 @@ void MainWindow::initWidgets() {
     lowerArea = new QSplitter(window);
     toolbar = new Toolbar(window);
     drawArea = new DrawArea(&animation->activeFrame());
-    scrubber = new Scrubber(window);
+    scrubber = new Scrubber(window, &animation->getFrames());
     previewArea = new PreviewArea(window, &animation->getFrames());
     layerMenu = new LayerMenu(window);
+    kd = new KeyBindingDialog;
 
-    connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
     drawArea->setScene(&animation->activeFrame().scene());
 
     layout->addWidget(splitter);
@@ -189,14 +207,8 @@ void MainWindow::initWidgets() {
     fileMenu->addAction(exitAct);
 
     editMenu = new QMenu(tr("&Edit"), this);
-    editMenu->addAction(undoAct);
-    editMenu->addAction(redoAct);
-    editMenu->addSeparator();
-    editMenu->addAction(imageSizeAct);
 
     optionMenu = new QMenu(tr("&Options"), this);
-    optionMenu->addAction(clearScreenAct);
-    optionMenu->addAction(keyBindAct);
 
     menuBar()->addMenu(fileMenu);
     menuBar()->addMenu(editMenu);
@@ -287,5 +299,10 @@ void MainWindow::initSignals() {
             this, [this](int to) {
                 animation->activeFrame().setActiveLayer(to);
     });
+
+    connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
+
+    connect(kd, &KeyBindingDialog::colorSignal, this, &MainWindow::setColorBind);
+    connect(kd, &KeyBindingDialog::brushSignal, this, &MainWindow::setBrushBind);
 
 }

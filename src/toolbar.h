@@ -21,6 +21,14 @@ signals:
 
 public slots:
     void getColor();
+    void setBrush();
+    void setEraser();
+    void setFill();
+    void setSquare();
+    void setCircle();
+    void setLine();
+    void initWidgets();
+    void initConnections();
 
 private:
     QVBoxLayout* toolsLayout;
@@ -45,14 +53,6 @@ private:
     QIcon squareIcon = QIcon(QPixmap(":/icons/square"));
     QIcon lineIcon = QIcon(QPixmap(":/icons/line"));
 
-    void setBrush();
-    void setEraser();
-    void setFill();
-    void setSquare();
-    void setCircle();
-    void setLine();
-    void initWidgets();
-    void initConnections();
 };
 
 #endif // TOOLBAR_H
