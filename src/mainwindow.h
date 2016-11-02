@@ -18,7 +18,7 @@
 #include "previewarea.h"
 #include "scrubber.h"
 #include "toolbar.h"
-#include "keybindingdialogue.h"
+#include "keybindingdialog.h"
 
 
 class DrawArea;
