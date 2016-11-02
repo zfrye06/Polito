@@ -79,6 +79,9 @@ private:
     void initActions();
     void initSignals();
     void initWidgets();
+    void synchronizeScrubber();
+    void synchronizeLayerMenu();
+    
 };
 
 #endif
