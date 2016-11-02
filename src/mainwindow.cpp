@@ -46,18 +46,8 @@ void MainWindow::loadProject() {
             actionHistory.clear();
             drawArea->setFrame(&toLoad->activeFrame());
             previewArea->setFrames(&toLoad->getFrames());
-            scrubber->clear();
-            std::cout << animation->numframes() << std::endl;
-            for (int i = 0; i < animation->numframes(); i++) {
-               scrubber->addFrame(i);
-            }
-            scrubber->setActiveFrame(animation->activeFrameIdx());
-            layerMenu->clear();
-            Frame &activeFrame = animation->activeFrame();
-            for (int i = 0; i < activeFrame.numlayers(); i++) {
-                layerMenu->addLayer(i);
-            }
-            layerMenu->setActiveLayer(activeFrame.activeLayerIdx());
+            synchronizeScrubber();
+            synchronizeLayerMenu();
             animation.swap(toLoad);
         } catch (const std::exception &ex) {
             QString msg = "Unable to load project: ";
@@ -99,6 +89,22 @@ void MainWindow::setBrushBind(const QKeySequence &keySequence){
 
 void MainWindow::finishImageSize(int w, int h) {
     animation->resize(w);
+}
+
+void MainWindow::synchronizeScrubber() {
+    scrubber->clear();
+    for (int i = 0; i < animation->numframes(); i++) {
+        scrubber->addFrame(i);
+    }
+    scrubber->setActiveFrame(animation->activeFrameIdx());
+}
+
+void MainWindow::synchronizeLayerMenu() {
+    layerMenu->clear();
+    for (int i = 0; i < animation->activeFrame().numlayers(); i++) {
+        layerMenu->addLayer(i);
+    }
+    layerMenu->setActiveLayer(animation->activeFrame().activeLayerIdx());
 }
 
 void MainWindow::initActions() {
@@ -290,6 +296,7 @@ void MainWindow::initSignals() {
                 animation->removeFrame(removeIndex);
                 scrubber->removeFrame(removeIndex);
                 scrubber->setActiveFrame(animation->activeFrameIdx());
+                synchronizeLayerMenu();
                 drawArea->setFrame(&animation->activeFrame());
     });
 
@@ -297,6 +304,7 @@ void MainWindow::initSignals() {
             this, [this](int index) {
                 animation->setActiveFrame(index);
                 scrubber->setActiveFrame(index);
+                synchronizeLayerMenu();
                 drawArea->setFrame(&animation->activeFrame());
     });
 
