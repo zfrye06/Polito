@@ -6,6 +6,7 @@
 #include <memory>
 #include <QRectF>
 #include <QtGlobal>
+#include <QIntValidator>
 #include "previewarea.h"
 
 using namespace std;
@@ -26,6 +27,7 @@ void PreviewArea::initWidgets(){
     pauseButton = new QPushButton;
     nextFrame = new QPushButton;
     previousFrame = new QPushButton;
+    duration = new QTextEdit();
 
     playButton->setCheckable(true);
     pauseButton->setCheckable(true);
@@ -47,6 +49,7 @@ void PreviewArea::initWidgets(){
     buttonLayout->addWidget(pauseButton);
     buttonLayout->addWidget(previousFrame);
     buttonLayout->addWidget(nextFrame);
+    buttonLayout->addWidget(duration);
 
     previewLayout->addWidget(currentFrame);
     previewLayout->addLayout(buttonLayout);
@@ -57,7 +60,24 @@ void PreviewArea::initConnections(){
     connect(pauseButton, &QPushButton::released, this, &PreviewArea::pauseAnimation);
     connect(nextFrame, &QPushButton::released, this, &PreviewArea::goToNextFrame);
     connect(previousFrame, &QPushButton::released, this, &PreviewArea::goToPreviousFrame);
+    connect(duration, &QTextEdit::textChanged, this, &PreviewArea::updateDuration);
 
+}
+
+void PreviewArea::updateDuration(){
+    QString text = duration->toPlainText();
+    QIntValidator validator;
+    for(int i = 0; i < text.length(); i++){
+        if(QValidator::Acceptable != validator.validate(text.at(i), i)){
+            text.remove(i);
+            i--;
+        }
+    }
+
+    if(duration->toPlainText() != text){
+        duration->setPlainText(text);
+    }
+    frames->at(currentFrameNumber)->setDuration(text.toInt());
 }
 
 void PreviewArea::setPreview(){
@@ -67,7 +87,6 @@ void PreviewArea::setPreview(){
     int asdf = scene->width();
     width = 80 / asdf;
     height = 80 / scene->height();
-    currentFrame->scale(width, height);
 }
 
 void PreviewArea::updatePreview(){

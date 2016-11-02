@@ -6,6 +6,7 @@
 #include <QLayout>
 #include <QGraphicsView>
 #include <QTimer>
+#include <QTextEdit>
 #include <memory>
 #include <vector>
 #include "animation.h"
@@ -28,6 +29,7 @@ public slots:
     void goToNextFrameIsPlaying();
     void goToNextFrame();
     void goToPreviousFrame();
+    void updateDuration();
 
 private:
     bool isPlaying = false;
@@ -47,6 +49,7 @@ private:
     QPushButton* pauseButton;
     QPushButton* nextFrame;
     QPushButton* previousFrame;
+    QTextEdit* duration;
 
     QIcon playIcon = QIcon(QPixmap(":/icons/play"));
     QIcon pauseIcon = QIcon(QPixmap(":/icons/pause"));
