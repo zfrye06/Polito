@@ -16,22 +16,22 @@ public:
     ~KeyBindingDialog();
 
 signals:
-    colorSignal(const QKeySequence&);
-    eraserSignal(const QKeySequence&);
-    lineSignal(const QKeySequence&);
-    addFrameSignal(const QKeySequence&);
-    addLayerSignal(const QKeySequence&);
-    nextFrameSignal(const QKeySequence&);
-    nextLayerSignal(const QKeySequence&);
-    removeFrameSignal(const QKeySequence&);
-    removeLayerSignal(const QKeySequence&);
-    brushSignal(const QKeySequence&);
-    fillSignal(const QKeySequence&);
-    selectSignal(const QKeySequence&);
-    circleSignal(const QKeySequence&);
-    squareSignal(const QKeySequence&);
-    previousFrameSignal(const QKeySequence&);
-    previousLayerSignal(const QKeySequence&);
+    void colorSignal(const QKeySequence&);
+    void eraserSignal(const QKeySequence&);
+    void lineSignal(const QKeySequence&);
+    void addFrameSignal(const QKeySequence&);
+    void addLayerSignal(const QKeySequence&);
+    void nextFrameSignal(const QKeySequence&);
+    void nextLayerSignal(const QKeySequence&);
+    void removeFrameSignal(const QKeySequence&);
+    void removeLayerSignal(const QKeySequence&);
+    void brushSignal(const QKeySequence&);
+    void fillSignal(const QKeySequence&);
+    void selectSignal(const QKeySequence&);
+    void circleSignal(const QKeySequence&);
+    void squareSignal(const QKeySequence&);
+    void previousFrameSignal(const QKeySequence&);
+    void previousLayerSignal(const QKeySequence&);
 
 private slots:
 
