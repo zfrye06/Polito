@@ -15,14 +15,21 @@ MainWindow::MainWindow() :
     previewArea->setPreview();
 }
 
-void MainWindow::saveProject() {
+void MainWindow::saveProject(bool extendedFormat) {
     try {
         QString fileName = QFileDialog::getSaveFileName(this);
         ofstream out(fileName.toStdString());
-        animation->save(out);
+        if (extendedFormat) {
+            animation->saveExtendedFormat(out);
+        } else {
+            animation->save(out);
+        }
         out.close();
     } catch (const std::exception &ex) {
-        std::cerr << "Unable to save project: " << ex.what() << std::endl;
+        QString msg = "Unable to save project: ";
+        msg += ex.what();
+        std::cerr << msg.toStdString() << std::endl;
+        QMessageBox::information(this, tr("Polito"), msg);
     }
 }
 
@@ -53,7 +60,10 @@ void MainWindow::loadProject() {
             layerMenu->setActiveLayer(activeFrame.activeLayerIdx());
             animation.swap(toLoad);
         } catch (const std::exception &ex) {
-            std::cerr << "Unable to load project: " << ex.what() << std::endl;
+            QString msg = "Unable to load project: ";
+            msg += ex.what();
+            std::cerr << msg.toStdString() << std::endl;
+            QMessageBox::information(this, tr("Polito"), msg);
         }
     }
 }
@@ -90,7 +100,10 @@ void MainWindow::finishImageSize(int w, int h) {
 
 void MainWindow::initActions() {
     saveAct = new QAction(tr("Save Project"), this);
-    connect(saveAct, &QAction::triggered, this, &MainWindow::saveProject);
+    connect(saveAct, &QAction::triggered, this, [this] { this->saveProject(false); });
+
+    saveExtendedAct = new QAction(tr("Save Project (Extended Format)"), this);
+    connect(saveExtendedAct, &QAction::triggered, this, [this] { this->saveProject(true); });
 
     loadAct = new QAction(tr("Load Project"), this);
     connect(loadAct, &QAction::triggered, this, &MainWindow::loadProject);
@@ -144,7 +157,6 @@ void MainWindow::initWidgets() {
     connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
     drawArea->setScene(&animation->activeFrame().scene());
 
-
     layout->addWidget(splitter);
 
     splitter->setOrientation(Qt::Vertical);
@@ -171,6 +183,7 @@ void MainWindow::initWidgets() {
 
     fileMenu = new QMenu(tr("&File"), this);
     fileMenu->addAction(saveAct);
+    fileMenu->addAction(saveExtendedAct);
     fileMenu->addAction(loadAct);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);

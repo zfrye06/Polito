@@ -28,3 +28,7 @@ void Layer::paint(QPainter *painter,
 QPixmap &Layer::pixmap() {
     return *image.get();
 }
+
+int Layer::dimension() const {
+    return image->height();
+}
