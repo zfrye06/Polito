@@ -32,6 +32,8 @@ public slots:
 private:
     bool isPlaying = false;
     int currentFrameNumber = 0;
+    int width;
+    int height;
 
     vector<unique_ptr<Frame>> *frames;
     QTimer* timer;
