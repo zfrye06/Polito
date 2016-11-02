@@ -126,7 +126,7 @@ void MainWindow::initWidgets() {
     lowerArea = new QSplitter(window);
     toolbar = new Toolbar(window);
     drawArea = new DrawArea(&animation->activeFrame());
-    scrubber = new Scrubber(window);
+    scrubber = new Scrubber(window, &animation->getFrames());
     previewArea = new PreviewArea(window, &animation->getFrames());
     layerMenu = new LayerMenu(window);
 

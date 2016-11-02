@@ -4,96 +4,57 @@
 #include <QAbstractItemView>
 #include <iostream>
 #include <vector>
+#include <QImage>
+#include "frame.h"
 
-Scrubber::Scrubber(QWidget *parent) : QWidget(parent) {
+Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget(parent) {
 
-    layout = new QVBoxLayout(this);
+    this->frames = frames;
+
+    layout = new QHBoxLayout(this);
+    buttons = new QVBoxLayout();
+
+    addFrameButton = new QPushButton("Add Frame");
+    removeFrameButton = new QPushButton("Remove Frame");
+    moveFrameLeft = new QPushButton("Move Left");
+    moveFrameRight = new QPushButton("Move Right");
+
+    buttons->addWidget(addFrameButton);
+    buttons->addWidget(removeFrameButton);
+    buttons->addWidget(moveFrameLeft);
+    buttons->addWidget(moveFrameRight);
+
+    layout->addLayout(buttons);
+
     list = new QListWidget();
     list->setDragEnabled(true);
     list->setDragDropMode(QAbstractItemView::InternalMove);
     list->setDefaultDropAction(Qt::MoveAction);
     list->setSelectionMode(QAbstractItemView::SingleSelection);
     list->setFlow(QListView::LeftToRight);
+
     layout->addWidget(list);
 
+    for(int i = 0; i < frames->size(); i++){
+        int row = list->currentRow() + 1;
+        QListWidgetItem* item = new QListWidgetItem("Frame");
+        list->insertItem(row, item);
+    }
+
     connect(list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(frameClicked(QListWidgetItem*)));
-
-    addFrame(0);
-    addFrame(1);
-    addFrame(2);
-    addFrame(3);
-    addFrame(4);
-    addFrame(5);
-    addFrame(6);
-    addFrame(7);
-    addFrame(8);
-    addFrame(9);
-    addFrame(10);
-    addFrame(11);
-    addFrame(12);
-    addFrame(13);
-    addFrame(0);
-    addFrame(1);
-    addFrame(2);
-    addFrame(3);
-    addFrame(4);
-    addFrame(5);
-    addFrame(6);
-    addFrame(7);
-    addFrame(8);
-    addFrame(9);
-    addFrame(10);
-    addFrame(11);
-    addFrame(12);
-    addFrame(13);
-    addFrame(0);
-    addFrame(1);
-    addFrame(2);
-    addFrame(3);
-    addFrame(4);
-    addFrame(5);
-    addFrame(6);
-    addFrame(7);
-    addFrame(8);
-    addFrame(9);
-    addFrame(10);
-    addFrame(11);
-    addFrame(12);
-    addFrame(13);
-    addFrame(0);
-    addFrame(1);
-    addFrame(2);
-    addFrame(3);
-    addFrame(4);
-    addFrame(5);
-    addFrame(6);
-    addFrame(7);
-    addFrame(8);
-    addFrame(9);
-    addFrame(10);
-    addFrame(11);
-    addFrame(12);
-    addFrame(13);
-    addFrame(0);
-    addFrame(1);
-    addFrame(2);
-    addFrame(3);
-    addFrame(4);
-    addFrame(5);
-    addFrame(6);
-    addFrame(7);
-    addFrame(8);
-    addFrame(9);
-    addFrame(10);
-    addFrame(11);
-    addFrame(12);
-    addFrame(13);
-
+    connect(addFrameButton, &QPushButton::clicked, this, &Scrubber::addFrame);
+    connect(removeFrameButton, &QPushButton::clicked, this, &Scrubber::removeFrame);
 }
 
 void Scrubber::addFrame(int index) {
-    QListWidgetItem* item = new QListWidgetItem(QString::number(index));
-    list->insertItem(list->currentRow() + 1, item);
+    int row = list->currentRow() + 1;
+    QListWidgetItem* item = new QListWidgetItem("Frame");
+    list->insertItem(row, item);
+
+    emit frameAdded(row);
+
+
+//    emit activeFrameChanged(index);
 }
 
 void Scrubber::moveFrame(int from, int to) {
@@ -101,11 +62,14 @@ void Scrubber::moveFrame(int from, int to) {
 }
 
 void Scrubber::removeFrame(int index) {
-    
+    if(list->count() > 1){
+        emit frameRemoved(list->currentRow());
+        list->takeItem(list->currentRow());
+    }
 }
 
 void Scrubber::setActiveFrame(int index) {
-    
+    //list->
 }
 
 void Scrubber::clear() {
@@ -113,7 +77,7 @@ void Scrubber::clear() {
 }
 
 void Scrubber::frameClicked(QListWidgetItem *item){
-    std::cout<<item->text().toStdString()<<std::endl;
+    emit activeFrameChanged(list->currentRow());
 }
 
 void Scrubber::reordered(QDropEvent* event){
@@ -123,4 +87,8 @@ void Scrubber::reordered(QDropEvent* event){
 void Scrubber::dropEvent(QDropEvent *event){
     event->accept();
     std::cout<<"reordered"<<std::endl;
+}
+
+void Scrubber::setFrames(vector<unique_ptr<Frame>> *frames) {
+    this->frames = frames;
 }

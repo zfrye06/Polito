@@ -63,15 +63,7 @@ void PreviewArea::setPreview(){
     QRectF rect(previewLayout->itemAt(0)->geometry());
     QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
     currentFrame->setScene(scene);
-    float widthScale = rect.x() / scene->width();
-    float heightScale = rect.y() / scene->height();
-    currentFrame->scale(.5,.5);
-//    if(widthScale > heightScale){
-//        currentFrame->scale(widthScale, widthScale);
-//    }
-//    else{
-//        currentFrame->scale(heightScale, heightScale);
-//    }
+    currentFrame->scale(rect.width() / scene->width(), rect.height() / scene->height());
 }
 
 void PreviewArea::updatePreview(){
@@ -80,25 +72,19 @@ void PreviewArea::updatePreview(){
 
 void PreviewArea::playAnimation(){
     if(!isPlaying){
-        cout << "Begin Play..." << endl;
         isPlaying = true;
         int duration = frames->at(currentFrameNumber)->duration();
-        cout << currentFrameNumber << endl;
         QTimer::singleShot(duration, this, SLOT(goToNextFrameIsPlaying()));
-    }
-    else{
-        cout << "Already Playing..." << endl;
     }
 }
 
 void PreviewArea::pauseAnimation(){
-    cout << "Pause Pressed..." << endl;
     isPlaying = false;
 }
 
 void PreviewArea::goToNextFrameIsPlaying(){
     if(isPlaying){
-        if(currentFrameNumber == frames->size()){
+        if(currentFrameNumber == (frames->size() - 1)){
             currentFrameNumber = 0;
         }
         else{
@@ -107,22 +93,19 @@ void PreviewArea::goToNextFrameIsPlaying(){
         currentFrame->setScene(&frames->at(currentFrameNumber)->scene());
         QTimer::singleShot(200, this, SLOT(goToNextFrameIsPlaying()));
     }
-    else{
-        cout << "Animation Stopped..." << endl;
-    }
 }
 
 void PreviewArea::goToNextFrame(){
     if(isPlaying){
         isPlaying = false;
     }
-    if(currentFrameNumber == 6){
+    if(currentFrameNumber == (frames->size() - 1)){
         currentFrameNumber = 0;
     }
     else{
         currentFrameNumber++;
     }
-    cout << currentFrameNumber << endl;
+    currentFrame->setScene(&frames->at(currentFrameNumber)->scene());
 }
 
 void PreviewArea::goToPreviousFrame(){
@@ -130,12 +113,12 @@ void PreviewArea::goToPreviousFrame(){
         isPlaying = false;
     }
     if(currentFrameNumber == 0){
-        currentFrameNumber = 6;
+        currentFrameNumber = frames->size() - 1;
     }
     else{
         currentFrameNumber--;
     }
-    cout << currentFrameNumber << endl;
+    currentFrame->setScene(&frames->at(currentFrameNumber)->scene());
 }
 
 void PreviewArea::setFrames(vector<unique_ptr<Frame>> *frames) {
