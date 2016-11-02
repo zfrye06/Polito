@@ -23,12 +23,18 @@ class Frame {
     friend class MoveLayerAction;
  public:
 
+    static const int DEFAULT_DURATION = 1000;
+
     // Constructs a new frame with a single layer.
     Frame(AnimationEventEmitter &emitter, int dim);
 
     // Constructs a new frame with a single layer matching
     // the given image.
     Frame(AnimationEventEmitter &emitter, QImage);
+
+    // Constructs a frame with the given layers. The frame takes
+    // ownership of each layer.
+    Frame(AnimationEventEmitter &emitter, std::vector<std::unique_ptr<Layer>> &layers);
 
     // Adds a single layer to the top of this frame.
     // Does not change the active layer.
@@ -63,6 +69,9 @@ class Frame {
 
     // Returns the number of layers in this frame.
     int numlayers() const;
+
+    // Returns a non-owning vector of the layers in this frame.
+    const std::vector<Layer *>& getLayers() const;
 
     // Sets the duration of this frame to the number of milliseconds given.
     void setDuration(int duration);

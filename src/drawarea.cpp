@@ -19,6 +19,7 @@ PaintHandler &DrawArea::paintHandler() {
 
 void DrawArea::setFrame(Frame *frame) {
     this->frame = frame;
+    setScene(&frame->scene());
 }
 
 void DrawArea::updateDisplay() {

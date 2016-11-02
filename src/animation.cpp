@@ -3,16 +3,13 @@
 
 Animation::Animation(AnimationEventEmitter &emitter) :
     activeFrameIndex(-1),  dim(Animation::DEFAULT_DIMENSION), emitter(emitter) {
-    addFrame();
+    std::unique_ptr<Frame> frame(new Frame(emitter, dim));
+    frames.insert(frames.end(), std::move(frame));
     activeFrameIndex = 0;
 }
 
-void Animation::addFrame() {
-    addFrame(frames.size());
-}
-
 void Animation::addFrame(int index) {
-    if (index < 0 || index > frames.size()) {
+    if (index < 0 || index > (int)frames.size()) {
         throw std::invalid_argument("Index out of bounds.");
     }
     std::unique_ptr<Frame> f(new Frame(emitter, dim));
@@ -61,17 +58,16 @@ void Animation::removeFrame(int index) {
         throw std::invalid_argument("Index out of bounds.");
     }
     auto frame = std::move(frames[index]);
-    frames.erase(frames.begin() + index);
+    removeFrameInternal(index);
     emitter.emitRemoveFrameEvent(new RemoveFrameAction(this, std::move(frame), index));
 }
 
 void Animation::removeFrameInternal(int index) {
-    frames.erase(frames.begin() + index);
-    if (index < activeFrameIndex ||
-                    (index == activeFrameIndex &&
-                     activeFrameIndex == (int)frames.size())) {
+    if (index < activeFrameIndex || (index == activeFrameIndex &&
+                                     activeFrameIndex == (int)frames.size() - 1)) {
         activeFrameIndex--;
     }
+    frames.erase(frames.begin() + index);
 }
 
 void Animation::setActiveFrame(int index) {
@@ -86,7 +82,7 @@ int Animation::activeFrameIdx() const {
 }
 
 Frame &Animation::activeFrame() {
-    return *frames[activeFrameIndex];
+    return *frames.at(activeFrameIndex);
 }
 
 void Animation::resize(int dimension) {
@@ -96,6 +92,10 @@ void Animation::resize(int dimension) {
     int before = dim;
     resizeInternal(dimension);
     emitter.emiteResizeEvent(new ResizeAction(this, before, dimension));
+}
+
+int Animation::dimension() const {
+    return dim;
 }
 
 void Animation::resizeInternal(int dimension) {
@@ -109,35 +109,104 @@ int Animation::numframes() const {
     return frames.size();
 }
 
+std::vector<std::unique_ptr<Frame>>& Animation::getFrames(){
+    return frames;
+}
+
+void saveImage(std::ostream& out, QImage& image) {
+    for (int row = 0; row < image.height(); row++) {
+        for (int col = 0; col < image.width(); col++) {
+            QColor color = image.pixelColor(row, col);
+            out << color.red() << " " <<
+                color.green() << " " <<
+                color.blue() << " " <<
+                color.alpha();
+            if (col != image.width() - 1) {
+                out << " ";
+            }
+        }
+        out << std::endl;
+    }
+}
+
 void Animation::save(std::ostream& out) const {
     out << dim << " " << dim << std::endl; // height and width
     out << numframes() << std::endl;
     for (auto& frame : frames) {
         QImage image = frame->image();
-        for (int row = 0; row < image.height(); row++) {
-            for (int col = 0; col < image.width(); col++) {
-                QColor color = image.pixelColor(row, col);
-                out << color.red() << " " <<
-                       color.green() << " " <<
-                       color.blue() << " " <<
-                       color.alpha();
-                if (col != image.width() - 1) {
-                    out << " ";
-                }
-            }
-            out << std::endl;
-        }
+        saveImage(out, image);
     }
 }
 
 void Animation::saveExtendedFormat(std::ostream& out) const {
-    out << "TODO" << std::endl;
+    out << "P O L I T O" << std::endl; // Write the *magic* header.
+    out << dim << " " << dim << std::endl;
+    out << numframes() << std::endl;
+    for (auto& frame : frames) {
+        out << frame->duration() << std::endl;
+        out << frame->numlayers() << std::endl;
+        for (auto& layer : frame->getLayers()) {
+            QImage image = layer->pixmap().toImage();
+            saveImage(out, image);
+        }
+    }
 }
 
-void Animation::saveGif(std::ostream& out) const {
+// Returns whether the stream begins with the extended
+// format header.
+bool checkForExtendedHeader(std::istream& in) {
+    auto startPos = in.tellg();
+    std::string line;
+    if (std::getline(in, line)) {
+       if (line == "P O L I T O") return true;
+       in.seekg(startPos);
+    }
+    return false;
+}
+
+void loadImage(std::istream& in, QImage& image) {
+    for (int row = 0; row < image.height(); row++) {
+        for (int col = 0; col < image.width(); col++) {
+            int red, green, blue, alpha;
+            in >> red >> green >> blue >> alpha;
+            if (in.fail()) {
+                throw std::runtime_error(
+                            "Unable to load: file contained misformatted or mis-sized frame section.");
+            }
+            QColor color(red, green, blue, alpha);
+            image.setPixelColor(row, col, color);
+        }
+    }
+}
+
+Frame *loadExtendedFrame(std::istream& in, AnimationEventEmitter& emitter, int dimension) {
+   int duration, numLayers;
+   in >> duration >> numLayers;
+   if (in.fail() || numLayers < 1) {
+       throw std::runtime_error(
+                   "Unable to load: file contained misformatted extended-frame header.");
+   }
+   std::vector<std::unique_ptr<Layer>> layers;
+   for (int i = 0; i < numLayers; i++) {
+        QImage image(dimension, dimension, QImage::Format_RGBA8888);
+        loadImage(in, image);
+        layers.push_back(std::unique_ptr<Layer>(new Layer(image)));
+   }
+   // Pass ownership of the layers to the new frame.
+   Frame *frame = new Frame(emitter, layers);
+   if (duration > 0) frame->setDuration(duration);
+   return frame;
+}
+
+Frame *loadFrame(std::istream& in, AnimationEventEmitter& emitter, int dimension) {
+    QImage image(dimension, dimension, QImage::Format_RGBA8888);
+    image.fill(Qt::transparent);
+    loadImage(in, image);
+    return new Frame(emitter, image);
 }
 
 void Animation::load(std::istream& in) {
+    bool extendedFormat = checkForExtendedHeader(in);
     int width, height, numFrames;
     in >> width >> height >> numFrames;
     if (in.fail() || width != height || numFrames == 0) {
@@ -146,31 +215,17 @@ void Animation::load(std::istream& in) {
     }
     std::vector<std::unique_ptr<Frame>> tempFrames;
     for (int i = 0; i < numFrames; i++) {
-        QImage image(width, height, QImage::Format_RGBA8888);
-        image.fill(Qt::transparent);
-        for (int row = 0; row < image.height(); row++) {
-            for (int col = 0; col < image.width(); col++) {
-                int red, green, blue, alpha;
-                in >> red >> green >> blue >> alpha;
-                if (in.fail()) {
-                    throw std::runtime_error(
-                                "Unable to load: file contained misformatted or mis-sized frame section.");
-                }
-                QColor color(red, green, blue, alpha);
-                image.setPixelColor(row, col, color);
-            }
-        }
-        std::unique_ptr<Frame> frame(new Frame(emitter, image));
-        tempFrames.push_back(std::move(frame));
+        Frame *frame = extendedFormat ?
+                    loadExtendedFrame(in, emitter, height) : loadFrame(in, emitter, height);
+        tempFrames.push_back(std::unique_ptr<Frame>(frame));
     }
     dim = height;
     activeFrameIndex = 0;
     frames.clear();
-    for (int i = 0; i < tempFrames.size(); i++) {
+    for (int i = 0; i < (int)tempFrames.size(); i++) {
         frames.push_back(std::move(tempFrames.at(i)));
     }
 }
 
-std::vector<std::unique_ptr<Frame>>& Animation::getFrames(){
-    return frames;
+void Animation::saveGif(std::ostream& out) const {
 }

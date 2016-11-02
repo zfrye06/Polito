@@ -31,10 +31,10 @@ public:
     void clear();
 
 signals:
-    void frameAdded(int index);
-    void frameMoved(int fromIndex, int toIndex);
-    void frameRemoved(int index);
-    void activeFrameChanged(int newIndex);
+    void addFrameClicked();
+    void moveFrameClicked(int fromIndex, int toIndex);
+    void removeFrameClicked();
+    void setActiveFrameClicked(int newIndex);
 
 public slots:
     void frameClicked(QListWidgetItem* item);

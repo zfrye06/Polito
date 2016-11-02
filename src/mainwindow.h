@@ -33,7 +33,7 @@ protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
-    void saveProject();
+    void saveProject(bool extendedFormat);
     void loadProject();
     void imageSize();
     void finishImageSize(int w, int h);
@@ -60,6 +60,7 @@ private:
     QMenu *editMenu;
     QMenu *optionMenu;
     QAction *saveAct;
+    QAction *saveExtendedAct;
     QAction *loadAct;
     QAction *undoAct;
     QAction *redoAct;

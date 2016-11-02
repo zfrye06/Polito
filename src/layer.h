@@ -28,6 +28,8 @@ class Layer : public QGraphicsItem {
 
     QPixmap &pixmap();
 
+    int dimension() const;
+
  private:
 
     std::shared_ptr<QPixmap> image;

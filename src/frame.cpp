@@ -3,15 +3,26 @@
 #include <stdexcept>
 
 Frame::Frame(AnimationEventEmitter &emitter, int dim) :
-    emitter(emitter), activeLayerIndex(0), durationMs(1000), dim(dim) {
+    emitter(emitter), activeLayerIndex(0), durationMs(Frame::DEFAULT_DURATION), dim(dim) {
     addLayer();
     activeLayerIndex = 0;
 }
 
 Frame::Frame(AnimationEventEmitter &emitter, QImage image) :
-    emitter(emitter), activeLayerIndex(0), durationMs(1000) {
+    emitter(emitter), activeLayerIndex(0), durationMs(Frame::DEFAULT_DURATION), dim(image.height()) {
     addLayerInternal(new Layer(image), 0);
     activeLayerIndex = 0;
+}
+
+Frame::Frame(AnimationEventEmitter &emitter, std::vector<std::unique_ptr<Layer>> &inlayers) :
+    emitter(emitter), activeLayerIndex(0), durationMs(Frame::DEFAULT_DURATION) {
+    if (inlayers.size() == 0) {
+        throw std::invalid_argument("layers must contain at least one layer.");
+    }
+    dim = inlayers.front()->dimension();
+    for (auto& layer : inlayers) {
+        addLayerInternal(layer.release(), layers.size());
+    }
 }
 
 void Frame::addLayer() {
@@ -29,7 +40,7 @@ void Frame::addLayer(int index) {
 
 void Frame::addLayerInternal(Layer *layer, int index) {
     gscene.addItem(layer);
-    layers.insert(layers.begin() + index, layer);
+    layers.insert(layers.begin() + 0, layer);
     layer->setZValue(index);
     for (auto i = index + 1; i < (int)layers.size(); i++) {
         layers[i]->setZValue(i);
@@ -120,6 +131,10 @@ Layer* Frame::activeLayer() {
 
 int Frame::numlayers() const {
     return layers.size();
+}
+
+const std::vector<Layer *>& Frame::getLayers() const {
+    return layers;
 }
 
 void Frame::setDuration(int duration) { durationMs = duration; }

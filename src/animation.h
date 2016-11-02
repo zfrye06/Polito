@@ -28,8 +28,6 @@ class Animation {
     // Constructs an animation with a single frame.
     Animation(AnimationEventEmitter &emitter);
 
-    void addFrame();
-
     void addFrame(int index);
 
     void moveFrame(int fromIndex, int toIndex);
@@ -44,6 +42,8 @@ class Animation {
 
     // Resizes every frame in this animation to the given dimension
     void resize(int dim);
+
+    int dimension() const;
 
     int numframes() const;
 
