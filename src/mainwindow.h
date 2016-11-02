@@ -38,6 +38,7 @@ private slots:
     void imageSize();
     void finishImageSize(int w, int h);
     void bindings();
+    void setColorBind(const QKeySequence&);
 
 private:
 
@@ -65,6 +66,7 @@ private:
     QAction *keyBindAct;
     QAction *exitAct;
     QAction *clearScreenAct;
+    QAction *chooseColor;
     QWidget *window;
     QVBoxLayout *layout;
     QSplitter *splitter;

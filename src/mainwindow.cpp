@@ -65,7 +65,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 void MainWindow::imageSize() {
     int width = drawArea->width();
     int height = drawArea->height();
-    // TOOD: This leaks. Not deleted until the main window is.
+    // TODO: This leaks. Not deleted until the main window is.
     ImageSizeDialog* d = new ImageSizeDialog(this, width, height);
     d->activateWindow();
     d->showNormal();
@@ -78,6 +78,10 @@ void MainWindow::bindings(){
     kd->activateWindow();
     kd->showNormal();
     kd->setVisible(true);
+}
+
+void MainWindow::setColorBind(const QKeySequence &keySequence){
+    chooseColor->setShortcut(keySequence);
 }
 
 void MainWindow::finishImageSize(int w, int h) {
@@ -96,6 +100,12 @@ void MainWindow::initActions() {
 
     keyBindAct = new QAction(tr("&Set Key Bindings"), this);
     connect(keyBindAct, &QAction::triggered, this, &MainWindow::bindings);
+
+//    connect(kd, &KeyBindingDialog::colorChanged, this, &MainWindow::setColorBind);
+
+    chooseColor = new QAction(tr("&Choose Color"), this);
+    chooseColor->setShortcut(tr("&Ctrl+P"));
+//    connect(chooseColor, &QAction::triggered, toolbar, &Toolbar::getColor);
 
     undoAct = new QAction(tr("&Undo"), this);
     undoAct->setShortcuts(QKeySequence::Undo);
@@ -116,6 +126,7 @@ void MainWindow::initActions() {
         animation->activeFrame().clear();
     });
 
+
 }
 
 void MainWindow::initWidgets() {
@@ -130,9 +141,9 @@ void MainWindow::initWidgets() {
     previewArea = new PreviewArea(window, &animation->getFrames());
     layerMenu = new LayerMenu(window);
 
+    connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
     drawArea->setScene(&animation->activeFrame().scene());
 
-    connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
 
     layout->addWidget(splitter);
 
