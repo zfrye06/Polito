@@ -302,7 +302,7 @@ void MainWindow::initSignals() {
 
     connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
 
-    connect(kd, &KeyBindingDialog::colorSignal, this, &MainWindow::setColorBind);
-    connect(kd, &KeyBindingDialog::brushSignal, this, &MainWindow::setBrushBind);
+//    connect(kd, &KeyBindingDialog::colorSignal, this, &MainWindow::setColorBind);
+//    connect(kd, &KeyBindingDialog::brushSignal, this, &MainWindow::setBrushBind);
 
 }

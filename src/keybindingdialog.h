@@ -59,22 +59,22 @@ private:
     void initConnections();
 
 public:
-    void colorChanged();
-    void eraserChanged();
-    void lineChanged();
-    void addFrameChanged();
-    void addLayerChanged();
-    void nextFrameChanged();
-    void nextLayerChanged();
-    void removeFrameChanged();
-    void removeLayerChanged();
-    void brushChanged();
-    void fillChanged();
-    void selectChanged();
-    void circleChanged();
-    void squareChanged();
-    void previousFrameChanged();
-    void previousLayerChanged();
+//    void colorChanged();
+//    void eraserChanged();
+//    void lineChanged();
+//    void addFrameChanged();
+//    void addLayerChanged();
+//    void nextFrameChanged();
+//    void nextLayerChanged();
+//    void removeFrameChanged();
+//    void removeLayerChanged();
+//    void brushChanged();
+//    void fillChanged();
+//    void selectChanged();
+//    void circleChanged();
+//    void squareChanged();
+//    void previousFrameChanged();
+//    void previousLayerChanged();
 
 };
 
