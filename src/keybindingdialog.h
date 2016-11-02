@@ -16,22 +16,22 @@ public:
     ~KeyBindingDialog();
 
 signals:
-    colorSignal(const QKeySequence&);
-    eraserSignal(const QKeySequence&);
-    lineSignal(const QKeySequence&);
-    addFrameSignal(const QKeySequence&);
-    addLayerSignal(const QKeySequence&);
-    nextFrameSignal(const QKeySequence&);
-    nextLayerSignal(const QKeySequence&);
-    removeFrameSignal(const QKeySequence&);
-    removeLayerSignal(const QKeySequence&);
-    brushSignal(const QKeySequence&);
-    fillSignal(const QKeySequence&);
-    selectSignal(const QKeySequence&);
-    circleSignal(const QKeySequence&);
-    squareSignal(const QKeySequence&);
-    previousFrameSignal(const QKeySequence&);
-    previousLayerSignal(const QKeySequence&);
+//    colorSignal(const QKeySequence&);
+//    eraserSignal(const QKeySequence&);
+//    lineSignal(const QKeySequence&);
+//    addFrameSignal(const QKeySequence&);
+//    addLayerSignal(const QKeySequence&);
+//    nextFrameSignal(const QKeySequence&);
+//    nextLayerSignal(const QKeySequence&);
+//    removeFrameSignal(const QKeySequence&);
+//    removeLayerSignal(const QKeySequence&);
+//    brushSignal(const QKeySequence&);
+//    fillSignal(const QKeySequence&);
+//    selectSignal(const QKeySequence&);
+//    circleSignal(const QKeySequence&);
+//    squareSignal(const QKeySequence&);
+//    previousFrameSignal(const QKeySequence&);
+//    previousLayerSignal(const QKeySequence&);
 
 private slots:
 
@@ -59,22 +59,22 @@ private:
     void initConnections();
 
 public:
-    void colorChanged();
-    void eraserChanged();
-    void lineChanged();
-    void addFrameChanged();
-    void addLayerChanged();
-    void nextFrameChanged();
-    void nextLayerChanged();
-    void removeFrameChanged();
-    void removeLayerChanged();
-    void brushChanged();
-    void fillChanged();
-    void selectChanged();
-    void circleChanged();
-    void squareChanged();
-    void previousFrameChanged();
-    void previousLayerChanged();
+//    void colorChanged();
+//    void eraserChanged();
+//    void lineChanged();
+//    void addFrameChanged();
+//    void addLayerChanged();
+//    void nextFrameChanged();
+//    void nextLayerChanged();
+//    void removeFrameChanged();
+//    void removeLayerChanged();
+//    void brushChanged();
+//    void fillChanged();
+//    void selectChanged();
+//    void circleChanged();
+//    void squareChanged();
+//    void previousFrameChanged();
+//    void previousLayerChanged();
 
 };
 
