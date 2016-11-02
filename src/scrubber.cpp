@@ -42,19 +42,14 @@ Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget
     }
 
     connect(list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(frameClicked(QListWidgetItem*)));
-    connect(addFrameButton, &QPushButton::clicked, this, &Scrubber::addFrame);
-    connect(removeFrameButton, &QPushButton::clicked, this, &Scrubber::removeFrame);
+    connect(addFrameButton, &QPushButton::clicked, this, [this]{ emit addFrameClicked(); });
+    connect(removeFrameButton, &QPushButton::clicked, this, [this]{ emit removeFrameClicked(); });
 }
 
 void Scrubber::addFrame(int index) {
     int row = list->currentRow() + 1;
     QListWidgetItem* item = new QListWidgetItem("Frame");
     list->insertItem(row, item);
-
-    emit frameAdded(row);
-
-
-//    emit activeFrameChanged(index);
 }
 
 void Scrubber::moveFrame(int from, int to) {
@@ -62,10 +57,7 @@ void Scrubber::moveFrame(int from, int to) {
 }
 
 void Scrubber::removeFrame(int index) {
-    if(list->count() > 1){
-        emit frameRemoved(list->currentRow());
-        list->takeItem(list->currentRow());
-    }
+    list->takeItem(index);
 }
 
 void Scrubber::setActiveFrame(int index) {
@@ -77,7 +69,7 @@ void Scrubber::clear() {
 }
 
 void Scrubber::frameClicked(QListWidgetItem *item){
-    emit activeFrameChanged(list->currentRow());
+    emit setActiveFrameClicked(list->currentRow());
 }
 
 void Scrubber::reordered(QDropEvent* event){

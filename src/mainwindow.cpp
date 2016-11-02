@@ -45,9 +45,9 @@ void MainWindow::loadProject() {
             toLoad->load(in);
             actionHistory.clear();
             drawArea->setFrame(&toLoad->activeFrame());
-            drawArea->setScene(&toLoad->activeFrame().scene());
             previewArea->setFrames(&toLoad->getFrames());
             scrubber->clear();
+            std::cout << animation->numframes() << std::endl;
             for (int i = 0; i < animation->numframes(); i++) {
                scrubber->addFrame(i);
             }
@@ -145,6 +145,7 @@ void MainWindow::initActions() {
     connect(brushAct, &QAction::triggered, toolbar, &Toolbar::setBrush);
 
     fileMenu->addAction(saveAct);
+    fileMenu->addAction(saveExtendedAct);
     fileMenu->addAction(loadAct);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
@@ -173,7 +174,7 @@ void MainWindow::initWidgets() {
     layerMenu = new LayerMenu(window);
     kd = new KeyBindingDialog;
 
-    drawArea->setScene(&animation->activeFrame().scene());
+    drawArea->setFrame(&animation->activeFrame());
 
     layout->addWidget(splitter);
 
@@ -200,14 +201,7 @@ void MainWindow::initWidgets() {
     lowerArea->addWidget(previewArea);
 
     fileMenu = new QMenu(tr("&File"), this);
-    fileMenu->addAction(saveAct);
-    fileMenu->addAction(saveExtendedAct);
-    fileMenu->addAction(loadAct);
-    fileMenu->addSeparator();
-    fileMenu->addAction(exitAct);
-
     editMenu = new QMenu(tr("&Edit"), this);
-
     optionMenu = new QMenu(tr("&Options"), this);
 
     menuBar()->addMenu(fileMenu);
@@ -265,19 +259,45 @@ void MainWindow::initSignals() {
                 drawArea->paintHandler().settings.color = to;
     });
 
-    connect(scrubber, &Scrubber::frameAdded,
-            this, [this](int index) {
-                animation->addFrame(index);
+    connect(scrubber, &Scrubber::addFrameClicked,
+            this, [this] {
+                int insertIndex = animation->activeFrameIdx() + 1;
+                animation->addFrame(insertIndex);
+                scrubber->addFrame(insertIndex);
     });
 
-    connect(scrubber, &Scrubber::frameMoved,
+    connect(scrubber, &Scrubber::moveFrameClicked,
             this, [this](int from, int to) {
                 animation->moveFrame(from, to);
+                scrubber->moveFrame(from, to);
     });
 
-    connect(scrubber, &Scrubber::frameRemoved,
+    connect(scrubber, &Scrubber::removeFrameClicked,
+            this, [this]() {
+                if (animation->numframes() <= 1) return;
+                int removeIndex = animation->activeFrameIdx();
+                
+                // TODO: We have a bit of a hacky situation here.  Between when
+                // we call Animation::removeFrame() and DrawArea::setFrame() the
+                // emitted RemoveFrameAction's ownership of the removed frame is
+                // the only thing keeping the removed frame from being deleted,
+                // which would then leave the drawArea with a deleted frame as
+                // its scene for a few milliseconds.  I set the drawArea's frame
+                // to an arbitrarily created frame during that timeframe to
+                // avoid the bug. Note that this is NOT exception safe.
+                std::unique_ptr<Frame> f(new Frame(emitter, animation->dimension()));
+                drawArea->setFrame(f.get());
+                animation->removeFrame(removeIndex);
+                scrubber->removeFrame(removeIndex);
+                scrubber->setActiveFrame(animation->activeFrameIdx());
+                drawArea->setFrame(&animation->activeFrame());
+    });
+
+    connect(scrubber, &Scrubber::setActiveFrameClicked,
             this, [this](int index) {
-                animation->removeFrame(index);
+                animation->setActiveFrame(index);
+                scrubber->setActiveFrame(index);
+                drawArea->setFrame(&animation->activeFrame());
     });
 
     connect(layerMenu, &LayerMenu::layerAddedSignal,

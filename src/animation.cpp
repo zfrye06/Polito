@@ -3,12 +3,9 @@
 
 Animation::Animation(AnimationEventEmitter &emitter) :
     activeFrameIndex(-1),  dim(Animation::DEFAULT_DIMENSION), emitter(emitter) {
-    addFrame();
+    std::unique_ptr<Frame> frame(new Frame(emitter, dim));
+    frames.insert(frames.end(), std::move(frame));
     activeFrameIndex = 0;
-}
-
-void Animation::addFrame() {
-    addFrame(frames.size());
 }
 
 void Animation::addFrame(int index) {
@@ -61,17 +58,16 @@ void Animation::removeFrame(int index) {
         throw std::invalid_argument("Index out of bounds.");
     }
     auto frame = std::move(frames[index]);
-    frames.erase(frames.begin() + index);
+    removeFrameInternal(index);
     emitter.emitRemoveFrameEvent(new RemoveFrameAction(this, std::move(frame), index));
 }
 
 void Animation::removeFrameInternal(int index) {
-    frames.erase(frames.begin() + index);
-    if (index < activeFrameIndex ||
-                    (index == activeFrameIndex &&
-                     activeFrameIndex == (int)frames.size())) {
+    if (index < activeFrameIndex || (index == activeFrameIndex &&
+                                     activeFrameIndex == (int)frames.size() - 1)) {
         activeFrameIndex--;
     }
+    frames.erase(frames.begin() + index);
 }
 
 void Animation::setActiveFrame(int index) {
@@ -86,7 +82,7 @@ int Animation::activeFrameIdx() const {
 }
 
 Frame &Animation::activeFrame() {
-    return *frames[activeFrameIndex];
+    return *frames.at(activeFrameIndex);
 }
 
 void Animation::resize(int dimension) {
@@ -96,6 +92,10 @@ void Animation::resize(int dimension) {
     int before = dim;
     resizeInternal(dimension);
     emitter.emiteResizeEvent(new ResizeAction(this, before, dimension));
+}
+
+int Animation::dimension() const {
+    return dim;
 }
 
 void Animation::resizeInternal(int dimension) {
