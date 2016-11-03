@@ -45,7 +45,21 @@ private slots:
     void finishImageSize(int w, int h);
     void bindings();
     void setColorBind(const QKeySequence&);
+    void setEraserBind(const QKeySequence&);
+    void setLineBind(const QKeySequence&);
+    void addFrameBind(const QKeySequence&);
+    void addLayerBind(const QKeySequence&);
+    void frameRightBind(const QKeySequence&);
+    void frameLeftBind(const QKeySequence&);
+    void layerUpBind(const QKeySequence&);
+    void layerDownBind(const QKeySequence&);
+    void removeLayerBind(const QKeySequence&);
+    void removeFrameBind(const QKeySequence&);
     void setBrushBind(const QKeySequence&);
+    void setFillBind(const QKeySequence&);
+    void setSelectBind(const QKeySequence&);
+    void setCircleBind(const QKeySequence&);
+    void setSquareBind(const QKeySequence&);
 
 private:
 
@@ -75,7 +89,21 @@ private:
     QAction *exitAct;
     QAction *clearScreenAct;
     QAction *chooseColor;
+    QAction *eraserAct;
+    QAction *lineAct;
+    QAction *addFrameAct;
+    QAction *addLayerAct;
+    QAction *frameRightAct;
+    QAction *layerUpAct;
+    QAction *removeFrameAct;
+    QAction *removeLayerAct;
     QAction *brushAct;
+    QAction *fillAct;
+    QAction *selectAct;
+    QAction *circleAct;
+    QAction *squareAct;
+    QAction *frameLeftAct;
+    QAction *layerDownAct;
     QWidget *window;
     QVBoxLayout *layout;
     QSplitter *splitter;

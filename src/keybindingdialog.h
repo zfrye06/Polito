@@ -21,8 +21,8 @@ signals:
     void lineSignal(const QKeySequence&);
     void addFrameSignal(const QKeySequence&);
     void addLayerSignal(const QKeySequence&);
-    void nextFrameSignal(const QKeySequence&);
-    void nextLayerSignal(const QKeySequence&);
+    void frameRightSignal(const QKeySequence&);
+    void layerUpSignal(const QKeySequence&);
     void removeFrameSignal(const QKeySequence&);
     void removeLayerSignal(const QKeySequence&);
     void brushSignal(const QKeySequence&);
@@ -30,8 +30,8 @@ signals:
     void selectSignal(const QKeySequence&);
     void circleSignal(const QKeySequence&);
     void squareSignal(const QKeySequence&);
-    void previousFrameSignal(const QKeySequence&);
-    void previousLayerSignal(const QKeySequence&);
+    void frameLeftSignal(const QKeySequence&);
+    void layerDownSignal(const QKeySequence&);
 
 private slots:
 
@@ -59,22 +59,22 @@ private:
     void initConnections();
 
 public:
-//    void colorChanged();
-//    void eraserChanged();
-//    void lineChanged();
-//    void addFrameChanged();
-//    void addLayerChanged();
-//    void nextFrameChanged();
-//    void nextLayerChanged();
-//    void removeFrameChanged();
-//    void removeLayerChanged();
-//    void brushChanged();
-//    void fillChanged();
-//    void selectChanged();
-//    void circleChanged();
-//    void squareChanged();
-//    void previousFrameChanged();
-//    void previousLayerChanged();
+    void colorChanged();
+    void eraserChanged();
+    void lineChanged();
+    void addFrameChanged();
+    void addLayerChanged();
+    void frameRightChanged();
+    void layerUpChanged();
+    void removeFrameChanged();
+    void removeLayerChanged();
+    void brushChanged();
+    void fillChanged();
+    void selectChanged();
+    void circleChanged();
+    void squareChanged();
+    void frameLeftChanged();
+    void layerDownChanged();
 
 };
 
