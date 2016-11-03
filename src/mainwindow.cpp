@@ -257,7 +257,7 @@ void MainWindow::initActions() {
     circleAct->setShortcut(tr("Ctrl+R"));
     connect(circleAct, &QAction::triggered, toolbar, &Toolbar::setCircle);
 
-    squareAct = new QAction(tr("&"), this);
+    squareAct = new QAction(tr("&Select Square Tool"), this);
     squareAct->setShortcut(tr("Ctrl+S"));
     connect(squareAct, &QAction::triggered, toolbar, &Toolbar::setSquare);
 
