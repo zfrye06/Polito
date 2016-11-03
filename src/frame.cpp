@@ -23,12 +23,12 @@ Frame::Frame(AnimationEventEmitter &emitter, std::vector<std::unique_ptr<Layer>>
     for (auto& layer : inlayers) {
         addLayerInternal(layer.release(), layers.size());
     }
+    activeLayerIndex = 0;
 }
 
 void Frame::addLayer() {
     addLayer(layers.size());
 }
-
 void Frame::addLayer(int index) {
     if (index < 0 || index > (int)layers.size()) {
         throw std::invalid_argument("Index out of bounds.");
@@ -150,7 +150,7 @@ void Frame::resize(int dimension) {
 void Frame::clear() {
     gscene.clear();
     layers.clear();
-    addLayer();
+    addLayerInternal(new Layer(dim), 0);
     activeLayerIndex = 0;
 }
 
