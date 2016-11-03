@@ -53,9 +53,8 @@ void Scrubber::frameClicked(QListWidgetItem *item) {
 }
 
 void Scrubber::addFrame(int index) {
-    int row = list->currentRow() + 1;
     QListWidgetItem* item = new QListWidgetItem("Frame");
-    list->insertItem(row, item);
+    list->insertItem(index, item);
 }
 
 void Scrubber::moveFrame(int from, int to) {
