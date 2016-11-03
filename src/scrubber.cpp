@@ -44,6 +44,12 @@ Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget
     connect(list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(frameClicked(QListWidgetItem*)));
     connect(addFrameButton, &QPushButton::clicked, this, [this]{ emit addFrameClicked(); });
     connect(removeFrameButton, &QPushButton::clicked, this, [this]{ emit removeFrameClicked(); });
+    connect(moveFrameLeft, &QPushButton::clicked, this, [this]{ emit moveFrameClicked(list->currentRow(), list->currentRow() - 1); });
+    connect(moveFrameRight, &QPushButton::clicked, this, [this]{ emit moveFrameClicked(list->currentRow(), list->currentRow() + 1); });
+}
+
+void Scrubber::frameClicked(QListWidgetItem *item) {
+    emit frameIconClicked(list->currentRow());
 }
 
 void Scrubber::addFrame(int index) {
@@ -53,7 +59,8 @@ void Scrubber::addFrame(int index) {
 }
 
 void Scrubber::moveFrame(int from, int to) {
-    
+   auto item = list->takeItem(from);
+   list->insertItem(to, item);
 }
 
 void Scrubber::removeFrame(int index) {
@@ -61,24 +68,11 @@ void Scrubber::removeFrame(int index) {
 }
 
 void Scrubber::setActiveFrame(int index) {
-    //list->
+    list->setCurrentRow(index);
 }
 
 void Scrubber::clear() {
-
-}
-
-void Scrubber::frameClicked(QListWidgetItem *item){
-    emit setActiveFrameClicked(list->currentRow());
-}
-
-void Scrubber::reordered(QDropEvent* event){
-    std::cout<<"reordered"<<std::endl;
-}
-
-void Scrubber::dropEvent(QDropEvent *event){
-    event->accept();
-    std::cout<<"reordered"<<std::endl;
+    list->clear();
 }
 
 void Scrubber::setFrames(vector<unique_ptr<Frame>> *frames) {

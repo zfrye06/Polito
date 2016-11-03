@@ -29,14 +29,18 @@ void Animation::moveFrame(int fromIndex, int toIndex) {
                     toIndex < 0 || toIndex >= (int)frames.size()) {
         throw std::invalid_argument("Index out of bounds.");
     }
-    moveFrame(fromIndex, toIndex);
+    moveFrameInternal(fromIndex, toIndex);
     emitter.emitMoveFrameEvent(new MoveFrameAction(this, fromIndex, toIndex));
 }
-
+#include <iostream>
 void Animation::moveFrameInternal(int fromIndex, int toIndex) {
+    std::cout << "pre move" << std::endl;
     auto frame = std::move(frames[fromIndex]);
+    std::cout << "made it to erase" << std::endl;
     frames.erase(frames.begin() + fromIndex);
+    std::cout << "made it past erase" << std::endl;
     frames.insert(frames.begin() + toIndex, std::move(frame));
+    std::cout << "made it past insert" << std::endl;
     if (activeFrameIndex == fromIndex) {
         activeFrameIndex = toIndex;
     } else if (fromIndex < toIndex &&
