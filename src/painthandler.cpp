@@ -13,6 +13,15 @@ PaintHandler::PaintHandler() : settings(PaintSettings::defaults()) {}
 PaintHandler::~PaintHandler() {
 }
 
+void PanTool::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) {
+}
+
+void PanTool::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) {
+}
+
+void PanTool::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) {
+}
+
 void PaintBrush::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) {
     lastMousePoint = pos;
 }

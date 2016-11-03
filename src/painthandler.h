@@ -34,6 +34,13 @@ public:
     virtual void mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
 };
 
+class PanTool: public PaintHandler {
+public:
+    virtual void mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+    virtual void mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+    virtual void mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
+};
+
 class Eraser: public PaintHandler {
 private:
     QPointF lastMousePoint;

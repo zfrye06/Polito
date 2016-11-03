@@ -71,6 +71,7 @@ void Toolbar::initWidgets(){
 void Toolbar::initConnections(){
     connect(colorButton, &QPushButton::clicked, this, &Toolbar::getColor);
     connect(eraseButton, &QPushButton::clicked, this, &Toolbar::setEraser);
+    connect(moveButton, &QPushButton::clicked, this, &Toolbar::setMove);
     connect(brushButton, &QPushButton::clicked, this, &Toolbar::setBrush);
     connect(fillButton, &QPushButton::clicked, this, &Toolbar::setFill);
     connect(squareButton, &QPushButton::clicked, this, &Toolbar::setSquare);
@@ -81,6 +82,11 @@ void Toolbar::initConnections(){
 void Toolbar::setBrush() {
     brushButton->setChecked(true);
     emit setPaintHandler( new PaintBrush() );
+}
+
+void Toolbar::setMove() {
+    moveButton->setChecked(true);
+    emit setPaintHandler( new PanTool() );
 }
 
 void Toolbar::setEraser() {

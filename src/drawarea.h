@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include <QMouseEvent>
 #include <QObject>
+#include <typeinfo>
 #include "action.h"
 #include "animationwidgets.h"
 #include "frame.h"

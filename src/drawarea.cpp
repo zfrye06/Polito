@@ -11,6 +11,14 @@ void DrawArea::setPaintHandler( PaintHandler* handler ) {
     handler->settings = currentPaintHandler->settings;
     delete currentPaintHandler;
     currentPaintHandler = handler;
+
+    // Test if we're a pan tool...
+    PanTool* x = dynamic_cast<PanTool*>(handler);
+    if ( x ) {
+        this->setDragMode(QGraphicsView::DragMode::ScrollHandDrag);
+    } else {
+        this->setDragMode(QGraphicsView::DragMode::NoDrag);
+    }
 }
 
 PaintHandler &DrawArea::paintHandler() {

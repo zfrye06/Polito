@@ -24,6 +24,7 @@ public slots:
     void setBrush();
     void setEraser();
     void setFill();
+    void setMove();
     void setSquare();
     void setCircle();
     void setLine();
