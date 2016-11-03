@@ -26,21 +26,17 @@ void Animation::addFrameInternal(std::unique_ptr<Frame> f, int index) {
 
 void Animation::moveFrame(int fromIndex, int toIndex) {
     if (fromIndex < 0 || fromIndex >= (int)frames.size() ||
-                    toIndex < 0 || toIndex >= (int)frames.size()) {
-        return;
+        toIndex < 0 || toIndex >= (int)frames.size()) {
+        throw std::invalid_argument("Index out of bounds.");
     }
     moveFrameInternal(fromIndex, toIndex);
     emitter.emitMoveFrameEvent(new MoveFrameAction(this, fromIndex, toIndex));
 }
-#include <iostream>
+
 void Animation::moveFrameInternal(int fromIndex, int toIndex) {
-    std::cout << "pre move" << std::endl;
     auto frame = std::move(frames[fromIndex]);
-    std::cout << "made it to erase" << std::endl;
     frames.erase(frames.begin() + fromIndex);
-    std::cout << "made it past erase" << std::endl;
     frames.insert(frames.begin() + toIndex, std::move(frame));
-    std::cout << "made it past insert" << std::endl;
     if (activeFrameIndex == fromIndex) {
         activeFrameIndex = toIndex;
     } else if (fromIndex < toIndex &&
@@ -162,8 +158,8 @@ bool checkForExtendedHeader(std::istream& in) {
     auto startPos = in.tellg();
     std::string line;
     if (std::getline(in, line)) {
-       if (line == "P O L I T O") return true;
-       in.seekg(startPos);
+        if (line == "P O L I T O") return true;
+        in.seekg(startPos);
     }
     return false;
 }
@@ -175,7 +171,7 @@ void loadImage(std::istream& in, QImage& image) {
             in >> red >> green >> blue >> alpha;
             if (in.fail()) {
                 throw std::runtime_error(
-                            "Unable to load: file contained misformatted or mis-sized frame section.");
+                                         "Unable to load: file contained misformatted or mis-sized frame section.");
             }
             QColor color(red, green, blue, alpha);
             image.setPixelColor(row, col, color);
@@ -184,22 +180,22 @@ void loadImage(std::istream& in, QImage& image) {
 }
 
 Frame *loadExtendedFrame(std::istream& in, AnimationEventEmitter& emitter, int dimension) {
-   int duration, numLayers;
-   in >> duration >> numLayers;
-   if (in.fail() || numLayers < 1) {
-       throw std::runtime_error(
-                   "Unable to load: file contained misformatted extended-frame header.");
-   }
-   std::vector<std::unique_ptr<Layer>> layers;
-   for (int i = 0; i < numLayers; i++) {
+    int duration, numLayers;
+    in >> duration >> numLayers;
+    if (in.fail() || numLayers < 1) {
+        throw std::runtime_error(
+                                 "Unable to load: file contained misformatted extended-frame header.");
+    }
+    std::vector<std::unique_ptr<Layer>> layers;
+    for (int i = 0; i < numLayers; i++) {
         QImage image(dimension, dimension, QImage::Format_RGBA8888);
         loadImage(in, image);
         layers.push_back(std::unique_ptr<Layer>(new Layer(image)));
-   }
-   // Pass ownership of the layers to the new frame.
-   Frame *frame = new Frame(emitter, layers);
-   if (duration > 0) frame->setDuration(duration);
-   return frame;
+    }
+    // Pass ownership of the layers to the new frame.
+    Frame *frame = new Frame(emitter, layers);
+    if (duration > 0) frame->setDuration(duration);
+    return frame;
 }
 
 Frame *loadFrame(std::istream& in, AnimationEventEmitter& emitter, int dimension) {
@@ -215,12 +211,12 @@ void Animation::load(std::istream& in) {
     in >> width >> height >> numFrames;
     if (in.fail() || width != height || numFrames == 0) {
         throw std::runtime_error(
-                    "Unable to load: file contained misformatted width, height, nframes header.");
+                                 "Unable to load: file contained misformatted width, height, nframes header.");
     }
     std::vector<std::unique_ptr<Frame>> tempFrames;
     for (int i = 0; i < numFrames; i++) {
         Frame *frame = extendedFormat ?
-                    loadExtendedFrame(in, emitter, height) : loadFrame(in, emitter, height);
+            loadExtendedFrame(in, emitter, height) : loadFrame(in, emitter, height);
         tempFrames.push_back(std::unique_ptr<Frame>(frame));
     }
     dim = height;
