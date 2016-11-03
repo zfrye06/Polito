@@ -38,23 +38,6 @@ private slots:
 private:
     Ui::KeyBindingDialog *ui;
 
-    QKeySequence colorKey;
-    QKeySequence eraserKey;
-    QKeySequence lineKey;
-    QKeySequence addFrameKey;
-    QKeySequence addLayerKey;
-    QKeySequence nextFrameKey;
-    QKeySequence nextLayerKey;
-    QKeySequence removeFrameKey;
-    QKeySequence removeLayerKey;
-    QKeySequence brushKey;
-    QKeySequence fillKey;
-    QKeySequence selectKey;
-    QKeySequence circleKey;
-    QKeySequence squareKey;
-    QKeySequence previousFrameKey;
-    QKeySequence previousLayerKey;
-
     void initWidgets();
     void initConnections();
 
