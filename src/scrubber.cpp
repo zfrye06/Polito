@@ -27,9 +27,9 @@ Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget
     layout->addLayout(buttons);
 
     list = new QListWidget();
-    list->setDragEnabled(true);
-    list->setDragDropMode(QAbstractItemView::InternalMove);
-    list->setDefaultDropAction(Qt::MoveAction);
+//    list->setDragEnabled(true);
+//    list->setDragDropMode(QAbstractItemView::InternalMove);
+//    list->setDefaultDropAction(Qt::MoveAction);
     list->setSelectionMode(QAbstractItemView::SingleSelection);
     list->setFlow(QListView::LeftToRight);
 
