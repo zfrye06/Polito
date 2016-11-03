@@ -21,7 +21,7 @@ class FrameWidget {
     virtual void setActiveLayer(int index) = 0;
 };
 
-class UpdatableWidget {
+class UpdateableWidget {
  public:
     virtual void updateDisplay() = 0;
 };

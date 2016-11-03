@@ -4,7 +4,7 @@
 
 Frame::Frame(AnimationEventEmitter &emitter, int dim) :
     emitter(emitter), activeLayerIndex(0), durationMs(Frame::DEFAULT_DURATION), dim(dim) {
-    addLayer();
+    addLayerInternal(new Layer(dim), 0);
     activeLayerIndex = 0;
 }
 
@@ -40,7 +40,7 @@ void Frame::addLayer(int index) {
 
 void Frame::addLayerInternal(Layer *layer, int index) {
     gscene.addItem(layer);
-    layers.insert(layers.begin() + 0, layer);
+    layers.insert(layers.begin() + index, layer);
     layer->setZValue(index);
     for (auto i = index + 1; i < (int)layers.size(); i++) {
         layers[i]->setZValue(i);
@@ -126,7 +126,7 @@ int Frame::activeLayerIdx() const {
 }
 
 Layer* Frame::activeLayer() {
-    return layers[activeLayerIndex];
+    return layers.at(activeLayerIndex);
 }
 
 int Frame::numlayers() const {

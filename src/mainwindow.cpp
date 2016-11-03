@@ -46,9 +46,9 @@ void MainWindow::loadProject() {
             actionHistory.clear();
             drawArea->setFrame(&toLoad->activeFrame());
             previewArea->setFrames(&toLoad->getFrames());
+            animation.swap(toLoad);
             synchronizeScrubber();
             synchronizeLayerMenu();
-            animation.swap(toLoad);
         } catch (const std::exception &ex) {
             QString msg = "Unable to load project: ";
             msg += ex.what();
@@ -229,19 +229,19 @@ void MainWindow::initSignals() {
 
     connect(&emitter, &AnimationEventEmitter::addFrameEvent,
             this, [this](AddFrameAction *a){
-                a->setAnimationWidget(scrubber);
+                a->setWidgetToUpdate(this);
                 actionHistory.addAction(a);
             });
 
     connect(&emitter, &AnimationEventEmitter::moveFrameEvent,
             this, [this](MoveFrameAction *a){
-                a->setAnimationWidget(scrubber);
+                a->setWidgetToUpdate(this);
                 actionHistory.addAction(a);
             });
 
     connect(&emitter, &AnimationEventEmitter::removeFrameEvent,
             this, [this](RemoveFrameAction *a){
-                a->setAnimationWidget(scrubber);
+                a->setWidgetToUpdate(this);
                 actionHistory.addAction(a);
             });
 
@@ -339,4 +339,10 @@ void MainWindow::initSignals() {
     //    connect(kd, &KeyBindingDialog::colorSignal, this, &MainWindow::setColorBind);
     //    connect(kd, &KeyBindingDialog::brushSignal, this, &MainWindow::setBrushBind);
 
+}
+
+void MainWindow::updateDisplay() {
+    synchronizeScrubber();
+    synchronizeLayerMenu();
+    drawArea->setFrame(&animation->activeFrame());
 }

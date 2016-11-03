@@ -77,21 +77,21 @@ class AddFrameAction : public Action {
     animation(animation), index(index), widget(nullptr) {}
 
     void undo() {
-        frame.swap(animation->frames[index]);
+        frame.swap(animation->frames.at(index));
         animation->removeFrameInternal(index);
         if (widget != nullptr) {
-            widget->removeFrame(index);
+            widget->updateDisplay();
         }
     }
 
     void redo() {
         animation->addFrameInternal(std::move(frame), index);
         if (widget != nullptr) {
-            widget->addFrame(index);
+            widget->updateDisplay();
         }
     }
 
-    void setAnimationWidget(AnimationWidget *w) {
+    void setWidgetToUpdate(UpdateableWidget *w) {
         widget = w;
     }
 
@@ -99,7 +99,7 @@ class AddFrameAction : public Action {
     Animation *animation;
     std::unique_ptr<Frame> frame;
     int index;
-    AnimationWidget *widget;
+    UpdateableWidget *widget;
 };
 
 class MoveFrameAction : public Action {
@@ -111,18 +111,18 @@ class MoveFrameAction : public Action {
     void undo() {
         animation->moveFrameInternal(toIndex, fromIndex);
         if (widget != nullptr) {
-            widget->moveFrame(toIndex, fromIndex);
+            widget->updateDisplay();
         }
     }
 
     void redo() {
         animation->moveFrameInternal(fromIndex, toIndex);
         if (widget != nullptr) {
-            widget->moveFrame(fromIndex, toIndex);
+            widget->updateDisplay();
         }
     }
 
-    void setAnimationWidget(AnimationWidget *w) {
+    void setWidgetToUpdate(UpdateableWidget *w) {
         widget = w;
     }
 
@@ -130,7 +130,7 @@ class MoveFrameAction : public Action {
     Animation *animation;
     int fromIndex;
     int toIndex;
-    AnimationWidget *widget;
+    UpdateableWidget *widget;
 };
 
 class RemoveFrameAction : public Action {
@@ -142,19 +142,19 @@ class RemoveFrameAction : public Action {
     void undo() {
         animation->addFrameInternal(std::move(frame), index);
         if (widget != nullptr) {
-            widget->addFrame(index);
+            widget->updateDisplay();
         }
     }
 
     void redo() {
-        frame.swap(animation->frames[index]);
+        frame.swap(animation->frames.at(index));
         animation->removeFrameInternal(index);
         if (widget != nullptr) {
-            widget->removeFrame(index);
+            widget->updateDisplay();
         }
     }
 
-    void setAnimationWidget(AnimationWidget *w) {
+    void setWidgetToUpdate(UpdateableWidget *w) {
         widget = w;
     }
 
@@ -162,7 +162,7 @@ class RemoveFrameAction : public Action {
     Animation *animation;
     std::unique_ptr<Frame> frame;
     int index;
-    AnimationWidget *widget;
+    UpdateableWidget *widget;
 };
 
 class ResizeAction : public Action {
@@ -185,7 +185,7 @@ public:
         }
     }
 
-    void setWidgetToUpdate(UpdatableWidget *w) {
+    void setWidgetToUpdate(UpdateableWidget *w) {
         widget = w;
     }
 
@@ -193,7 +193,7 @@ private:
    Animation *animation;
    int dimBefore;
    int dimAfter;
-   UpdatableWidget *widget;
+   UpdateableWidget *widget;
 };
 
 #endif // ANIMATION_H

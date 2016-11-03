@@ -10,7 +10,7 @@
 #include "layer.h"
 #include "painthandler.h"
 
-class DrawArea : public QGraphicsView, public UpdatableWidget {
+class DrawArea : public QGraphicsView, public UpdateableWidget {
     Q_OBJECT
 
  public:

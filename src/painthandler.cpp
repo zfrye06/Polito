@@ -1,4 +1,3 @@
-#include <iostream>
 #include <QStack>
 #include "painthandler.h"
 

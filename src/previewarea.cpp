@@ -2,7 +2,6 @@
 #include <QPushButton>
 #include <QLayout>
 #include <QTimer>
-#include <iostream>
 #include <memory>
 #include <QRectF>
 #include <QtGlobal>

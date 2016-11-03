@@ -1,10 +1,10 @@
 #include "scrubber.h"
+#include <QAbstractItemView>
 #include <QListWidgetItem>
 #include <QPushButton>
-#include <QAbstractItemView>
-#include <iostream>
-#include <vector>
 #include <QImage>
+#include <vector>
+
 #include "frame.h"
 
 Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget(parent) {
