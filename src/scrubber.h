@@ -34,14 +34,12 @@ signals:
     void addFrameClicked();
     void moveFrameClicked(int fromIndex, int toIndex);
     void removeFrameClicked();
-    void setActiveFrameClicked(int newIndex);
+    void frameIconClicked(int newIndex);
 
 public slots:
     void frameClicked(QListWidgetItem* item);
-    void reordered(QDropEvent* event);
 
 protected:
-    void dropEvent(QDropEvent* event) Q_DECL_OVERRIDE;
 
 private:
     QPushButton* addFrameButton;

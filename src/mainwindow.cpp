@@ -194,8 +194,8 @@ void MainWindow::initActions() {
     clearScreenAct->setShortcut(tr("Ctrl+L"));
     connect(clearScreenAct, &QAction::triggered,
             this, [this] {
-        animation->activeFrame().clear();
-    });
+                animation->activeFrame().clear();
+            });
 
     chooseColor = new QAction(tr("&Choose Color"), this);
     chooseColor->setShortcut(tr("Ctrl+P"));
@@ -356,19 +356,19 @@ void MainWindow::initSignals() {
             this, [this](AddFrameAction *a){
                 a->setAnimationWidget(scrubber);
                 actionHistory.addAction(a);
-    });
+            });
 
     connect(&emitter, &AnimationEventEmitter::moveFrameEvent,
             this, [this](MoveFrameAction *a){
                 a->setAnimationWidget(scrubber);
                 actionHistory.addAction(a);
-    });
+            });
 
     connect(&emitter, &AnimationEventEmitter::removeFrameEvent,
             this, [this](RemoveFrameAction *a){
                 a->setAnimationWidget(scrubber);
                 actionHistory.addAction(a);
-    });
+            });
 
     connect(&emitter, &AnimationEventEmitter::addLayerEvent,
             &actionHistory, &ActionHistory::addAction);
@@ -388,20 +388,26 @@ void MainWindow::initSignals() {
     connect(toolbar, &Toolbar::colorChanged,
             this, [this](QColor to){
                 drawArea->paintHandler().settings.color = to;
-    });
+            });
 
     connect(scrubber, &Scrubber::addFrameClicked,
             this, [this] {
                 int insertIndex = animation->activeFrameIdx() + 1;
                 animation->addFrame(insertIndex);
                 scrubber->addFrame(insertIndex);
-    });
+            });
 
     connect(scrubber, &Scrubber::moveFrameClicked,
             this, [this](int from, int to) {
-                animation->moveFrame(from, to);
-                scrubber->moveFrame(from, to);
-    });
+                if (from >= 0 && from < animation->numframes() &&
+                    to >= 0 && to < animation->numframes()) {
+                    animation->moveFrame(from, to);
+                    scrubber->moveFrame(from, to);
+                    scrubber->setActiveFrame(animation->activeFrameIdx());
+                    synchronizeLayerMenu();
+                    drawArea->setFrame(&animation->activeFrame());
+                }
+            });
 
     connect(scrubber, &Scrubber::removeFrameClicked,
             this, [this]() {
@@ -423,35 +429,35 @@ void MainWindow::initSignals() {
                 scrubber->setActiveFrame(animation->activeFrameIdx());
                 synchronizeLayerMenu();
                 drawArea->setFrame(&animation->activeFrame());
-    });
+            });
 
-    connect(scrubber, &Scrubber::setActiveFrameClicked,
+    connect(scrubber, &Scrubber::frameIconClicked,
             this, [this](int index) {
                 animation->setActiveFrame(index);
                 scrubber->setActiveFrame(index);
                 synchronizeLayerMenu();
                 drawArea->setFrame(&animation->activeFrame());
-    });
+            });
 
     connect(layerMenu, &LayerMenu::layerAddedSignal,
             this, [this](int index) {
                 animation->activeFrame().addLayer(index);
-    });
+            });
 
     connect(layerMenu, &LayerMenu::layersSwappedSignal,
             this, [this](int from, int to) {
                 animation->activeFrame().moveLayer(from, to);
-    });
+            });
 
     connect(layerMenu, &LayerMenu::layerDeletedSignal,
             this, [this](int index) {
                 animation->activeFrame().removeLayer(index);
-     });
+            });
 
     connect(layerMenu, &LayerMenu::activeLayerChangedSignal,
             this, [this](int to) {
                 animation->activeFrame().setActiveLayer(to);
-    });
+            });
 
     connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
 
