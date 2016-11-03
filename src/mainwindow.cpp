@@ -223,13 +223,13 @@ void MainWindow::initActions() {
     addLayerAct->setShortcut(tr("Ctrl+A"));
     connect(addLayerAct, &QAction::triggered, this, [this]{emit layerMenu->addLayerButtonClicked();});
 
-//    frameRightAct = new QAction(tr("&Move Current Frame Right"), this);
-//    frameRightAct->setShortcut(tr("Ctrl+N"));
-//    connect(frameRightAct, &QAction::triggered, this, [this]{emit scrubber->;});
+    frameRightAct = new QAction(tr("&Move Current Frame Right"), this);
+    frameRightAct->setShortcut(tr("Ctrl+N"));
+    connect(frameRightAct, &QAction::triggered, this, [this]{emit this->scrubber->moveFrameClicked(scrubber->getCurrentListRow(), scrubber->getCurrentListRow() + 1);});
 
-//    frameLeftAct = new QAction(tr("&Move Current Frame Left"), this);
-//    ->setShortcut(tr("Ctrl+G"));
-//    connect(frameLeftAct, &QAction::triggered, this, [this]{emit ;});
+    frameLeftAct = new QAction(tr("&Move Current Frame Left"), this);
+    frameLeftAct->setShortcut(tr("Ctrl+G"));
+    connect(frameLeftAct, &QAction::triggered, this, [this]{emit this->scrubber->moveFrameClicked(scrubber->getCurrentListRow(), scrubber->getCurrentListRow() - 1);});
 
     layerUpAct = new QAction(tr("&Move Current Layer Up"), this);
     layerUpAct->setShortcut(tr("Ctrl+H"));
@@ -282,10 +282,10 @@ void MainWindow::initActions() {
     editMenu->addAction(lineAct);
     editMenu->addAction(addFrameAct);
     editMenu->addAction(addLayerAct);
-//    editMenu->addAction(frameRightAct);
+    editMenu->addAction(frameRightAct);
     editMenu->addAction(layerUpAct);
     editMenu->addAction(layerDownAct);
-//    editMenu->addAction(frameLeftAct);
+    editMenu->addAction(frameLeftAct);
     editMenu->addAction(removeFrameAct);
     editMenu->addAction(removeLayerAct);
     editMenu->addAction(brushAct);

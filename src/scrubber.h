@@ -29,6 +29,7 @@ public:
     void removeFrame(int index) override;
     void setActiveFrame(int index) override;
     void clear();
+    int getCurrentListRow();
 
 signals:
     void addFrameClicked();

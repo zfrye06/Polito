@@ -48,6 +48,10 @@ Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget
     connect(moveFrameRight, &QPushButton::clicked, this, [this]{ emit moveFrameClicked(list->currentRow(), list->currentRow() + 1); });
 }
 
+int Scrubber::getCurrentListRow(){
+    return list->currentRow();
+}
+
 void Scrubber::frameClicked(QListWidgetItem *item) {
     emit frameIconClicked(list->currentRow());
 }
