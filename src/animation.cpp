@@ -27,9 +27,9 @@ void Animation::addFrameInternal(std::unique_ptr<Frame> f, int index) {
 void Animation::moveFrame(int fromIndex, int toIndex) {
     if (fromIndex < 0 || fromIndex >= (int)frames.size() ||
                     toIndex < 0 || toIndex >= (int)frames.size()) {
-        throw std::invalid_argument("Index out of bounds.");
+        return;
     }
-    moveFrame(fromIndex, toIndex);
+    moveFrameInternal(fromIndex, toIndex);
     emitter.emitMoveFrameEvent(new MoveFrameAction(this, fromIndex, toIndex));
 }
 

@@ -27,9 +27,9 @@ Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget
     layout->addLayout(buttons);
 
     list = new QListWidget();
-    list->setDragEnabled(true);
-    list->setDragDropMode(QAbstractItemView::InternalMove);
-    list->setDefaultDropAction(Qt::MoveAction);
+//    list->setDragEnabled(true);
+//    list->setDragDropMode(QAbstractItemView::InternalMove);
+//    list->setDefaultDropAction(Qt::MoveAction);
     list->setSelectionMode(QAbstractItemView::SingleSelection);
     list->setFlow(QListView::LeftToRight);
 
@@ -44,6 +44,8 @@ Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget
     connect(list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(frameClicked(QListWidgetItem*)));
     connect(addFrameButton, &QPushButton::clicked, this, [this]{ emit addFrameClicked(); });
     connect(removeFrameButton, &QPushButton::clicked, this, [this]{ emit removeFrameClicked(); });
+    connect(moveFrameLeft, &QPushButton::clicked, this, [this]{ emit moveFrameClicked(list->currentRow(), list->currentRow() - 1); });
+    connect(moveFrameRight, &QPushButton::clicked, this, [this]{ emit moveFrameClicked(list->currentRow(), list->currentRow() + 1); });
 }
 
 void Scrubber::addFrame(int index) {
@@ -53,7 +55,9 @@ void Scrubber::addFrame(int index) {
 }
 
 void Scrubber::moveFrame(int from, int to) {
-    
+    QListWidgetItem* item = list->takeItem(from);
+    list->insertItem(to, item);
+    setActiveFrame(to);
 }
 
 void Scrubber::removeFrame(int index) {
@@ -61,7 +65,8 @@ void Scrubber::removeFrame(int index) {
 }
 
 void Scrubber::setActiveFrame(int index) {
-    //list->
+    QListWidgetItem* item = list->item(index);
+    item->setSelected(true);
 }
 
 void Scrubber::clear() {
