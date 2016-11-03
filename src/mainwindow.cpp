@@ -223,13 +223,13 @@ void MainWindow::initActions() {
     addLayerAct->setShortcut(tr("Ctrl+A"));
     connect(addLayerAct, &QAction::triggered, this, [this]{emit layerMenu->addLayerButtonClicked();});
 
-//    frameRightAct = new QAction(tr("&Move Current Frame Right"), this);
-//    frameRightAct->setShortcut(tr("Ctrl+N"));
-//    connect(frameRightAct, &QAction::triggered, this, [this]{emit scrubber->;});
+    frameRightAct = new QAction(tr("&Move Current Frame Right"), this);
+    frameRightAct->setShortcut(tr("Ctrl+N"));
+    connect(frameRightAct, &QAction::triggered, this, [this]{emit this->scrubber->moveFrameClicked(scrubber->getCurrentListRow(), scrubber->getCurrentListRow() + 1);});
 
-//    frameLeftAct = new QAction(tr("&Move Current Frame Left"), this);
-//    ->setShortcut(tr("Ctrl+G"));
-//    connect(frameLeftAct, &QAction::triggered, this, [this]{emit ;});
+    frameLeftAct = new QAction(tr("&Move Current Frame Left"), this);
+    frameLeftAct->setShortcut(tr("Ctrl+G"));
+    connect(frameLeftAct, &QAction::triggered, this, [this]{emit this->scrubber->moveFrameClicked(scrubber->getCurrentListRow(), scrubber->getCurrentListRow() - 1);});
 
     layerUpAct = new QAction(tr("&Move Current Layer Up"), this);
     layerUpAct->setShortcut(tr("Ctrl+H"));
@@ -282,10 +282,10 @@ void MainWindow::initActions() {
     editMenu->addAction(lineAct);
     editMenu->addAction(addFrameAct);
     editMenu->addAction(addLayerAct);
-//    editMenu->addAction(frameRightAct);
+    editMenu->addAction(frameRightAct);
     editMenu->addAction(layerUpAct);
     editMenu->addAction(layerDownAct);
-//    editMenu->addAction(frameLeftAct);
+    editMenu->addAction(frameLeftAct);
     editMenu->addAction(removeFrameAct);
     editMenu->addAction(removeLayerAct);
     editMenu->addAction(brushAct);
@@ -326,16 +326,19 @@ void MainWindow::initWidgets() {
     toolbar->setMaximumWidth(50);
     layerMenu->setMaximumWidth(200);
 
-    upperArea->setStretchFactor(0,0);
-    upperArea->setStretchFactor(1,20);
-    upperArea->setStretchFactor(2,0);
-
     upperArea->addWidget(toolbar);
     upperArea->addWidget(drawArea);
     upperArea->addWidget(layerMenu);
 
+    upperArea->setStretchFactor(0,0);
+    upperArea->setStretchFactor(1,20);
+    upperArea->setStretchFactor(2,0);
+
     lowerArea->addWidget(scrubber);
     lowerArea->addWidget(previewArea);
+
+    lowerArea->setStretchFactor(0, 5);
+    lowerArea->setStretchFactor(1, 1);
 
     fileMenu = new QMenu(tr("&File"), this);
     editMenu = new QMenu(tr("&Edit"), this);

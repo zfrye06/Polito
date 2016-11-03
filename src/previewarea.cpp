@@ -28,7 +28,7 @@ void PreviewArea::initWidgets(){
     nextFrame = new QPushButton();
     previousFrame = new QPushButton();
     duration = new QTextEdit();
-    QSize size(60, 25);
+    QSize size(80, 25);
     duration->setMaximumSize(size);
     duration->setMinimumSize(size);
 
