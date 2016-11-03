@@ -63,7 +63,8 @@ void Scrubber::moveFrame(int from, int to) {
 }
 
 void Scrubber::removeFrame(int index) {
-    list->takeItem(index);
+    auto item = list->takeItem(index);
+    delete item;
 }
 
 void Scrubber::setActiveFrame(int index) {
