@@ -3,13 +3,15 @@
 
 #include <QWidget>
 #include <QListView>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <iostream>
-#include <QLineEdit>
 #include <QGroupBox>
 #include <QIcon>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QWidget>
 #include "animationwidgets.h"
+
+class LayerWidget;
 
 class LayerMenu : public QWidget, public FrameWidget {
     Q_OBJECT
@@ -41,24 +43,31 @@ public slots:
     void moveLayerDownButtonClicked();
     void textBoxClicked();
 
-protected:
-
 private:
+    QPushButton* addLayerButton;
+    QVBoxLayout* layerMenuLayout;
+    LayerWidget* highlightedWidget;
+
+    // I maintain this as an external index. It's purely for
+    // recordkeeping. Don't use internally without translating
+    // to an internal index.
+    int indexOfActiveLayer;
+    int translateToInternalIndex(int);
+    int translateToExternalIndex(int);
+    int translatedClickIndex();
+    LayerWidget *widgetAtExternalIndex(int);
+};
+
+class LayerWidget : public QGroupBox {
+    Q_OBJECT
+ public:
+    LayerWidget(LayerMenu *parent = 0);
+    void highlight();
+    void unhighlight();
+ private:
     QIcon upArrow = QIcon(QPixmap(":/icons/up"));
     QIcon downArrow = QIcon(QPixmap(":/icons/down"));
     QIcon deleteX = QIcon(QPixmap(":/icons/delete"));
-    QPushButton* addLayerButton;
-    QVBoxLayout* layerMenuLayout;
-    int indexOfActiveLayer;
-    int numLayers;
-
-    void deleteLayer(QGroupBox* layerToBeDeleted);
-    void addLayer(QString layerName);
-    void highlightGroupBox(QGroupBox*);
-    void unhighlightGroupBox(QGroupBox*);
-    void swapLayers(int, int);
-    int getIndex(QGroupBox*);
-    QGroupBox* getBox(int index);
 };
 
 #endif // LAYERMENU_H

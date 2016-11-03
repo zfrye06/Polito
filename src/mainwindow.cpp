@@ -162,6 +162,12 @@ void MainWindow::synchronizeLayerMenu() {
     layerMenu->setActiveLayer(animation->activeFrame().activeLayerIdx());
 }
 
+void MainWindow::updateDisplay() {
+    synchronizeScrubber();
+    synchronizeLayerMenu();
+    drawArea->setFrame(&animation->activeFrame());
+}
+
 void MainWindow::initActions() {
     saveAct = new QAction(tr("Save Project"), this);
     connect(saveAct, &QAction::triggered, this, [this] { this->saveProject(false); });
@@ -371,13 +377,22 @@ void MainWindow::initSignals() {
             });
 
     connect(&emitter, &AnimationEventEmitter::addLayerEvent,
-            &actionHistory, &ActionHistory::addAction);
+            this, [this](AddLayerAction *a){
+                a->setFrameWidget(layerMenu);
+                actionHistory.addAction(a);
+            });
 
     connect(&emitter, &AnimationEventEmitter::moveLayerEvent,
-            &actionHistory, &ActionHistory::addAction);
+            this, [this](MoveLayerAction *a){
+                a->setFrameWidget(layerMenu);
+                actionHistory.addAction(a);
+            });
 
     connect(&emitter, &AnimationEventEmitter::removeLayerEvent,
-            &actionHistory, &ActionHistory::addAction);
+            this, [this](RemoveLayerAction *a){
+                a->setFrameWidget(layerMenu);
+                actionHistory.addAction(a);
+            });
 
     connect(&emitter, &AnimationEventEmitter::resizeEvent,
             this, [this](ResizeAction *action){
@@ -441,22 +456,37 @@ void MainWindow::initSignals() {
 
     connect(layerMenu, &LayerMenu::layerAddedSignal,
             this, [this](int index) {
-                animation->activeFrame().addLayer(index);
+                Frame &frame = animation->activeFrame();
+                frame.addLayer(index);
+                layerMenu->addLayer(index);
+                layerMenu->setActiveLayer(frame.activeLayerIdx());
             });
 
     connect(layerMenu, &LayerMenu::layersSwappedSignal,
             this, [this](int from, int to) {
-                animation->activeFrame().moveLayer(from, to);
+                if (from >= 0 && from < animation->activeFrame().numlayers() &&
+                    to >= 0 && to < animation->activeFrame().numlayers()) {
+
+                    Frame &frame = animation->activeFrame();
+                    frame.moveLayer(from, to);
+                    layerMenu->moveLayer(from, to);
+                    layerMenu->setActiveLayer(frame.activeLayerIdx());
+                }
             });
 
     connect(layerMenu, &LayerMenu::layerDeletedSignal,
             this, [this](int index) {
-                animation->activeFrame().removeLayer(index);
+                if (animation->activeFrame().numlayers() <= 1) return;
+                Frame &frame = animation->activeFrame();
+                frame.removeLayer(index);
+                layerMenu->removeLayer(index);
+                layerMenu->setActiveLayer(frame.activeLayerIdx());
             });
 
     connect(layerMenu, &LayerMenu::activeLayerChangedSignal,
             this, [this](int to) {
                 animation->activeFrame().setActiveLayer(to);
+                layerMenu->setActiveLayer(to);
             });
 
     connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
@@ -479,8 +509,3 @@ void MainWindow::initSignals() {
     connect(kd, &KeyBindingDialog::squareSignal, this, &MainWindow::setSquareBind);
 }
 
-void MainWindow::updateDisplay() {
-    synchronizeScrubber();
-    synchronizeLayerMenu();
-    drawArea->setFrame(&animation->activeFrame());
-}
