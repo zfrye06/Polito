@@ -326,16 +326,19 @@ void MainWindow::initWidgets() {
     toolbar->setMaximumWidth(50);
     layerMenu->setMaximumWidth(200);
 
-    upperArea->setStretchFactor(0,0);
-    upperArea->setStretchFactor(1,20);
-    upperArea->setStretchFactor(2,0);
-
     upperArea->addWidget(toolbar);
     upperArea->addWidget(drawArea);
     upperArea->addWidget(layerMenu);
 
+    upperArea->setStretchFactor(0,0);
+    upperArea->setStretchFactor(1,20);
+    upperArea->setStretchFactor(2,0);
+
     lowerArea->addWidget(scrubber);
     lowerArea->addWidget(previewArea);
+
+    lowerArea->setStretchFactor(0, 5);
+    lowerArea->setStretchFactor(1, 1);
 
     fileMenu = new QMenu(tr("&File"), this);
     editMenu = new QMenu(tr("&Edit"), this);
