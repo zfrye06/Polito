@@ -80,11 +80,66 @@ void MainWindow::bindings(){
 }
 
 void MainWindow::setColorBind(const QKeySequence &keySequence){
-    chooseColor->setShortcut(keySequence);
+    chooseColor->setShortcut(keySequence);void setEraserBind(const QKeySequence&);
+}
+
+void MainWindow::setEraserBind(const QKeySequence &keySequence){
+    eraserAct->setShortcut(keySequence);
+}
+
+void MainWindow::setLineBind(const QKeySequence& keySequence){
+    lineAct->setShortcut(keySequence);
+}
+void MainWindow::addFrameBind(const QKeySequence& keySequence){
+    addFrameAct->setShortcut(keySequence);
+}
+
+void MainWindow::addLayerBind(const QKeySequence& keySequence){
+    addLayerAct->setShortcut(keySequence);
+}
+
+void MainWindow::frameRightBind(const QKeySequence& keySequence){
+    frameRightAct->setShortcut(keySequence);
+}
+
+void MainWindow::frameLeftBind(const QKeySequence& keySequence){
+    frameLeftAct->setShortcut(keySequence);
+}
+
+void MainWindow::layerUpBind(const QKeySequence& keySequence){
+    layerUpAct->setShortcut(keySequence);
+}
+
+void MainWindow::layerDownBind(const QKeySequence& keySequence){
+    layerDownAct->setShortcut(keySequence);
+}
+
+void MainWindow::removeLayerBind(const QKeySequence& keySequence){
+    removeLayerAct->setShortcut(keySequence);
+}
+
+void MainWindow::removeFrameBind(const QKeySequence& keySequence){
+    removeFrameAct->setShortcut(keySequence);
 }
 
 void MainWindow::setBrushBind(const QKeySequence &keySequence){
     brushAct->setShortcut(keySequence);
+}
+
+void MainWindow::setFillBind(const QKeySequence& keySequence){
+    fillAct->setShortcut(keySequence);
+}
+
+void MainWindow::setSelectBind(const QKeySequence& keySequence){
+    selectAct->setShortcut(keySequence);
+}
+
+void MainWindow::setCircleBind(const QKeySequence& keySequence){
+    circleAct->setShortcut(keySequence);
+}
+
+void MainWindow::setSquareBind(const QKeySequence& keySequence){
+    squareAct->setShortcut(keySequence);
 }
 
 void MainWindow::finishImageSize(int w, int h) {
@@ -146,9 +201,65 @@ void MainWindow::initActions() {
     chooseColor->setShortcut(tr("Ctrl+P"));
     connect(chooseColor, &QAction::triggered, toolbar, &Toolbar::getColor);
 
+    eraserAct = new QAction(tr("&Select Eraser Tool"), this);
+    eraserAct->setShortcut(tr("Ctrl+E"));
+    connect(eraserAct, &QAction::triggered, toolbar, &Toolbar::setEraser);
+
+    lineAct = new QAction(tr("&Select Line Tool"), this);
+    lineAct->setShortcut(tr("Ctrl+I"));
+    connect(lineAct, &QAction::triggered, toolbar, &Toolbar::setLine);
+
+    addFrameAct = new QAction(tr("&Add Frame"), this);
+    addFrameAct->setShortcut(tr("Ctrl+T"));
+    connect(addFrameAct, &QAction::triggered, this, [this]{emit scrubber->addFrameClicked();});
+
+    addLayerAct = new QAction(tr("&Add Layer"), this);
+    addLayerAct->setShortcut(tr("Ctrl+A"));
+    connect(addLayerAct, &QAction::triggered, this, [this]{emit layerMenu->addLayerButtonClicked();});
+
+//    frameRightAct = new QAction(tr("&Move Current Frame Right"), this);
+//    frameRightAct->setShortcut(tr("Ctrl+N"));
+//    connect(frameRightAct, &QAction::triggered, this, [this]{emit scrubber->;});
+
+//    frameLeftAct = new QAction(tr("&Move Current Frame Left"), this);
+//    ->setShortcut(tr("Ctrl+G"));
+//    connect(frameLeftAct, &QAction::triggered, this, [this]{emit ;});
+
+    layerUpAct = new QAction(tr("&Move Current Layer Up"), this);
+    layerUpAct->setShortcut(tr("Ctrl+H"));
+    connect(layerUpAct, &QAction::triggered, this, [this]{emit layerMenu->moveLayerUpButtonClicked();});
+
+    layerDownAct = new QAction(tr("&Move Current Layer Down"), this);
+    layerDownAct->setShortcut(tr("Ctrl+D"));
+    connect(layerDownAct, &QAction::triggered, this, [this]{emit layerMenu->moveLayerDownButtonClicked();});
+
+    removeFrameAct = new QAction(tr("&Delete Current Frame"), this);
+    removeFrameAct->setShortcut(tr("Ctrl+J"));
+    connect(removeFrameAct, &QAction::triggered, this, [this]{emit scrubber->removeFrameClicked();});
+
+    removeLayerAct = new QAction(tr("&Delete Current Layer"), this);
+    removeLayerAct->setShortcut(tr("Ctrl+K"));
+    connect(removeLayerAct, &QAction::triggered, this, [this]{emit layerMenu->deleteLayerButtonClicked();});
+
     brushAct = new QAction(tr("&Select Brush Tool"), this);
     brushAct->setShortcut(tr("Ctrl+B"));
     connect(brushAct, &QAction::triggered, toolbar, &Toolbar::setBrush);
+
+    fillAct = new QAction(tr("&Select Fill Tool"), this);
+    fillAct->setShortcut(tr("Ctrl+F"));
+    connect(fillAct, &QAction::triggered, toolbar, &Toolbar::setFill);
+
+//    selectAct = new QAction(tr("&Select Pan Tool"), this);
+//    selectAct->setShortcut(tr("Ctrl+M"));
+//    connect(selectAct, &QAction::triggered, this, &Toolbar::);
+
+    circleAct = new QAction(tr("&Select Circle Tool"), this);
+    circleAct->setShortcut(tr("Ctrl+R"));
+    connect(circleAct, &QAction::triggered, toolbar, &Toolbar::setCircle);
+
+    squareAct = new QAction(tr("&"), this);
+    squareAct->setShortcut(tr("Ctrl+S"));
+    connect(squareAct, &QAction::triggered, toolbar, &Toolbar::setSquare);
 
     fileMenu->addAction(saveAct);
     fileMenu->addAction(saveExtendedAct);
@@ -161,7 +272,21 @@ void MainWindow::initActions() {
     editMenu->addSeparator();
     editMenu->addAction(imageSizeAct);
     editMenu->addAction(chooseColor);
+    editMenu->addAction(eraserAct);
+    editMenu->addAction(lineAct);
+    editMenu->addAction(addFrameAct);
+    editMenu->addAction(addLayerAct);
+//    editMenu->addAction(frameRightAct);
+    editMenu->addAction(layerUpAct);
+    editMenu->addAction(layerDownAct);
+//    editMenu->addAction(frameLeftAct);
+    editMenu->addAction(removeFrameAct);
+    editMenu->addAction(removeLayerAct);
     editMenu->addAction(brushAct);
+    editMenu->addAction(fillAct);
+//    editMenu->addAction(selectAct);
+    editMenu->addAction(circleAct);
+    editMenu->addAction(squareAct);
 
     optionMenu->addAction(clearScreenAct);
     optionMenu->addAction(keyBindAct);
@@ -330,7 +455,20 @@ void MainWindow::initSignals() {
 
     connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
 
-//    connect(kd, &KeyBindingDialog::colorSignal, this, &MainWindow::setColorBind);
-//    connect(kd, &KeyBindingDialog::brushSignal, this, &MainWindow::setBrushBind);
-
+    connect(kd, &KeyBindingDialog::colorSignal, this, &MainWindow::setColorBind);
+    connect(kd, &KeyBindingDialog::eraserSignal, this, &MainWindow::setEraserBind);
+    connect(kd, &KeyBindingDialog::lineSignal, this, &MainWindow::setLineBind);
+    connect(kd, &KeyBindingDialog::addFrameSignal, this, &MainWindow::addFrameBind);
+    connect(kd, &KeyBindingDialog::addLayerSignal, this, &MainWindow::addLayerBind);
+    connect(kd, &KeyBindingDialog::frameRightSignal, this, &MainWindow::frameRightBind);
+    connect(kd, &KeyBindingDialog::frameLeftSignal, this, &MainWindow::frameLeftBind);
+    connect(kd, &KeyBindingDialog::layerUpSignal, this, &MainWindow::layerUpBind);
+    connect(kd, &KeyBindingDialog::layerDownSignal, this, &MainWindow::layerDownBind);
+    connect(kd, &KeyBindingDialog::removeFrameSignal, this, &MainWindow::removeFrameBind);
+    connect(kd, &KeyBindingDialog::removeLayerSignal, this, &MainWindow::removeLayerBind);
+    connect(kd, &KeyBindingDialog::brushSignal, this, &MainWindow::setBrushBind);
+    connect(kd, &KeyBindingDialog::fillSignal, this, &MainWindow::setFillBind);
+    connect(kd, &KeyBindingDialog::selectSignal, this, &MainWindow::setSelectBind);
+    connect(kd, &KeyBindingDialog::circleSignal, this, &MainWindow::setCircleBind);
+    connect(kd, &KeyBindingDialog::squareSignal, this, &MainWindow::setSquareBind);
 }

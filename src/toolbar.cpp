@@ -84,22 +84,27 @@ void Toolbar::setBrush() {
 }
 
 void Toolbar::setEraser() {
+    eraseButton->setChecked(true);
     emit setPaintHandler( new Eraser() );
 }
 
 void Toolbar::setFill() {
+    fillButton->setChecked(true);
     emit setPaintHandler( new PaintBucket() );
 }
 
 void Toolbar::setSquare(){
+    squareButton->setChecked(true);
     emit setPaintHandler( new PaintSquare() );
 }
 
 void Toolbar::setCircle(){
+    circleButton->setChecked(true);
     emit setPaintHandler( new PaintCircle() );
 }
 
 void Toolbar::setLine(){
+    lineButton->setChecked(true);
     emit setPaintHandler( new PaintLine() );
 }
 
