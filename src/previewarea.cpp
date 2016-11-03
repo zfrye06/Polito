@@ -6,6 +6,7 @@
 #include <memory>
 #include <QRectF>
 #include <QtGlobal>
+#include <QSize>
 #include <QIntValidator>
 #include "previewarea.h"
 
@@ -22,12 +23,15 @@ void PreviewArea::initWidgets(){
     buttonLayout = new QHBoxLayout(this);
     playbackButtons = new QButtonGroup(this);
 
-    currentFrame = new QGraphicsView;
-    playButton = new QPushButton;
-    pauseButton = new QPushButton;
-    nextFrame = new QPushButton;
-    previousFrame = new QPushButton;
+    currentFrame = new QGraphicsView();
+    playButton = new QPushButton();
+    pauseButton = new QPushButton();
+    nextFrame = new QPushButton();
+    previousFrame = new QPushButton();
     duration = new QTextEdit();
+    QSize size(40, 25);
+    duration->setMaximumSize(size);
+    duration->setMinimumSize(size);
 
     playButton->setCheckable(true);
     pauseButton->setCheckable(true);
@@ -68,8 +72,9 @@ void PreviewArea::updateDuration(){
     QString text = duration->toPlainText();
     QIntValidator validator;
     for(int i = 0; i < text.length(); i++){
-        if(QValidator::Acceptable != validator.validate(text.at(i), i)){
-            text.remove(i);
+        QString temp(text.at(i));
+        if(QValidator::Acceptable != validator.validate(temp, i)){
+            text = text.remove(i, 1);
             i--;
         }
     }
@@ -82,16 +87,30 @@ void PreviewArea::updateDuration(){
 
 void PreviewArea::setPreview(){
     QRectF rect(previewLayout->itemAt(0)->geometry());
+    int frameDuration = frames->at(currentFrameNumber)->duration();
+    duration->setPlainText(QString::number(frameDuration));
     QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
     currentFrame->setScene(scene);
-    int asdf = scene->width();
-    width = 80 / asdf;
-    height = 80 / scene->height();
 }
 
 void PreviewArea::updatePreview(){
     currentFrame->viewport()->update();
+}
+
+void PreviewArea::resizeEvent(QResizeEvent *event){
+    currentFrame->scale(1/width, 1/height);
+    QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
     QRectF rect(previewLayout->itemAt(0)->geometry());
+    if(rect.width() < rect.height()){
+        width = (rect.width() / scene->width()) - .01;
+        height = width;
+    }
+    else{
+        height = (rect.height() / scene->height()) - .01;
+        width = height;
+    }
+
+    currentFrame->scale(width, height);
 }
 
 void PreviewArea::playAnimation(){
@@ -115,7 +134,9 @@ void PreviewArea::goToNextFrameIsPlaying(){
             currentFrameNumber++;
         }
         currentFrame->setScene(&frames->at(currentFrameNumber)->scene());
-        QTimer::singleShot(200, this, SLOT(goToNextFrameIsPlaying()));
+        int frameDuration = frames->at(currentFrameNumber)->duration();
+        duration->setPlainText(QString::number(frameDuration));
+        QTimer::singleShot(frameDuration, this, SLOT(goToNextFrameIsPlaying()));
     }
 }
 
@@ -129,6 +150,8 @@ void PreviewArea::goToNextFrame(){
     else{
         currentFrameNumber++;
     }
+    int frameDuration = frames->at(currentFrameNumber)->duration();
+    duration->setPlainText(QString::number(frameDuration));
     currentFrame->setScene(&frames->at(currentFrameNumber)->scene());
 }
 
@@ -142,6 +165,8 @@ void PreviewArea::goToPreviousFrame(){
     else{
         currentFrameNumber--;
     }
+    int frameDuration = frames->at(currentFrameNumber)->duration();
+    duration->setPlainText(QString::number(frameDuration));
     currentFrame->setScene(&frames->at(currentFrameNumber)->scene());
 }
 

@@ -9,6 +9,7 @@
 #include <QTextEdit>
 #include <memory>
 #include <vector>
+#include <QResizeEvent>
 #include "animation.h"
 #include "frame.h"
 
@@ -31,11 +32,14 @@ public slots:
     void goToPreviousFrame();
     void updateDuration();
 
+protected:
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
 private:
     bool isPlaying = false;
     int currentFrameNumber = 0;
-    int width;
-    int height;
+    double width = 1;
+    double height = 1;
 
     vector<unique_ptr<Frame>> *frames;
     QTimer* timer;
