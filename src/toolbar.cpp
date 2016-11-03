@@ -8,6 +8,20 @@ Toolbar::Toolbar(QWidget *parent) : QWidget(parent){
     this->setParent(parent);
 }
 
+Toolbar::~Toolbar(){
+    delete lineButton;
+    delete moveButton;
+    delete brushButton;
+    delete eraseButton;
+    delete fillButton;
+    delete colorButton;
+    delete circleButton;
+    delete squareButton;
+    delete buttonGroup;
+    delete toolsLayout;
+    delete colorPicker;
+}
+
 void Toolbar::initWidgets(){
     QSize size = QSize(40, 40);
     toolsLayout = new QVBoxLayout(this);
