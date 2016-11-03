@@ -56,7 +56,7 @@ void PaintBucket::mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPo
 
 void PaintBucket::floodFill( QImage &image, QPainter &painter, QColor target, QColor replacement, QPoint position ){
     QStack<PixelInfo> unprocessedPixels;
-    PixelInfo first(position, "");
+    PixelInfo first(position, PixelDirection::None);
     unprocessedPixels.push(first);
     while(unprocessedPixels.size() != 0){
         PixelInfo currentPoint = unprocessedPixels.pop();
@@ -79,21 +79,41 @@ void PaintBucket::floodFill( QImage &image, QPainter &painter, QColor target, QC
         QPoint eastPoint(currentPoint.point.x() + 1, currentPoint.point.y());
         QPoint westPoint(currentPoint.point.x() - 1, currentPoint.point.y());
 
-        if(currentPoint.direction != "south"){
-            PixelInfo north(northPoint, "north");
-            unprocessedPixels.push(north);
-        }
-        if(currentPoint.direction != "north"){
-            PixelInfo south(southPoint, "south");
-            unprocessedPixels.push(south);
-        }
-        if(currentPoint.direction != "west"){
-            PixelInfo east(eastPoint, "east");
-            unprocessedPixels.push(east);
-        }
-        if(currentPoint.direction != "east"){
-            PixelInfo west(westPoint, "west");
-            unprocessedPixels.push(west);
+        switch( currentPoint.direction ) {
+            case PixelDirection::North: {
+                unprocessedPixels.push(PixelInfo(northPoint,PixelDirection::North));
+                unprocessedPixels.push(PixelInfo(eastPoint,PixelDirection::East));
+                unprocessedPixels.push(PixelInfo(westPoint,PixelDirection::West));
+                break;
+                                        }
+            case PixelDirection::West: {
+                unprocessedPixels.push(PixelInfo(northPoint,PixelDirection::North));
+                unprocessedPixels.push(PixelInfo(southPoint,PixelDirection::South));
+                unprocessedPixels.push(PixelInfo(westPoint,PixelDirection::West));
+                break;
+                                       }
+            case PixelDirection::East: {
+                unprocessedPixels.push(PixelInfo(northPoint,PixelDirection::North));
+                unprocessedPixels.push(PixelInfo(southPoint,PixelDirection::South));
+                unprocessedPixels.push(PixelInfo(eastPoint,PixelDirection::East));
+                break;
+                                       }
+            case PixelDirection::South: {
+                unprocessedPixels.push(PixelInfo(southPoint,PixelDirection::South));
+                unprocessedPixels.push(PixelInfo(eastPoint,PixelDirection::East));
+                unprocessedPixels.push(PixelInfo(westPoint,PixelDirection::West));
+                break;
+                                        }
+            case PixelDirection::None: {
+                unprocessedPixels.push(PixelInfo(southPoint,PixelDirection::North));
+                unprocessedPixels.push(PixelInfo(southPoint,PixelDirection::South));
+                unprocessedPixels.push(PixelInfo(eastPoint,PixelDirection::East));
+                unprocessedPixels.push(PixelInfo(westPoint,PixelDirection::West));
+                break;
+                                       }
+            default: {
+                         throw "Yeah this should never throw haha.";
+                     }
         }
     }
 }

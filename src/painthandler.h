@@ -82,11 +82,13 @@ public:
     virtual void mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos);
 };
 
+enum PixelDirection { None,North,East,South,West };
+
 struct PixelInfo{
     PixelInfo();
-    PixelInfo(QPoint p, QString s) : point(p), direction(s){;}
+    PixelInfo(QPoint p, PixelDirection s) : point(p), direction(s){;}
     QPoint point;
-    QString direction = "";
+    PixelDirection direction = None;
 };
 
 #endif
