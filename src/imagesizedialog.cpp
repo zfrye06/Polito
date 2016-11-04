@@ -1,16 +1,13 @@
 #include "imagesizedialog.h"
 #include "ui_imagesizedialog.h"
 
-ImageSizeDialog::ImageSizeDialog(QWidget *parent, int Width, int Height) :
+ImageSizeDialog::ImageSizeDialog(QWidget *parent, int dimension) :
     QDialog(parent),
     ui(new Ui::ImageSizeDialog) {
     ui->setupUi(this);
     ui->filtering->addItem("Bilinear",0);
     ui->filtering->addItem("None",1);
-    ui->width->setValue( Width );
-    ui->height->setValue( Height );
-    width = Width;
-    height = Height;
+    ui->dimensionsBox->setValue(dimension);
 }
 
 ImageSizeDialog::~ImageSizeDialog() {
@@ -18,7 +15,6 @@ ImageSizeDialog::~ImageSizeDialog() {
 }
 
 void ImageSizeDialog::on_buttonBox_accepted() {
-    width = ui->width->value();
-    height = ui->height->value();
-    emit done( width, height);
+//    int dim = ui->dimensionsBox->value();
+    emit done(64);
 }

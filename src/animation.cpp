@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include "animation.h"
 
 Animation::Animation(AnimationEventEmitter &emitter) :
@@ -86,8 +86,9 @@ Frame &Animation::activeFrame() {
 }
 
 void Animation::resize(int dimension) {
-    if (dimension< 64) {
-        throw std::invalid_argument("Resize dimension must be at least 64.");
+    std::cout << dimension << std::endl;
+    if (dimension < 8) {
+        throw std::invalid_argument("Resize dimension must be at least 8.");
     }
     int before = dim;
     resizeInternal(dimension);

@@ -42,7 +42,7 @@ private slots:
     void saveProject(bool extendedFormat);
     void loadProject();
     void imageSize();
-    void finishImageSize(int w, int h);
+    void finishImageSize(int dimension);
     void bindings();
     void setColorBind(const QKeySequence&);
     void setEraserBind(const QKeySequence&);

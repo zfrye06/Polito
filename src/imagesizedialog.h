@@ -11,18 +11,16 @@ class ImageSizeDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit ImageSizeDialog(QWidget *parent = 0, int width = 0, int height = 0);
+    explicit ImageSizeDialog(QWidget *parent = 0, int dimension = 0);
     ~ImageSizeDialog();
 
 signals:
-    void done(int width, int height);
+    void done(int dimensions);
 
 private slots:
     void on_buttonBox_accepted();
 
 private:
-    int width;
-    int height;
     Ui::ImageSizeDialog *ui;
 };
 

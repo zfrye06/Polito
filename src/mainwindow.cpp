@@ -65,19 +65,16 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void MainWindow::imageSize() {
-    int width = drawArea->width();
-    int height = drawArea->height();
+    int dimension = drawArea->width();
     // TODO: This leaks. Not deleted until the main window is.
-    ImageSizeDialog* d = new ImageSizeDialog(this, width, height);
+    ImageSizeDialog* d = new ImageSizeDialog(this, dimension);
     d->activateWindow();
-    d->showNormal();
     d->setVisible(true);
     connect(d,&ImageSizeDialog::done,this,&MainWindow::finishImageSize);
 }
 
 void MainWindow::bindings(){
     kd->activateWindow();
-    kd->showNormal();
     kd->setVisible(true);
 }
 
@@ -144,8 +141,8 @@ void MainWindow::setSquareBind(const QKeySequence& keySequence){
     squareAct->setShortcut(keySequence);
 }
 
-void MainWindow::finishImageSize(int w, int h) {
-    animation->resize(w);
+void MainWindow::finishImageSize(int dimension) {
+    animation->resize(dimension);
 }
 
 void MainWindow::synchronizeScrubber() {
@@ -181,7 +178,7 @@ void MainWindow::initActions() {
     connect(loadAct, &QAction::triggered, this, &MainWindow::loadProject);
 
     imageSizeAct = new QAction(tr("&Image Size..."), this);
-    connect(imageSizeAct, SIGNAL(triggered()), this, SLOT(imageSize()));
+    connect(imageSizeAct, &QAction::triggered, this, &MainWindow::imageSize);
 
     keyBindAct = new QAction(tr("&Set Key Bindings"), this);
     connect(keyBindAct, &QAction::triggered, this, &MainWindow::bindings);
