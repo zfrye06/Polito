@@ -58,6 +58,8 @@ void MainWindow::loadProject() {
     }
 }
 
+
+
 void MainWindow::closeEvent(QCloseEvent *event) {
     event->accept();
 }
