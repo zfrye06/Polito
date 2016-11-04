@@ -15,5 +15,8 @@
         <file alias="circle">icons/circle.png</file>
         <file alias="line">icons/line.png</file>
         <file alias="square">icons/square.png</file>
+        <file alias="add">icons/add.png</file>
+        <file alias="left">icons/left.png</file>
+        <file alias="right">icons/right.png</file>
     </qresource>
 </RCC>

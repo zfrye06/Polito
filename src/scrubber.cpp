@@ -14,10 +14,10 @@ Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget
     layout = new QHBoxLayout(this);
     buttons = new QVBoxLayout();
 
-    addFrameButton = new QPushButton("Add Frame");
-    removeFrameButton = new QPushButton("Remove Frame");
-    moveFrameLeft = new QPushButton("Move Left");
-    moveFrameRight = new QPushButton("Move Right");
+    addFrameButton = new QPushButton(addIcon, "");
+    removeFrameButton = new QPushButton(deleteIcon, "");
+    moveFrameLeft = new QPushButton(leftIcon, "");
+    moveFrameRight = new QPushButton(rightIcon, "");
 
     buttons->addWidget(addFrameButton);
     buttons->addWidget(removeFrameButton);

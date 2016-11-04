@@ -233,11 +233,11 @@ void MainWindow::initActions() {
 
     layerUpAct = new QAction(tr("&Move Current Layer Up"), this);
     layerUpAct->setShortcut(tr("Ctrl+H"));
-    connect(layerUpAct, &QAction::triggered, this, [this]{emit layerMenu->moveLayerUpButtonClicked();});
+//    connect(layerUpAct, &QAction::triggered, this, [this]{emit layerMenu->moveLayerUpButtonClicked();});
 
     layerDownAct = new QAction(tr("&Move Current Layer Down"), this);
     layerDownAct->setShortcut(tr("Ctrl+D"));
-    connect(layerDownAct, &QAction::triggered, this, [this]{emit layerMenu->moveLayerDownButtonClicked();});
+//    connect(layerDownAct, &QAction::triggered, this, [this]{emit layerMenu->moveLayerDownButtonClicked();});
 
     removeFrameAct = new QAction(tr("&Delete Current Frame"), this);
     removeFrameAct->setShortcut(tr("Ctrl+J"));
@@ -255,8 +255,8 @@ void MainWindow::initActions() {
     fillAct->setShortcut(tr("Ctrl+F"));
     connect(fillAct, &QAction::triggered, toolbar, &Toolbar::setFill);
 
-//    selectAct = new QAction(tr("&Select Pan Tool"), this);
-//    selectAct->setShortcut(tr("Ctrl+M"));
+    selectAct = new QAction(tr("&Select Pan Tool"), this);
+    selectAct->setShortcut(tr("Ctrl+M"));
 //    connect(selectAct, &QAction::triggered, this, &Toolbar::);
 
     circleAct = new QAction(tr("&Select Circle Tool"), this);

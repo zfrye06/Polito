@@ -52,6 +52,11 @@ private:
     QHBoxLayout* layout;
     QVBoxLayout* buttons;
 
+    QIcon deleteIcon = QIcon(QPixmap(":/icons/delete"));
+    QIcon rightIcon = QIcon(QPixmap(":/icons/right"));
+    QIcon leftIcon = QIcon(QPixmap(":/icons/left"));
+    QIcon addIcon = QIcon(QPixmap(":/icons/add"));
+
     vector<unique_ptr<Frame>> *frames;
 };
 
