@@ -29,6 +29,7 @@ public slots:
     void setPaintHandler( PaintHandler* paintHandler );
 
 signals:
+    void updateFrame();
     void updatePreview();
     void addAction( Action* action );
 

@@ -38,6 +38,7 @@ signals:
     void frameIconClicked(int newIndex);
 
 public slots:
+    void updateFrame();
     void frameClicked(QListWidgetItem* item);
 
 protected:

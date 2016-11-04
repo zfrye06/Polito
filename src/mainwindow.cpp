@@ -359,6 +359,7 @@ void MainWindow::initWidgets() {
 void MainWindow::initSignals() {
 
     connect(drawArea, &DrawArea::updatePreview, previewArea, &PreviewArea::updatePreview);
+    connect(drawArea, &DrawArea::updateFrame, scrubber, &Scrubber::updateFrame);
 
     connect(drawArea, &DrawArea::addAction,
             &actionHistory, &ActionHistory::addAction);

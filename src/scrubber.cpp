@@ -4,6 +4,11 @@
 #include <QPushButton>
 #include <QImage>
 #include <vector>
+#include <QLabel>
+#include <QGraphicsView>
+#include <QPalette>
+#include <QVBoxLayout>
+#include <QPixmap>
 
 #include "frame.h"
 
@@ -32,25 +37,47 @@ Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget
     layout->addLayout(buttons);
 
     list = new QListWidget();
-//    list->setDragEnabled(true);
-//    list->setDragDropMode(QAbstractItemView::InternalMove);
-//    list->setDefaultDropAction(Qt::MoveAction);
     list->setSelectionMode(QAbstractItemView::SingleSelection);
-    list->setFlow(QListView::LeftToRight);
+    list->setFlow(QListView::LeftToRight);\
+    list->setIconSize(QSize(100,100));
+    list->setAlternatingRowColors(true);
 
     layout->addWidget(list);
 
     for(int i = 0; i < frames->size(); i++){
         int row = list->currentRow() + 1;
-        QListWidgetItem* item = new QListWidgetItem("Frame");
-        list->insertItem(row, item);
+
+        QSize size(100, 100);
+        QImage image = frames->at(i)->image().copy(frames->at(i)->image().rect());
+        image.scaled(size);
+        QPixmap pixmap = QPixmap::fromImage(image);
+        QIcon icon(pixmap);
+
+        QListWidgetItem* item = new QListWidgetItem();
+        item->setIcon(icon);
+        item->setSizeHint(size);
+        list->addItem(item);
+        item->setTextAlignment(Qt::AlignCenter);
+
     }
+
+    list->setCurrentRow(0);
 
     connect(list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(frameClicked(QListWidgetItem*)));
     connect(addFrameButton, &QPushButton::clicked, this, [this]{ emit addFrameClicked(); });
     connect(removeFrameButton, &QPushButton::clicked, this, [this]{ emit removeFrameClicked(); });
     connect(moveFrameLeft, &QPushButton::clicked, this, [this]{ emit moveFrameClicked(list->currentRow(), list->currentRow() - 1); });
     connect(moveFrameRight, &QPushButton::clicked, this, [this]{ emit moveFrameClicked(list->currentRow(), list->currentRow() + 1); });
+}
+
+void Scrubber::updateFrame(){
+    QSize size(100, 100);
+    QImage image = frames->at(list->currentRow())->image().copy(frames->at(list->currentRow())->image().rect());
+    QPixmap pixmap = QPixmap::fromImage(image);
+    QIcon icon(pixmap);
+
+    QListWidgetItem* item = list->currentItem();
+    item->setIcon(icon);
 }
 
 int Scrubber::getCurrentListRow(){
@@ -62,8 +89,16 @@ void Scrubber::frameClicked(QListWidgetItem *item) {
 }
 
 void Scrubber::addFrame(int index) {
-    QListWidgetItem* item = new QListWidgetItem("Frame");
+    QSize size(100,100);
+    QImage image = frames->at(index)->image().copy(frames->at(index)->image().rect());
+    QPixmap pixmap = QPixmap::fromImage(image);
+    QIcon icon(pixmap);
+
+    QListWidgetItem* item = new QListWidgetItem(icon, "");
+    item->setSizeHint(size);
     list->insertItem(index, item);
+    item->setTextAlignment(Qt::AlignCenter);
+
 }
 
 void Scrubber::moveFrame(int from, int to) {
