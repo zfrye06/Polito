@@ -133,7 +133,7 @@ void PreviewArea::pauseAnimation(){
 
 void PreviewArea::goToNextFrameIsPlaying(){
     if(isPlaying){
-        if(currentFrameNumber == (frames->size() - 1)){
+        if(currentFrameNumber >= (frames->size() - 1)){
             currentFrameNumber = 0;
         }
         else{
@@ -150,7 +150,7 @@ void PreviewArea::goToNextFrame(){
     if(isPlaying){
         isPlaying = false;
     }
-    if(currentFrameNumber == (frames->size() - 1)){
+    if(currentFrameNumber >= (frames->size() - 1)){
         currentFrameNumber = 0;
     }
     else{
@@ -165,7 +165,7 @@ void PreviewArea::goToPreviousFrame(){
     if(isPlaying){
         isPlaying = false;
     }
-    if(currentFrameNumber == 0){
+    if(currentFrameNumber <= 0){
         currentFrameNumber = frames->size() - 1;
     }
     else{
