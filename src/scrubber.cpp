@@ -19,6 +19,11 @@ Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget
     moveFrameLeft = new QPushButton(leftIcon, "");
     moveFrameRight = new QPushButton(rightIcon, "");
 
+    addFrameButton->setToolTip("Add Frame");
+    removeFrameButton->setToolTip("Remove Frame");
+    moveFrameLeft->setToolTip("Move Selected Frame to the Left");
+    moveFrameRight->setToolTip("Move Selected Frame to the Right");
+
     buttons->addWidget(addFrameButton);
     buttons->addWidget(removeFrameButton);
     buttons->addWidget(moveFrameLeft);

@@ -27,10 +27,17 @@ void PreviewArea::initWidgets(){
     pauseButton = new QPushButton();
     nextFrame = new QPushButton();
     previousFrame = new QPushButton();
+
+    playButton->setToolTip("Play");
+    pauseButton->setToolTip("Pause");
+    nextFrame->setToolTip("Next Frame");
+    previousFrame->setToolTip("Previous Frame");
+
     duration = new QTextEdit();
     QSize size(80, 25);
     duration->setMaximumSize(size);
     duration->setMinimumSize(size);
+    duration->setToolTip("Frame Duration in ms");
 
     playButton->setCheckable(true);
     pauseButton->setCheckable(true);

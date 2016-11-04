@@ -34,6 +34,12 @@ void Toolbar::initWidgets(){
     fillButton = new QPushButton(fillIcon, "");
     colorButton = new QPushButton();
 
+    moveButton->setToolTip("Pan Tool");
+    brushButton->setToolTip("Paintbrush");
+    eraseButton->setToolTip("Eraser");
+    fillButton->setToolTip("Fill");
+    colorButton->setToolTip("Color Picker");
+
     QPalette pal;
     pal.setColor(QPalette::Button, Qt::red);
     colorButton->setFlat(true);
@@ -44,6 +50,10 @@ void Toolbar::initWidgets(){
     circleButton = new QPushButton(circleIcon, "");
     lineButton = new QPushButton(lineIcon, "");
     squareButton = new QPushButton(squareIcon, "");
+
+    circleButton->setToolTip("Circle Tool");
+    lineButton->setToolTip("Line Tool");
+    squareButton->setToolTip("Square Tool");
 
     fillButton->setCheckable(true);
     brushButton->setCheckable(true);
