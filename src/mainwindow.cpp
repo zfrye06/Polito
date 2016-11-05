@@ -336,7 +336,7 @@ void MainWindow::initWidgets() {
 
     upperArea->setStretchFactor(0,0);
     upperArea->setStretchFactor(1,20);
-    upperArea->setStretchFactor(2,0);
+    upperArea->setStretchFactor(2,1);
 
     lowerArea->addWidget(scrubber);
     lowerArea->addWidget(previewArea);
