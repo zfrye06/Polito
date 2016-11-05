@@ -275,7 +275,6 @@ void MainWindow::initActions() {
     editMenu->addAction(undoAct);
     editMenu->addAction(redoAct);
     editMenu->addSeparator();
-    editMenu->addAction(imageSizeAct);
     editMenu->addAction(chooseColor);
     editMenu->addAction(eraserAct);
     editMenu->addAction(lineAct);
@@ -293,6 +292,7 @@ void MainWindow::initActions() {
     editMenu->addAction(circleAct);
     editMenu->addAction(squareAct);
 
+    optionMenu->addAction(imageSizeAct);
     optionMenu->addAction(clearScreenAct);
     optionMenu->addAction(keyBindAct);
 }
