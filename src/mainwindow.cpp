@@ -158,10 +158,12 @@ void MainWindow::synchronizeScrubber() {
 
 void MainWindow::synchronizeLayerMenu() {
     layerMenu->clear();
+    layerMenu->setCurrentFrame(animation->activeFrameIdx());
     for (int i = 0; i < animation->activeFrame().numlayers(); i++) {
-        layerMenu->addLayer(i);
+        layerMenu->addExistingLayer(i);
     }
-    layerMenu->setActiveLayer(animation->activeFrame().activeLayerIdx());
+
+    layerMenu->setActiveLayer(0);
 }
 
 void MainWindow::updateDisplay() {
@@ -310,7 +312,7 @@ void MainWindow::initWidgets() {
     drawArea = new DrawArea(&animation->activeFrame());
     scrubber = new Scrubber(window, &animation->getFrames());
     previewArea = new PreviewArea(window, &animation->getFrames());
-    layerMenu = new LayerMenu(window);
+    layerMenu = new LayerMenu(window, &animation->getFrames());
     kd = new KeyBindingDialog;
 
     drawArea->setFrame(&animation->activeFrame());
@@ -360,6 +362,7 @@ void MainWindow::initSignals() {
 
     connect(drawArea, &DrawArea::updatePreview, previewArea, &PreviewArea::updatePreview);
     connect(drawArea, &DrawArea::updateFrame, scrubber, &Scrubber::updateFrame);
+    connect(drawArea, &DrawArea::updateLayer, layerMenu, &LayerMenu::updateLayer);
 
     connect(drawArea, &DrawArea::addAction,
             &actionHistory, &ActionHistory::addAction);
@@ -465,7 +468,6 @@ void MainWindow::initSignals() {
                 Frame &frame = animation->activeFrame();
                 frame.addLayer(index);
                 layerMenu->addLayer(index);
-                layerMenu->setActiveLayer(frame.activeLayerIdx());
             });
 
     connect(layerMenu, &LayerMenu::layersSwappedSignal,
@@ -486,7 +488,6 @@ void MainWindow::initSignals() {
                 Frame &frame = animation->activeFrame();
                 frame.removeLayer(index);
                 layerMenu->removeLayer(index);
-                layerMenu->setActiveLayer(frame.activeLayerIdx());
             });
 
     connect(layerMenu, &LayerMenu::activeLayerChangedSignal,

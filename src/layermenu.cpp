@@ -4,152 +4,123 @@
 #include <QPalette>
 #include <QLabel>
 #include <QIcon>
+#include <QSize>
 
 // TODO: We shouldn't be manually managing the layout and indices of stuff at all here...
 
-LayerMenu::LayerMenu(QWidget *parent) : QWidget(parent), indexOfActiveLayer(-1), highlightedWidget(nullptr) {
-    addLayerButton = new QPushButton(this);
-    addLayerButton->setText("Add Layer");
-    connect(addLayerButton, &QPushButton::released,this, &LayerMenu::addLayerButtonClicked);
+LayerMenu::LayerMenu(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget(parent) {
+    this->frames = frames;
 
-    layerMenuLayout = new QVBoxLayout();
-    layerMenuLayout->setAlignment(Qt::AlignTop);
-    layerMenuLayout->addWidget(addLayerButton);
-    this->setLayout(layerMenuLayout);
+    addLayerButton = new QPushButton();
+    removeLayerButton = new QPushButton();
+    moveLayerUp = new QPushButton();
+    moveLayerDown = new QPushButton();
+
+    addLayerButton->setIcon(addIcon);
+    removeLayerButton->setIcon(deleteIcon);
+
+    layerMenuLayout = new QVBoxLayout(this);
+    layerButtons = new QHBoxLayout();
+    layerMenuLayout->addLayout(layerButtons);
+
+    layerButtons->addWidget(addLayerButton);
+    layerButtons->addWidget(removeLayerButton);
+    layerButtons->addWidget(moveLayerUp);
+    layerButtons->addWidget(moveLayerDown);
+
+    list = new QListWidget();
+    list->setSelectionMode(QAbstractItemView::SingleSelection);
+    list->setFlow(QListView::TopToBottom);
+    list->setIconSize(QSize(100,100));
+    list->setAlternatingRowColors(true);
+
+    layerMenuLayout->addWidget(list);
 
     addLayer(0);
-    setActiveLayer(0);
+
+    list->setCurrentRow(0);
+
+    connect(addLayerButton, &QPushButton::clicked,this, &LayerMenu::addLayerButtonClicked);
+    connect(removeLayerButton, &QPushButton::clicked, this, &LayerMenu::deleteLayerButtonClicked);
+    connect(moveLayerUp, &QPushButton::clicked, this, &LayerMenu::moveLayerUpButtonClicked);
+    connect(moveLayerDown, &QPushButton::clicked, this, &LayerMenu::moveLayerDownButtonClicked);
+    connect(list, &QListWidget::clicked, this, &LayerMenu::layerClicked);
+}
+
+void LayerMenu::updateLayer(){
+    vector<Layer*> layers = frames->at(currentFrameNumber)->getLayers();
+    Layer* layer = layers.at(list->currentRow());
+    QPixmap px = layer->pixmap();
+    QIcon icon(px);
+
+    QListWidgetItem* item = list->item(list->currentRow());
+    item->setIcon(icon);
+}
+
+void LayerMenu::addExistingLayer(int index){
+    vector<Layer*> layers = frames->at(currentFrameNumber)->getLayers();
+    Layer* layer = layers.at(index);
+    QSize size(100,100);
+    QPixmap pixmap = layer->pixmap();
+    QIcon icon(pixmap);
+
+    QListWidgetItem* item = new QListWidgetItem(pixmap, "");
+    list->addItem(item);
+}
+
+void LayerMenu::layerClicked(){
+    emit activeLayerChangedSignal(list->currentRow());
+}
+
+void LayerMenu::setCurrentFrame(int index){
+    currentFrameNumber = index;
 }
 
 void LayerMenu::addLayer(int index) {
-    
-    // When adding, the translated index is actually one greater
-    // than it would otherwise be.
-    int indexTranslated = layerMenuLayout->count() - index;
-    layerMenuLayout->insertWidget(indexTranslated, new LayerWidget(this));
+    QSize size(100,100);
+    QPixmap pixmap;
+    QIcon icon(pixmap);
+
+    QListWidgetItem* item = new QListWidgetItem(icon, "");
+    item->setSizeHint(size);
+    list->insertItem(list->currentRow(), item);
+    item->setTextAlignment(Qt::AlignCenter);
 }
 
 void LayerMenu::moveLayer(int from, int to) {
-    int fromTranslated = translateToInternalIndex(from);
-    int toTranslated = translateToInternalIndex(to);
-    auto toMove = layerMenuLayout->takeAt(fromTranslated)->widget();
-    layerMenuLayout->insertWidget(toTranslated, toMove);
+    auto item = list->takeItem(from);
+    list->insertItem(to, item);
 }
 
 void LayerMenu::removeLayer(int index) {
-    auto item = widgetAtExternalIndex(index);
-    layerMenuLayout->removeWidget(item);
-    if (item == highlightedWidget) {
-        highlightedWidget = nullptr;
-    }
+    auto item = list->takeItem(index);
     delete item;
 }
 
 void LayerMenu::setActiveLayer(int index) {
-    indexOfActiveLayer = index;
-    if (highlightedWidget != nullptr) {
-        highlightedWidget->unhighlight();
-    }
-    LayerWidget *widget = widgetAtExternalIndex(index);
-    widget->highlight();
-    highlightedWidget = widget;
+    list->setCurrentRow(index);
 }
 
 void LayerMenu::clear() {
-    while (layerMenuLayout->count() > 1) {
-        removeLayer(0);
-    }
-    indexOfActiveLayer = -1;
-    highlightedWidget = nullptr;
-}
-
-void LayerMenu::textBoxClicked(){
-    int translated = translatedClickIndex();
-    emit activeLayerChangedSignal(translated);
+    list->clear();
 }
 
 void LayerMenu::addLayerButtonClicked() {
-    emit layerAddedSignal(indexOfActiveLayer + 1);
+    vector<Layer*> layers = frames->at(currentFrameNumber)->getLayers();
+    if(layers.size() >= 4){
+        return;
+    }
+    emit layerAddedSignal(list->currentRow());
 }
 
 void LayerMenu::deleteLayerButtonClicked() {
-    int translated = translatedClickIndex();
-    emit layerDeletedSignal(translated);
+    emit layerDeletedSignal(list->currentRow());
 }
 
 void LayerMenu::moveLayerUpButtonClicked(){
-    int translated = translatedClickIndex();
-    emit layersSwappedSignal(translated, translated + 1);
+    emit layersSwappedSignal(list->currentRow(), list->currentRow() + 1);
 }
 
 void LayerMenu::moveLayerDownButtonClicked(){
-    int translated = translatedClickIndex();
-    emit layersSwappedSignal(translated, translated - 1);
-}
-
-int LayerMenu::translatedClickIndex() {
-    auto w = qobject_cast<LayerWidget*>(sender()->parent());
-    int index = layerMenuLayout->indexOf(w);
-    int translated = translateToExternalIndex(index);
-    return translated;
-}
-
-int LayerMenu::translateToInternalIndex(int index) {
-    return layerMenuLayout->count() - index - 1;
-}
-
-int LayerMenu::translateToExternalIndex(int index) {
-    // The reverse translation is the same.
-    return translateToInternalIndex(index);
-}
-
-LayerWidget *LayerMenu::widgetAtExternalIndex(int index) {
-    int translated = translateToInternalIndex(index);
-    QWidget *qw = layerMenuLayout->itemAt(translated)->widget();
-    return qobject_cast<LayerWidget*>(qw);
-}
-
-LayerWidget::LayerWidget(LayerMenu *parent) : QGroupBox(parent) {
-    QLineEdit* label = new QLineEdit("layer", this);
-    //cursorPositionChanged here is just used for "when text box is clicked"
-    //since there's no "released" event in QLineEdit
-    connect(label, &QLineEdit::cursorPositionChanged,
-            parent, &LayerMenu::textBoxClicked);
-
-    QPushButton* moveLayerUpButton = new QPushButton(this);
-    moveLayerUpButton->setIcon(upArrow);
-    connect(moveLayerUpButton, &QPushButton::released,
-            parent, &LayerMenu::moveLayerUpButtonClicked);
-
-    QPushButton* moveLayerDownButton = new QPushButton(this);
-    moveLayerDownButton->setIcon(downArrow);
-    connect(moveLayerDownButton, &QPushButton::released,
-            parent, &LayerMenu::moveLayerDownButtonClicked);
-
-    QPushButton* deleteLayerButton = new QPushButton(this);
-    deleteLayerButton->setIcon(deleteX);
-    connect(deleteLayerButton, &QPushButton::released,
-            parent, &LayerMenu::deleteLayerButtonClicked);
-
-    QGridLayout* gridBox = new QGridLayout();
-    gridBox->addWidget(label, 0, 0, 1, 3, Qt::AlignCenter);
-    gridBox->addWidget(moveLayerUpButton, 1, 0);
-    gridBox->addWidget(moveLayerDownButton, 1, 1);
-    gridBox->addWidget(deleteLayerButton, 1, 2);
-
-    setLayout(gridBox);
-}
-
-void LayerWidget::highlight() {
-    QPalette Pal(palette());
-    Pal.setColor(QPalette::Background, QColor(110,135,255,100));
-    setAutoFillBackground(true);
-    setPalette(Pal);
-    show();
-}
-
-void LayerWidget::unhighlight() {
-    setAutoFillBackground(false);
-    setPalette(style()->standardPalette());
-    show();
+    emit layersSwappedSignal(list->currentRow(), list->currentRow() - 1);
 }
