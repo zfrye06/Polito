@@ -12,10 +12,7 @@
 
 #include "frame.h"
 
-Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget(parent) {
-
-    this->frames = frames;
-
+Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget(parent), frames(frames) {
     layout = new QHBoxLayout(this);
     buttons = new QVBoxLayout();
 
@@ -44,22 +41,7 @@ Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget
 
     layout->addWidget(list);
 
-    for(int i = 0; i < frames->size(); i++){
-        int row = list->currentRow() + 1;
-
-        QSize size(100, 100);
-        QImage image = frames->at(i)->image().copy(frames->at(i)->image().rect());
-        image.scaled(size);
-        QPixmap pixmap = QPixmap::fromImage(image);
-        QIcon icon(pixmap);
-
-        QListWidgetItem* item = new QListWidgetItem();
-        item->setIcon(icon);
-        item->setSizeHint(size);
-        list->addItem(item);
-        item->setTextAlignment(Qt::AlignCenter);
-
-    }
+    addFrameIcons();
 
     list->setCurrentRow(0);
 
@@ -72,7 +54,7 @@ Scrubber::Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget
 
 void Scrubber::updateFrame(){
     QSize size(100, 100);
-    QImage image = frames->at(list->currentRow())->image().copy(frames->at(list->currentRow())->image().rect());
+    QImage image = frames->at(list->currentRow())->image();
     QPixmap pixmap = QPixmap::fromImage(image);
     QIcon icon(pixmap);
 
@@ -90,7 +72,7 @@ void Scrubber::frameClicked(QListWidgetItem *item) {
 
 void Scrubber::addFrame(int index) {
     QSize size(100,100);
-    QImage image = frames->at(index)->image().copy(frames->at(index)->image().rect());
+    QImage image = frames->at(index)->image();
     QPixmap pixmap = QPixmap::fromImage(image);
     QIcon icon(pixmap);
 
@@ -121,4 +103,21 @@ void Scrubber::clear() {
 
 void Scrubber::setFrames(vector<unique_ptr<Frame>> *frames) {
     this->frames = frames;
+    clear();
+    addFrameIcons();
+}
+
+void Scrubber::addFrameIcons() {
+    for(int i = 0; i < frames->size(); i++){
+        int row = list->currentRow() + 1;
+        QSize size(100, 100);
+        QImage image = frames->at(i)->image();
+        QPixmap pixmap = QPixmap::fromImage(image);
+        QIcon icon(pixmap);
+        QListWidgetItem* item = new QListWidgetItem();
+        item->setIcon(icon);
+        item->setSizeHint(size);
+        list->addItem(item);
+        item->setTextAlignment(Qt::AlignCenter);
+    }
 }

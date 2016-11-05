@@ -31,7 +31,6 @@ public:
     void moveLayer(int from, int to) override;
     void removeLayer(int index) override;
     void setActiveLayer(int index) override;
-    void addExistingLayer(int index);
     void clear();
 
     //These signals allow the LayerMenu to send information to the model
@@ -66,6 +65,8 @@ private:
 
     QIcon deleteIcon = QIcon(QPixmap(":/icons/delete"));
     QIcon addIcon = QIcon(QPixmap(":/icons/add"));
+
+    void addLayerIcons();
 };
 
 #endif // LAYERMENU_H

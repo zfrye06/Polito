@@ -70,8 +70,6 @@ void MainWindow::loadProject() {
     }
 }
 
-
-
 void MainWindow::closeEvent(QCloseEvent *event) {
     event->accept();
 }
@@ -161,21 +159,13 @@ void MainWindow::finishImageSize(int w, int h) {
 }
 
 void MainWindow::synchronizeScrubber() {
-    scrubber->clear();
-    for (int i = 0; i < animation->numframes(); i++) {
-        scrubber->addFrame(i);
-    }
+    scrubber->setFrames(&animation->getFrames());
     scrubber->setActiveFrame(animation->activeFrameIdx());
 }
 
 void MainWindow::synchronizeLayerMenu() {
-    layerMenu->clear();
     layerMenu->setCurrentFrame(&animation->activeFrame());
-    for (int i = 0; i < animation->activeFrame().numlayers(); i++) {
-        layerMenu->addExistingLayer(i);
-    }
-
-    layerMenu->setActiveLayer(0);
+    layerMenu->setActiveLayer(animation->activeFrame().activeLayerIdx());
 }
 
 void MainWindow::updateDisplay() {

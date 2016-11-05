@@ -32,7 +32,7 @@ LayerMenu::LayerMenu(QWidget *parent, Frame *frame) : QWidget(parent), frame(fra
 
     layerMenuLayout->addWidget(list);
 
-    addLayer(0);
+    addLayerIcons();
 
     list->setCurrentRow(0);
 
@@ -44,27 +44,11 @@ LayerMenu::LayerMenu(QWidget *parent, Frame *frame) : QWidget(parent), frame(fra
 }
 
 void LayerMenu::updateLayer(){
-    Layer* layer = frame->getLayers().at(list->currentRow());
+    Layer* layer = frame->activeLayer();
     QPixmap &px = layer->pixmap();
     QIcon icon(px);
     QListWidgetItem* item = list->item(list->currentRow());
     item->setIcon(icon);
-}
-
-void LayerMenu::addExistingLayer(int index){
-    Layer* layer = frame->getLayers().at(index);
-    QPixmap &pixmap = layer->pixmap();
-    QIcon icon(pixmap);
-    QListWidgetItem* item = new QListWidgetItem(pixmap, "");
-    list->addItem(item);
-}
-
-void LayerMenu::layerClicked(){
-    emit activeLayerChangedSignal(list->currentRow());
-}
-
-void LayerMenu::setCurrentFrame(Frame *frame){
-    this->frame = frame;
 }
 
 void LayerMenu::addLayer(int index) {
@@ -92,12 +76,31 @@ void LayerMenu::setActiveLayer(int index) {
     list->setCurrentRow(index);
 }
 
+void LayerMenu::setCurrentFrame(Frame *f){
+    clear();
+    frame = f;
+    addLayerIcons();
+}
+
 void LayerMenu::clear() {
     list->clear();
 }
 
+void LayerMenu::addLayerIcons() {
+    const vector<Layer*> &layers = frame->getLayers();
+    for (auto layer : layers) {
+        QPixmap &pixmap = layer->pixmap();
+        QIcon icon(pixmap);
+        QListWidgetItem* item = new QListWidgetItem(pixmap, "");
+        list->addItem(item);        
+    }
+}
+
+void LayerMenu::layerClicked(){
+    emit activeLayerChangedSignal(list->currentRow());
+}
+
 void LayerMenu::addLayerButtonClicked() {
-    //  if(layers.size() >= 4) return;
     emit layerAddedSignal(list->currentRow());
 }
 
