@@ -158,7 +158,7 @@ void MainWindow::synchronizeScrubber() {
 
 void MainWindow::synchronizeLayerMenu() {
     layerMenu->clear();
-    layerMenu->setCurrentFrame(animation->activeFrameIdx());
+    layerMenu->setCurrentFrame(&animation->activeFrame());
     for (int i = 0; i < animation->activeFrame().numlayers(); i++) {
         layerMenu->addExistingLayer(i);
     }
@@ -312,7 +312,7 @@ void MainWindow::initWidgets() {
     drawArea = new DrawArea(&animation->activeFrame());
     scrubber = new Scrubber(window, &animation->getFrames());
     previewArea = new PreviewArea(window, &animation->getFrames());
-    layerMenu = new LayerMenu(window, &animation->getFrames());
+    layerMenu = new LayerMenu(window, &animation->activeFrame());
     kd = new KeyBindingDialog;
 
     drawArea->setFrame(&animation->activeFrame());

@@ -6,11 +6,7 @@
 #include <QIcon>
 #include <QSize>
 
-// TODO: We shouldn't be manually managing the layout and indices of stuff at all here...
-
-LayerMenu::LayerMenu(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidget(parent) {
-    this->frames = frames;
-
+LayerMenu::LayerMenu(QWidget *parent, Frame *frame) : QWidget(parent), frame(frame) {
     addLayerButton = new QPushButton();
     removeLayerButton = new QPushButton();
     moveLayerUp = new QPushButton();
@@ -48,22 +44,17 @@ LayerMenu::LayerMenu(QWidget *parent, vector<unique_ptr<Frame>> *frames) : QWidg
 }
 
 void LayerMenu::updateLayer(){
-    vector<Layer*> layers = frames->at(currentFrameNumber)->getLayers();
-    Layer* layer = layers.at(list->currentRow());
-    QPixmap px = layer->pixmap();
+    Layer* layer = frame->getLayers().at(list->currentRow());
+    QPixmap &px = layer->pixmap();
     QIcon icon(px);
-
     QListWidgetItem* item = list->item(list->currentRow());
     item->setIcon(icon);
 }
 
 void LayerMenu::addExistingLayer(int index){
-    vector<Layer*> layers = frames->at(currentFrameNumber)->getLayers();
-    Layer* layer = layers.at(index);
-    QSize size(100,100);
-    QPixmap pixmap = layer->pixmap();
+    Layer* layer = frame->getLayers().at(index);
+    QPixmap &pixmap = layer->pixmap();
     QIcon icon(pixmap);
-
     QListWidgetItem* item = new QListWidgetItem(pixmap, "");
     list->addItem(item);
 }
@@ -72,8 +63,8 @@ void LayerMenu::layerClicked(){
     emit activeLayerChangedSignal(list->currentRow());
 }
 
-void LayerMenu::setCurrentFrame(int index){
-    currentFrameNumber = index;
+void LayerMenu::setCurrentFrame(Frame *frame){
+    this->frame = frame;
 }
 
 void LayerMenu::addLayer(int index) {
@@ -106,10 +97,7 @@ void LayerMenu::clear() {
 }
 
 void LayerMenu::addLayerButtonClicked() {
-    vector<Layer*> layers = frames->at(currentFrameNumber)->getLayers();
-    if(layers.size() >= 4){
-        return;
-    }
+    //  if(layers.size() >= 4) return;
     emit layerAddedSignal(list->currentRow());
 }
 
