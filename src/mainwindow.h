@@ -40,6 +40,7 @@ protected:
 
 private slots:
     void saveProject(bool extendedFormat);
+    void saveGif();
     void loadProject();
     void imageSize();
     void finishImageSize(int dimension);
@@ -81,6 +82,7 @@ private:
     QMenu *optionMenu;
     QAction *saveAct;
     QAction *saveExtendedAct;
+    QAction *exportGifAct;
     QAction *loadAct;
     QAction *undoAct;
     QAction *redoAct;

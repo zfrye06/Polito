@@ -47,6 +47,8 @@ void DrawArea::mousePressEvent(QMouseEvent *event) {
     
     this->viewport()->update();
     emit updatePreview();
+    emit updateFrame();
+    emit updateLayer();
 }
 
 void DrawArea::mouseMoveEvent(QMouseEvent *event) {
@@ -59,6 +61,8 @@ void DrawArea::mouseMoveEvent(QMouseEvent *event) {
     
     this->viewport()->update();
     emit updatePreview();
+    emit updateFrame();
+    emit updateLayer();
 }
 
 void DrawArea::mouseReleaseEvent(QMouseEvent *event) {
@@ -75,4 +79,6 @@ void DrawArea::mouseReleaseEvent(QMouseEvent *event) {
     
     this->viewport()->update();
     emit updatePreview();
+    emit updateFrame();
+    emit updateLayer();
 }

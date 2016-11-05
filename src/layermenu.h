@@ -8,20 +8,30 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QWidget>
+#include <QListWidget>
+#include <vector>
+#include <memory>
+#include "frame.h"
+#include "layer.h"
 #include "animationwidgets.h"
 
 class LayerWidget;
 
+using namespace std;
+
 class LayerMenu : public QWidget, public FrameWidget {
     Q_OBJECT
 public:
-    explicit LayerMenu(QWidget *parent = 0);
+    explicit LayerMenu(QWidget *parent, Frame *);
 
+    void setCurrentFrame(Frame *frame);
     void addLayer(int index) override;
     void moveLayer(int from, int to) override;
     void removeLayer(int index) override;
     void setActiveLayer(int index) override;
+    void addExistingLayer(int index);
     void clear();
 
     //These signals allow the LayerMenu to send information to the model
@@ -37,37 +47,25 @@ signals:
     void activeLayerChangedSignal (int indexOfActiveLayer);
 
 public slots:
+    void updateLayer();
     void addLayerButtonClicked();
     void deleteLayerButtonClicked();
     void moveLayerUpButtonClicked();
     void moveLayerDownButtonClicked();
-    void textBoxClicked();
+    void layerClicked();
 
 private:
+    Frame *frame;
     QPushButton* addLayerButton;
+    QPushButton* removeLayerButton;
+    QPushButton* moveLayerUp;
+    QPushButton* moveLayerDown;
     QVBoxLayout* layerMenuLayout;
-    LayerWidget* highlightedWidget;
+    QHBoxLayout* layerButtons;
+    QListWidget* list;
 
-    // I maintain this as an external index. It's purely for
-    // recordkeeping. Don't use internally without translating
-    // to an internal index.
-    int indexOfActiveLayer;
-    int translateToInternalIndex(int);
-    int translateToExternalIndex(int);
-    int translatedClickIndex();
-    LayerWidget *widgetAtExternalIndex(int);
-};
-
-class LayerWidget : public QGroupBox {
-    Q_OBJECT
- public:
-    LayerWidget(LayerMenu *parent = 0);
-    void highlight();
-    void unhighlight();
- private:
-    QIcon upArrow = QIcon(QPixmap(":/icons/up"));
-    QIcon downArrow = QIcon(QPixmap(":/icons/down"));
-    QIcon deleteX = QIcon(QPixmap(":/icons/delete"));
+    QIcon deleteIcon = QIcon(QPixmap(":/icons/delete"));
+    QIcon addIcon = QIcon(QPixmap(":/icons/add"));
 };
 
 #endif // LAYERMENU_H

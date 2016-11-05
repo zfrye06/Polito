@@ -33,6 +33,18 @@ void MainWindow::saveProject(bool extendedFormat) {
     }
 }
 
+void MainWindow::saveGif() {
+    try {
+        QString fileName = QFileDialog::getSaveFileName(this);
+        animation->saveGif(fileName.toStdString());
+    } catch (const std::exception &ex) {
+        QString msg = "Unable to save project: ";
+        msg += ex.what();
+        std::cerr << msg.toStdString() << std::endl;
+        QMessageBox::information(this, tr("Polito"), msg);
+    }
+}
+
 void MainWindow::loadProject() {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::FileMode::ExistingFile);
@@ -155,10 +167,12 @@ void MainWindow::synchronizeScrubber() {
 
 void MainWindow::synchronizeLayerMenu() {
     layerMenu->clear();
+    layerMenu->setCurrentFrame(&animation->activeFrame());
     for (int i = 0; i < animation->activeFrame().numlayers(); i++) {
-        layerMenu->addLayer(i);
+        layerMenu->addExistingLayer(i);
     }
-    layerMenu->setActiveLayer(animation->activeFrame().activeLayerIdx());
+
+    layerMenu->setActiveLayer(0);
 }
 
 void MainWindow::updateDisplay() {
@@ -170,6 +184,9 @@ void MainWindow::updateDisplay() {
 void MainWindow::initActions() {
     saveAct = new QAction(tr("Save Project"), this);
     connect(saveAct, &QAction::triggered, this, [this] { this->saveProject(false); });
+
+    exportGifAct = new QAction(tr("Export gif..."), this);
+    connect(exportGifAct, &QAction::triggered, this, [this] { this->saveGif(); });
 
     saveExtendedAct = new QAction(tr("Save Project (Extended Format)"), this);
     connect(saveExtendedAct, &QAction::triggered, this, [this] { this->saveProject(true); });
@@ -268,6 +285,7 @@ void MainWindow::initActions() {
 
     fileMenu->addAction(saveAct);
     fileMenu->addAction(saveExtendedAct);
+    fileMenu->addAction(exportGifAct);
     fileMenu->addAction(loadAct);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
@@ -307,7 +325,7 @@ void MainWindow::initWidgets() {
     drawArea = new DrawArea(&animation->activeFrame());
     scrubber = new Scrubber(window, &animation->getFrames());
     previewArea = new PreviewArea(window, &animation->getFrames());
-    layerMenu = new LayerMenu(window);
+    layerMenu = new LayerMenu(window, &animation->activeFrame());
     kd = new KeyBindingDialog;
 
     drawArea->setFrame(&animation->activeFrame());
@@ -331,7 +349,7 @@ void MainWindow::initWidgets() {
 
     upperArea->setStretchFactor(0,0);
     upperArea->setStretchFactor(1,20);
-    upperArea->setStretchFactor(2,0);
+    upperArea->setStretchFactor(2,1);
 
     lowerArea->addWidget(scrubber);
     lowerArea->addWidget(previewArea);
@@ -356,6 +374,8 @@ void MainWindow::initWidgets() {
 void MainWindow::initSignals() {
 
     connect(drawArea, &DrawArea::updatePreview, previewArea, &PreviewArea::updatePreview);
+    connect(drawArea, &DrawArea::updateFrame, scrubber, &Scrubber::updateFrame);
+    connect(drawArea, &DrawArea::updateLayer, layerMenu, &LayerMenu::updateLayer);
 
     connect(drawArea, &DrawArea::addAction,
             &actionHistory, &ActionHistory::addAction);
@@ -461,7 +481,6 @@ void MainWindow::initSignals() {
                 Frame &frame = animation->activeFrame();
                 frame.addLayer(index);
                 layerMenu->addLayer(index);
-                layerMenu->setActiveLayer(frame.activeLayerIdx());
             });
 
     connect(layerMenu, &LayerMenu::layersSwappedSignal,
@@ -482,7 +501,6 @@ void MainWindow::initSignals() {
                 Frame &frame = animation->activeFrame();
                 frame.removeLayer(index);
                 layerMenu->removeLayer(index);
-                layerMenu->setActiveLayer(frame.activeLayerIdx());
             });
 
     connect(layerMenu, &LayerMenu::activeLayerChangedSignal,
