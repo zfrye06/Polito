@@ -1,5 +1,7 @@
 
 #include "animation.h"
+// This MUST be included in the cpp, since it has implementation details.
+#include "gif-h/gif.h"
 
 Animation::Animation(AnimationEventEmitter &emitter) :
     activeFrameIndex(-1),  dim(Animation::DEFAULT_DIMENSION), emitter(emitter) {
@@ -227,5 +229,16 @@ void Animation::load(std::istream& in) {
     }
 }
 
-void Animation::saveGif(std::ostream& out) const {
+void Animation::saveGif(std::string filename) const {
+    GifWriter writer;
+    GifBegin( &writer, filename.c_str(), dimension(), dimension(), 100 );
+    for (int i=0;i<frames.size();i++) {
+        Frame* frame = frames[i].get();
+        QImage image = frame->image();
+        if ( image.format() != QImage::Format_RGBA8888 ) {
+            image.convertToFormat( QImage::Format_RGBA8888 );
+        }
+        GifWriteFrame( &writer, image.bits(), dimension(), dimension(), frame->duration()/10);
+    }
+    GifEnd( &writer );
 }
