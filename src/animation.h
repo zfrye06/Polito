@@ -23,7 +23,7 @@ class Animation {
     friend class ResizeAction;
  public:
 
-    static const int DEFAULT_DIMENSION = 512;
+    static const int DEFAULT_DIMENSION = 64;
 
     // Constructs an animation with a single frame.
     Animation(AnimationEventEmitter &emitter);

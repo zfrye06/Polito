@@ -75,12 +75,26 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void MainWindow::imageSize() {
-    int dimension = currentDimension;
     // TODO: This leaks. Not deleted until the main window is.
-    ImageSizeDialog* d = new ImageSizeDialog(this, currentDimension);
+    ImageSizeDialog* d = new ImageSizeDialog(this, animation->dimension());
     d->activateWindow();
     d->setVisible(true);
     connect(d, &ImageSizeDialog::finish, this, &MainWindow::finishImageSize);
+}
+
+void MainWindow::finishImageSize(int dimension) {
+    if (dimension < 8) return;
+    animation->setDim(dimension);
+    QGraphicsScene &scene = animation->activeFrame().scene();
+    scene.setSceneRect(0, 0, dimension, dimension);
+    drawArea->fitInView(scene.sceneRect());
+    drawArea->updateDisplay();
+}
+
+void MainWindow::updateDisplay() {
+    synchronizeScrubber();
+    synchronizeLayerMenu();
+    drawArea->setFrame(&animation->activeFrame());
 }
 
 void MainWindow::bindings(){
@@ -151,16 +165,6 @@ void MainWindow::setSquareBind(const QKeySequence& keySequence){
     squareAct->setShortcut(keySequence);
 }
 
-void MainWindow::finishImageSize(int dimension) {
-    currentDimension = dimension;\
-    animation->setDim(dimension);
-    vector<unique_ptr<Frame>>* frames = scrubber->getFrames();
-    for(int i = 0; i < frames->size(); i++){
-        frames->at(i)->resize(currentDimension);
-    }
-
-}
-
 void MainWindow::synchronizeScrubber() {
     scrubber->setFrames(&animation->getFrames());
     scrubber->setActiveFrame(animation->activeFrameIdx());
@@ -169,12 +173,6 @@ void MainWindow::synchronizeScrubber() {
 void MainWindow::synchronizeLayerMenu() {
     layerMenu->setLayers(&animation->activeFrame().getLayers());
     layerMenu->setActiveLayer(animation->activeFrame().activeLayerIdx());
-}
-
-void MainWindow::updateDisplay() {
-    synchronizeScrubber();
-    synchronizeLayerMenu();
-    drawArea->setFrame(&animation->activeFrame());
 }
 
 void MainWindow::initActions() {
@@ -190,7 +188,7 @@ void MainWindow::initActions() {
     loadAct = new QAction(tr("Load Project"), this);
     connect(loadAct, &QAction::triggered, this, &MainWindow::loadProject);
 
-    imageSizeAct = new QAction(tr("&Image Size..."), this);
+    imageSizeAct = new QAction(tr("&Change Sprite Size"), this);
     connect(imageSizeAct, &QAction::triggered, this, &MainWindow::imageSize);
 
     keyBindAct = new QAction(tr("&Set Key Bindings"), this);
@@ -325,7 +323,6 @@ void MainWindow::initWidgets() {
     kd = new KeyBindingDialog;
 
     drawArea->setFrame(&animation->activeFrame());
-    currentDimension = drawArea->width();
 
     layout->addWidget(splitter);
 

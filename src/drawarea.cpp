@@ -27,7 +27,9 @@ PaintHandler &DrawArea::paintHandler() {
 
 void DrawArea::setFrame(Frame *frame) {
     this->frame = frame;
-    setScene(&frame->scene());
+    QGraphicsScene &scene = frame->scene();
+    setScene(&scene);
+    fitInView(scene.sceneRect());
 }
 
 void DrawArea::updateDisplay() {
