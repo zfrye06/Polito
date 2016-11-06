@@ -27,6 +27,7 @@ class DrawArea : public QGraphicsView, public UpdateableWidget {
 
 public slots:
     void setPaintHandler( PaintHandler* paintHandler );
+    void setBrushWidth(int width);
 
 signals:
     void updateView();

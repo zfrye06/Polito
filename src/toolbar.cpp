@@ -27,19 +27,33 @@ void Toolbar::initWidgets(){
     toolsLayout = new QVBoxLayout(this);
     buttonGroup = new QButtonGroup(this);
     colorPicker = new QColorDialog(this);
+    brushWidth = new QSlider(Qt::Vertical, this);
+    brushWidth->setMaximum(10);
+    brushWidth->setMinimum(1);
+    brushWidth->setValue(5);
 
+    // Init Buttons
     moveButton = new QPushButton(moveIcon, "");
     brushButton = new QPushButton(brushIcon, "");
     eraseButton = new QPushButton(eraseIcon, "");
     fillButton = new QPushButton(fillIcon, "");
+    circleButton = new QPushButton(circleIcon, "");
+    lineButton = new QPushButton(lineIcon, "");
+    squareButton = new QPushButton(squareIcon, "");
     colorButton = new QPushButton();
 
+    // Set the tooltips
     moveButton->setToolTip("Pan Tool");
     brushButton->setToolTip("Paintbrush");
     eraseButton->setToolTip("Eraser");
     fillButton->setToolTip("Fill");
     colorButton->setToolTip("Color Picker");
+    circleButton->setToolTip("Circle Tool");
+    lineButton->setToolTip("Line Tool");
+    squareButton->setToolTip("Square Tool");
 
+
+    // Setup color button
     QPalette pal;
     pal.setColor(QPalette::Button, Qt::red);
     colorButton->setFlat(true);
@@ -47,14 +61,7 @@ void Toolbar::initWidgets(){
     colorButton->setPalette(pal);
     colorButton->update();
 
-    circleButton = new QPushButton(circleIcon, "");
-    lineButton = new QPushButton(lineIcon, "");
-    squareButton = new QPushButton(squareIcon, "");
-
-    circleButton->setToolTip("Circle Tool");
-    lineButton->setToolTip("Line Tool");
-    squareButton->setToolTip("Square Tool");
-
+    // Make buttons checkable
     fillButton->setCheckable(true);
     brushButton->setCheckable(true);
     eraseButton->setCheckable(true);
@@ -63,6 +70,7 @@ void Toolbar::initWidgets(){
     lineButton->setCheckable(true);
     squareButton->setCheckable(true);
 
+    // Set their size
     brushButton->setFixedSize(size);
     eraseButton->setFixedSize(size);
     fillButton->setFixedSize(size);
@@ -72,6 +80,7 @@ void Toolbar::initWidgets(){
     squareButton->setFixedSize(size);
     lineButton->setFixedSize(size);
 
+    // Add buttons to button group
     buttonGroup->addButton(brushButton);
     buttonGroup->addButton(moveButton);
     buttonGroup->addButton(eraseButton);
@@ -81,6 +90,7 @@ void Toolbar::initWidgets(){
     buttonGroup->addButton(lineButton);
     buttonGroup->setExclusive(true);
 
+    // Add buttons to layout
     toolsLayout->addWidget(colorButton);
     toolsLayout->addWidget(brushButton);
     toolsLayout->addWidget(eraseButton);
@@ -89,6 +99,7 @@ void Toolbar::initWidgets(){
     toolsLayout->addWidget(circleButton);
     toolsLayout->addWidget(squareButton);
     toolsLayout->addWidget(lineButton);
+    toolsLayout->addWidget(brushWidth);
 
 }
 
@@ -101,6 +112,7 @@ void Toolbar::initConnections(){
     connect(squareButton, &QPushButton::clicked, this, &Toolbar::setSquare);
     connect(circleButton, &QPushButton::clicked, this, &Toolbar::setCircle);
     connect(lineButton, &QPushButton::clicked, this, &Toolbar::setLine);
+    connect(brushWidth, &QSlider::sliderReleased, this, [this] {emit setBrushWidth(brushWidth->value());});
 }
 
 void Toolbar::setBrush() {

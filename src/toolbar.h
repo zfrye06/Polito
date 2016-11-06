@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QButtonGroup>
 #include <QColorDialog>
+#include <QSlider>
 
 #include "painthandler.h"
 
@@ -19,6 +20,7 @@ signals:
     
     void colorChanged(QColor);
     void setPaintHandler( PaintHandler* paintHandler );
+    void setBrushWidth(int width);
 
 public slots:
     void getColor();
@@ -36,6 +38,7 @@ private:
     QVBoxLayout* toolsLayout;
     QButtonGroup* buttonGroup;
     QColorDialog* colorPicker;
+    QSlider* brushWidth;
 
     QPushButton* moveButton;
     QPushButton* brushButton;

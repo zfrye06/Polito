@@ -511,6 +511,8 @@ void MainWindow::initSignals() {
 
     connect(toolbar,&Toolbar::setPaintHandler, drawArea, &DrawArea::setPaintHandler);
 
+    connect(toolbar, &Toolbar::setBrushWidth, drawArea, &DrawArea::setBrushWidth);
+
     connect(kd, &KeyBindingDialog::colorSignal, this, &MainWindow::setColorBind);
     connect(kd, &KeyBindingDialog::eraserSignal, this, &MainWindow::setEraserBind);
     connect(kd, &KeyBindingDialog::lineSignal, this, &MainWindow::setLineBind);
