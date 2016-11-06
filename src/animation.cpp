@@ -235,15 +235,20 @@ void Animation::load(std::istream& in) {
 }
 
 void Animation::saveGif(std::string filename) const {
+   QColor newColor = QColorDialog::getColor(QColor(255,0,255), nullptr, "Select GIF Background Color" );
+   if( !newColor.isValid() ) {
+       newColor = QColor(255,0,255);
+   }
    GifWriter writer;
    GifBegin( &writer, filename.c_str(), dimension(), dimension(), 100, 8, true );
    for (int i=0;i<frames.size();i++) {
        Frame* frame = frames[i].get();
        QImage image = frame->image();
-       if ( image.format() != QImage::Format_RGBA8888 ) {
-           image.convertToFormat( QImage::Format_RGBA8888 );
-       }
-       GifWriteFrame( &writer, image.bits(), dimension(), dimension(), frame->duration()/10, 8, true);
+       QImage newImage(image.width(), image.height(), QImage::Format_RGBA8888);
+       newImage.fill(newColor);
+       QPainter painter(&newImage);
+       painter.drawImage(0,0,image);
+       GifWriteFrame( &writer, newImage.bits(), dimension(), dimension(), frame->duration()/10, 8, true);
    }
    GifEnd( &writer );
 }

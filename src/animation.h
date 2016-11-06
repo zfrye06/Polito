@@ -2,6 +2,7 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
+#include <QColorDialog>
 #include <istream>
 #include <memory>
 #include <ostream>
