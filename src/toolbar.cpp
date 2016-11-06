@@ -55,7 +55,7 @@ void Toolbar::initWidgets(){
 
     // Setup color button
     QPalette pal;
-    pal.setColor(QPalette::Button, Qt::red);
+    pal.setColor(QPalette::Button, Qt::black);
     colorButton->setFlat(true);
     colorButton->setAutoFillBackground(true);
     colorButton->setPalette(pal);

@@ -3,8 +3,8 @@
 
 PaintSettings PaintSettings::defaults() {
     PaintSettings s;
-    s.color = Qt::red;
-    s.brushWidth = 5;
+    s.color = Qt::black;
+    s.brushWidth = 1;
     return s;
 }
 

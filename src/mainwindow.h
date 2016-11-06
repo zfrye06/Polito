@@ -111,7 +111,6 @@ private:
     QSplitter *splitter;
     QSplitter *upperArea;
     QSplitter *lowerArea;
-    int currentDimension;
     
     void initActions();
     void initSignals();
