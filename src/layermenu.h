@@ -66,6 +66,8 @@ private:
 
     QIcon deleteIcon = QIcon(QPixmap(":/icons/delete"));
     QIcon addIcon = QIcon(QPixmap(":/icons/add"));
+    QIcon upIcon = QIcon(QPixmap(":/icons/up"));
+    QIcon downIcon = QIcon(QPixmap(":/icons/down"));
 };
 
 #endif // LAYERMENU_H

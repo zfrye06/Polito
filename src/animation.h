@@ -51,7 +51,7 @@ class Animation {
 
     void saveExtendedFormat(std::ostream&) const;
 
-    void saveGif(std::string filename) const;
+//    void saveGif(std::string filename) const;
 
     void load(std::istream&);
 

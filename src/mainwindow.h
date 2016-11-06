@@ -40,7 +40,7 @@ protected:
 
 private slots:
     void saveProject(bool extendedFormat);
-    void saveGif();
+//    void saveGif();
     void loadProject();
     void imageSize();
     void finishImageSize(int dimension);

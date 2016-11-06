@@ -14,6 +14,8 @@ LayerMenu::LayerMenu(QWidget *parent, Frame *frame) : QWidget(parent), frame(fra
 
     addLayerButton->setIcon(addIcon);
     removeLayerButton->setIcon(deleteIcon);
+    moveLayerUp->setIcon(upIcon);
+    moveLayerDown->setIcon(downIcon);
 
     layerMenuLayout = new QVBoxLayout(this);
     layerButtons = new QHBoxLayout();
@@ -106,9 +108,9 @@ void LayerMenu::deleteLayerButtonClicked() {
 }
 
 void LayerMenu::moveLayerUpButtonClicked(){
-    emit layersSwappedSignal(list->currentRow(), list->currentRow() + 1);
+    emit layersSwappedSignal(list->currentRow(), list->currentRow() - 1);
 }
 
 void LayerMenu::moveLayerDownButtonClicked(){
-    emit layersSwappedSignal(list->currentRow(), list->currentRow() - 1);
+    emit layersSwappedSignal(list->currentRow(), list->currentRow() + 1);
 }
