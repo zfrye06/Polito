@@ -211,15 +211,15 @@ void MainWindow::initActions() {
             });
 
     chooseColor = new QAction(tr("&Choose Color"), this);
-    chooseColor->setShortcut(tr("Ctrl+P"));
+    chooseColor->setShortcut(tr("P"));
     connect(chooseColor, &QAction::triggered, toolbar, &Toolbar::getColor);
 
     eraserAct = new QAction(tr("&Select Eraser Tool"), this);
-    eraserAct->setShortcut(tr("Ctrl+E"));
+    eraserAct->setShortcut(tr("E"));
     connect(eraserAct, &QAction::triggered, toolbar, &Toolbar::setEraser);
 
     lineAct = new QAction(tr("&Select Line Tool"), this);
-    lineAct->setShortcut(tr("Ctrl+I"));
+    lineAct->setShortcut(tr("I"));
     connect(lineAct, &QAction::triggered, toolbar, &Toolbar::setLine);
 
     addFrameAct = new QAction(tr("&Add Frame"), this);
@@ -240,11 +240,11 @@ void MainWindow::initActions() {
 
     layerUpAct = new QAction(tr("&Move Current Layer Up"), this);
     layerUpAct->setShortcut(tr("Ctrl+H"));
-//    connect(layerUpAct, &QAction::triggered, this, [this]{emit layerMenu->moveLayerUpButtonClicked();});
+    connect(layerUpAct, &QAction::triggered, this, [this]{emit layerMenu->moveLayerUpButtonClicked();});
 
     layerDownAct = new QAction(tr("&Move Current Layer Down"), this);
     layerDownAct->setShortcut(tr("Ctrl+D"));
-//    connect(layerDownAct, &QAction::triggered, this, [this]{emit layerMenu->moveLayerDownButtonClicked();});
+    connect(layerDownAct, &QAction::triggered, this, [this]{emit layerMenu->moveLayerDownButtonClicked();});
 
     removeFrameAct = new QAction(tr("&Delete Current Frame"), this);
     removeFrameAct->setShortcut(tr("Ctrl+J"));
@@ -255,23 +255,23 @@ void MainWindow::initActions() {
     connect(removeLayerAct, &QAction::triggered, this, [this]{emit layerMenu->deleteLayerButtonClicked();});
 
     brushAct = new QAction(tr("&Select Brush Tool"), this);
-    brushAct->setShortcut(tr("Ctrl+B"));
+    brushAct->setShortcut(tr("B"));
     connect(brushAct, &QAction::triggered, toolbar, &Toolbar::setBrush);
 
     fillAct = new QAction(tr("&Select Fill Tool"), this);
-    fillAct->setShortcut(tr("Ctrl+F"));
+    fillAct->setShortcut(tr("F"));
     connect(fillAct, &QAction::triggered, toolbar, &Toolbar::setFill);
 
     selectAct = new QAction(tr("&Select Pan Tool"), this);
-    selectAct->setShortcut(tr("Ctrl+M"));
-//    connect(selectAct, &QAction::triggered, this, &Toolbar::);
+    selectAct->setShortcut(tr("M"));
+    connect(selectAct, &QAction::triggered, toolbar, &Toolbar::setMove);
 
     circleAct = new QAction(tr("&Select Circle Tool"), this);
-    circleAct->setShortcut(tr("Ctrl+R"));
+    circleAct->setShortcut(tr("R"));
     connect(circleAct, &QAction::triggered, toolbar, &Toolbar::setCircle);
 
     squareAct = new QAction(tr("&Select Square Tool"), this);
-    squareAct->setShortcut(tr("Ctrl+S"));
+    squareAct->setShortcut(tr("S"));
     connect(squareAct, &QAction::triggered, toolbar, &Toolbar::setSquare);
 
     fileMenu->addAction(saveAct);
