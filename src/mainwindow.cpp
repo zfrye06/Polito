@@ -33,17 +33,17 @@ void MainWindow::saveProject(bool extendedFormat) {
     }
 }
 
-//void MainWindow::saveGif() {
-//    try {
-//        QString fileName = QFileDialog::getSaveFileName(this);
-//        animation->saveGif(fileName.toStdString());
-//    } catch (const std::exception &ex) {
-//        QString msg = "Unable to save project: ";
-//        msg += ex.what();
-//        std::cerr << msg.toStdString() << std::endl;
-//        QMessageBox::information(this, tr("Polito"), msg);
-//    }
-//}
+void MainWindow::saveGif() {
+   try {
+       QString fileName = QFileDialog::getSaveFileName(this);
+       animation->saveGif(fileName.toStdString());
+   } catch (const std::exception &ex) {
+       QString msg = "Unable to export as GIF: ";
+       msg += ex.what();
+       std::cerr << msg.toStdString() << std::endl;
+       QMessageBox::information(this, tr("Polito"), msg);
+   }
+}
 
 void MainWindow::loadProject() {
     QFileDialog dialog(this);
@@ -181,8 +181,8 @@ void MainWindow::initActions() {
     saveAct = new QAction(tr("Save Project"), this);
     connect(saveAct, &QAction::triggered, this, [this] { this->saveProject(false); });
 
-//    exportGifAct = new QAction(tr("Export gif..."), this);
-//    connect(exportGifAct, &QAction::triggered, this, [this] { this->saveGif(); });
+    exportGifAct = new QAction(tr("Export as GIF"), this);
+    connect(exportGifAct, &QAction::triggered, this, [this] { this->saveGif(); });
 
     saveExtendedAct = new QAction(tr("Save Project (Extended Format)"), this);
     connect(saveExtendedAct, &QAction::triggered, this, [this] { this->saveProject(true); });
@@ -281,7 +281,7 @@ void MainWindow::initActions() {
 
     fileMenu->addAction(saveAct);
     fileMenu->addAction(saveExtendedAct);
-//    fileMenu->addAction(exportGifAct);
+    fileMenu->addAction(exportGifAct);
     fileMenu->addAction(loadAct);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
