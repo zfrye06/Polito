@@ -51,8 +51,14 @@ LayerMenu::LayerMenu(QWidget *parent, vector<Layer *> *layers) : QWidget(parent)
 }
 
 void LayerMenu::updateLayer(){
-    Layer* layer = layers->at(list->currentRow());
+    Layer* layer = layers->at(translateToExternalIndex(list->currentRow()));
     QPixmap &px = layer->pixmap();
+    if(px.width() > px.height()){
+        px = px.scaledToHeight(100);
+    }
+    else{
+        px = px.scaledToWidth(100);
+    }
     QIcon icon(px);
     QListWidgetItem* item = list->item(list->currentRow());
     item->setIcon(icon);
@@ -63,24 +69,25 @@ void LayerMenu::addLayer(int index) {
     QPixmap pixmap;
     QIcon icon(pixmap);
 
-    QListWidgetItem* item = new QListWidgetItem(icon, "");
+    QListWidgetItem* item = new QListWidgetItem();
+    item->setIcon(icon);
     item->setSizeHint(size);
-    list->insertItem(list->currentRow(), item);
-    item->setTextAlignment(Qt::AlignCenter);
+    list->insertItem(list->count() - index, item);
+    item->setTextAlignment(Qt::AlignHCenter);
 }
 
 void LayerMenu::moveLayer(int from, int to) {
-    auto item = list->takeItem(from);
-    list->insertItem(to, item);
+    auto item = list->takeItem(translateToInternalIndex(from));
+    list->insertItem(translateToInternalIndex(to), item);
 }
 
 void LayerMenu::removeLayer(int index) {
-    auto item = list->takeItem(index);
+    auto item = list->takeItem(translateToInternalIndex(index));
     delete item;
 }
 
 void LayerMenu::setActiveLayer(int index) {
-    list->setCurrentRow(index);
+    list->setCurrentRow(translateToInternalIndex(index));
 }
 
 void LayerMenu::setLayers(vector<Layer *> *l){
@@ -99,26 +106,46 @@ void LayerMenu::addLayerIcons() {
         QPixmap &pixmap = layer->pixmap();
         QIcon icon(pixmap);
         QListWidgetItem* item = new QListWidgetItem(pixmap, "");
+        item->setSizeHint(QSize(100,100));
         list->addItem(item);        
     }
 }
 
 void LayerMenu::layerClicked(){
-    emit activeLayerChangedSignal(list->currentRow());
+    int translated = translatedClickIndex();
+    emit activeLayerChangedSignal(translated);
 }
 
 void LayerMenu::addLayerButtonClicked() {
-    emit layerAddedSignal(list->currentRow());
+    emit layerAddedSignal(list->currentRow() + 1);
 }
 
 void LayerMenu::deleteLayerButtonClicked() {
-    emit layerDeletedSignal(list->currentRow());
+    int translated = translatedClickIndex();
+    emit layerDeletedSignal(translated);
 }
 
 void LayerMenu::moveLayerUpButtonClicked(){
-    emit layersSwappedSignal(list->currentRow(), list->currentRow() - 1);
+    int translated = translatedClickIndex();
+    emit layersSwappedSignal(translated, translated + 1);
 }
 
 void LayerMenu::moveLayerDownButtonClicked(){
-    emit layersSwappedSignal(list->currentRow(), list->currentRow() + 1);
+    int translated = translatedClickIndex();
+    emit layersSwappedSignal(translated, translated - 1);
+}
+
+int LayerMenu::translatedClickIndex() {
+    int index = list->currentRow();
+    int translated = translateToExternalIndex(index);
+    return translated;
+}
+
+int LayerMenu::translateToInternalIndex(int index) {
+    return list->count() - index - 1;
+}
+
+int LayerMenu::translateToExternalIndex(int index) {
+    // The reverse translation is the same.
+    return translateToInternalIndex(index);
 }
