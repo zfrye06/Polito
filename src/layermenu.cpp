@@ -6,7 +6,7 @@
 #include <QIcon>
 #include <QSize>
 
-LayerMenu::LayerMenu(QWidget *parent, Frame *frame) : QWidget(parent), frame(frame) {
+LayerMenu::LayerMenu(QWidget *parent, vector<Layer *> *layers) : QWidget(parent), layers(layers) {
     addLayerButton = new QPushButton();
     removeLayerButton = new QPushButton();
     moveLayerUp = new QPushButton();
@@ -44,7 +44,7 @@ LayerMenu::LayerMenu(QWidget *parent, Frame *frame) : QWidget(parent), frame(fra
 }
 
 void LayerMenu::updateLayer(){
-    Layer* layer = frame->activeLayer();
+    Layer* layer = layers->at(list->currentRow());
     QPixmap &px = layer->pixmap();
     QIcon icon(px);
     QListWidgetItem* item = list->item(list->currentRow());
@@ -76,9 +76,9 @@ void LayerMenu::setActiveLayer(int index) {
     list->setCurrentRow(index);
 }
 
-void LayerMenu::setCurrentFrame(Frame *f){
+void LayerMenu::setLayers(vector<Layer *> *l){
     clear();
-    frame = f;
+    layers = l;
     addLayerIcons();
 }
 
@@ -87,8 +87,8 @@ void LayerMenu::clear() {
 }
 
 void LayerMenu::addLayerIcons() {
-    const vector<Layer*> &layers = frame->getLayers();
-    for (auto layer : layers) {
+    vector<Layer *> &l = *layers;
+    for (auto layer : l) {
         QPixmap &pixmap = layer->pixmap();
         QIcon icon(pixmap);
         QListWidgetItem* item = new QListWidgetItem(pixmap, "");

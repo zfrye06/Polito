@@ -164,7 +164,7 @@ void MainWindow::synchronizeScrubber() {
 }
 
 void MainWindow::synchronizeLayerMenu() {
-    layerMenu->setCurrentFrame(&animation->activeFrame());
+    layerMenu->setLayers(&animation->activeFrame().getLayers());
     layerMenu->setActiveLayer(animation->activeFrame().activeLayerIdx());
 }
 
@@ -318,7 +318,7 @@ void MainWindow::initWidgets() {
     drawArea = new DrawArea(&animation->activeFrame());
     scrubber = new Scrubber(window, &animation->getFrames());
     previewArea = new PreviewArea(window, &animation->getFrames());
-    layerMenu = new LayerMenu(window, &animation->activeFrame());
+    layerMenu = new LayerMenu(window, &animation->activeFrame().getLayers());
     kd = new KeyBindingDialog;
 
     drawArea->setFrame(&animation->activeFrame());
@@ -366,12 +366,15 @@ void MainWindow::initWidgets() {
 
 void MainWindow::initSignals() {
 
-    connect(drawArea, &DrawArea::updatePreview, previewArea, &PreviewArea::updatePreview);
-    connect(drawArea, &DrawArea::updateFrame, scrubber, &Scrubber::updateFrame);
-    connect(drawArea, &DrawArea::updateLayer, layerMenu, &LayerMenu::updateLayer);
+    connect(drawArea, &DrawArea::updateView, previewArea, &PreviewArea::updatePreview);
+    connect(drawArea, &DrawArea::updateView, scrubber, &Scrubber::updateFrame);
+    connect(drawArea, &DrawArea::updateView, layerMenu, &LayerMenu::updateLayer);
 
-    connect(drawArea, &DrawArea::addAction,
-            &actionHistory, &ActionHistory::addAction);
+    connect(drawArea, &DrawArea::drawEvent,
+            this, [this](DrawAction *a) {
+                a->setWidgetToUpdate(this);
+                actionHistory.addAction(a);
+            });
 
     connect(&emitter, &AnimationEventEmitter::addFrameEvent,
             this, [this](AddFrameAction *a){

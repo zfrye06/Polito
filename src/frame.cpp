@@ -133,7 +133,7 @@ int Frame::numlayers() const {
     return layers.size();
 }
 
-const std::vector<Layer *>& Frame::getLayers() const {
+std::vector<Layer *>& Frame::getLayers() {
     return layers;
 }
 

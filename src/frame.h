@@ -71,7 +71,7 @@ class Frame {
     int numlayers() const;
 
     // Returns a non-owning vector of the layers in this frame.
-    const std::vector<Layer *>& getLayers() const;
+    std::vector<Layer *>& getLayers();
 
     // Sets the duration of this frame to the number of milliseconds given.
     void setDuration(int duration);

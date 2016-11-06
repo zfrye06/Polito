@@ -24,9 +24,9 @@ using namespace std;
 class LayerMenu : public QWidget, public FrameWidget {
     Q_OBJECT
 public:
-    explicit LayerMenu(QWidget *parent, Frame *);
+    explicit LayerMenu(QWidget *parent, vector<Layer *> *);
 
-    void setCurrentFrame(Frame *frame);
+    void setLayers(vector<Layer *>*);
     void addLayer(int index) override;
     void moveLayer(int from, int to) override;
     void removeLayer(int index) override;
@@ -54,7 +54,7 @@ public slots:
     void layerClicked();
 
 private:
-    Frame *frame;
+    vector<Layer *> *layers;
     QPushButton* addLayerButton;
     QPushButton* removeLayerButton;
     QPushButton* moveLayerUp;
