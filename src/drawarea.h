@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include <QMouseEvent>
 #include <QObject>
+#include <QColor>
 #include <typeinfo>
 #include "action.h"
 #include "animationwidgets.h"
@@ -24,6 +25,7 @@ class DrawArea : public QGraphicsView, public UpdateableWidget {
     virtual void mousePressEvent( QMouseEvent* event ) override;
     virtual void mouseMoveEvent( QMouseEvent* event ) override;
     virtual void mouseReleaseEvent( QMouseEvent* event ) override;
+    virtual void drawForeground( QPainter* painter, const QRectF& rect ) override;
 
 public slots:
     void setPaintHandler( PaintHandler* paintHandler );
@@ -35,6 +37,7 @@ signals:
 
  private:
 
+    QImage *checkerboard;
     Frame *frame; // does not own
     PaintHandler *currentPaintHandler; // owns
     DrawAction *currentAction; // owns

@@ -1,7 +1,12 @@
 #include "drawarea.h"
 
 DrawArea::DrawArea(Frame *frame):
-    frame(frame), currentPaintHandler(new PaintBrush()) {}
+    frame(frame), currentPaintHandler(new PaintBrush()) {
+    checkerboard = new QImage(":/icons/checkerboard");
+	if(checkerboard->isNull()) {
+        throw "Failed to load checkerboard image.";
+    }
+}
 
 DrawArea::~DrawArea() {
     delete currentPaintHandler;
@@ -34,10 +39,14 @@ void DrawArea::setFrame(Frame *frame) {
     QGraphicsScene &scene = frame->scene();
     setScene(&scene);
     fitInView(scene.sceneRect());
+    updateDisplay();
 }
 
 void DrawArea::updateDisplay() {
-   viewport()->repaint();
+    QBrush brush = QBrush(*checkerboard);
+    brush.setMatrix(this->matrix().inverted());
+    this->setBackgroundBrush(brush);
+    viewport()->repaint();
 }
 
 void DrawArea::mousePressEvent(QMouseEvent *event) {
@@ -81,4 +90,17 @@ void DrawArea::mouseReleaseEvent(QMouseEvent *event) {
     
     this->viewport()->update();
     emit updateView();
+}
+
+void DrawArea::drawForeground( QPainter* painter, const QRectF& outter ) {
+    QGraphicsScene &scene = frame->scene();
+    QRectF inner = scene.sceneRect();
+    QRectF l = QRectF(outter.topLeft(),inner.bottomLeft());
+    QRectF t = QRectF(outter.topLeft(),inner.topRight());
+    QRectF r = QRectF(inner.right(),outter.top(),outter.right()-inner.right(),outter.height());
+    QRectF b = QRectF(outter.left(),inner.bottom(),outter.width(),outter.bottom()-inner.bottom());
+    painter->fillRect(l,QColor(245,245,220,255));
+    painter->fillRect(t,QColor(245,245,220,255));
+    painter->fillRect(r,QColor(245,245,220,255));
+    painter->fillRect(b,QColor(245,245,220,255));
 }
