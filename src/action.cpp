@@ -37,11 +37,7 @@ void ActionHistory::addAction( Action* action ) {
     delete a;
   }
   redoStack.clear();
-  if ( undoStack.size() > maxSize ) {
-    delete undoStack.front();
-    // Delete the first element.
-    undoStack.erase(undoStack.begin());
-  }
+
 }
 
 /**
