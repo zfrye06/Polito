@@ -41,7 +41,7 @@ void Toolbar::initWidgets(){
     colorButton->setToolTip("Color Picker");
 
     QPalette pal;
-    pal.setColor(QPalette::Button, Qt::red);
+    pal.setColor(QPalette::Button, Qt::black);
     colorButton->setFlat(true);
     colorButton->setAutoFillBackground(true);
     colorButton->setPalette(pal);
