@@ -39,7 +39,7 @@ LayerMenu::LayerMenu(QWidget *parent, vector<Layer *> *layers) : QWidget(parent)
 
     layerMenuLayout->addWidget(list);
 
-    addLayerIcons();
+    addLayerIconsLoad();
 
     list->setCurrentRow(0);
 
@@ -50,8 +50,22 @@ LayerMenu::LayerMenu(QWidget *parent, vector<Layer *> *layers) : QWidget(parent)
     connect(list, &QListWidget::clicked, this, &LayerMenu::layerClicked);
 }
 
+int LayerMenu::translateClickIndex(){
+    int index = list->currentRow();
+    int translated = translateToExternalIndex(index);
+    return translated;
+}
+
+int LayerMenu::translateToExternalIndex(int index){
+    return translateToInternalIndex(index);
+}
+
+int LayerMenu::translateToInternalIndex(int index){
+    return list->count() - index - 1;
+}
+
 void LayerMenu::updateLayer(){
-    Layer* layer = layers->at(list->currentRow());
+    Layer* layer = layers->at(this->translateToExternalIndex(list->currentRow()));
     QPixmap &px = layer->pixmap();
     QIcon icon(px);
     QListWidgetItem* item = list->item(list->currentRow());
@@ -65,22 +79,22 @@ void LayerMenu::addLayer(int index) {
 
     QListWidgetItem* item = new QListWidgetItem(icon, "");
     item->setSizeHint(size);
-    list->insertItem(list->currentRow(), item);
+    list->insertItem(list->count() - index, item);
     item->setTextAlignment(Qt::AlignCenter);
 }
 
 void LayerMenu::moveLayer(int from, int to) {
-    auto item = list->takeItem(from);
-    list->insertItem(to, item);
+    auto item = list->takeItem(translateToInternalIndex(from));
+    list->insertItem(translateToInternalIndex(to) + 1, item);
 }
 
 void LayerMenu::removeLayer(int index) {
-    auto item = list->takeItem(index);
+    auto item = list->takeItem(translateToInternalIndex(index));
     delete item;
 }
 
 void LayerMenu::setActiveLayer(int index) {
-    list->setCurrentRow(index);
+    list->setCurrentRow(translateToInternalIndex(index));
 }
 
 void LayerMenu::setLayers(vector<Layer *> *l){
@@ -93,32 +107,46 @@ void LayerMenu::clear() {
     list->clear();
 }
 
+void LayerMenu::addLayerIconsLoad() {
+    vector<Layer *> &l = *layers;
+    for (auto layer : l) {
+        QPixmap &pixmap = layer->pixmap();
+        QIcon icon(pixmap);
+        QListWidgetItem* item = new QListWidgetItem(pixmap, "");
+        item->setSizeHint(QSize(100,100));
+        list->addItem(item);
+    }
+}
+
 void LayerMenu::addLayerIcons() {
     vector<Layer *> &l = *layers;
     for (auto layer : l) {
         QPixmap &pixmap = layer->pixmap();
         QIcon icon(pixmap);
         QListWidgetItem* item = new QListWidgetItem(pixmap, "");
-        list->addItem(item);        
+        item->setSizeHint(QSize(100,100));
+        list->insertItem(0, item);
     }
 }
 
 void LayerMenu::layerClicked(){
-    emit activeLayerChangedSignal(list->currentRow());
+    emit activeLayerChangedSignal(translateClickIndex());
 }
 
 void LayerMenu::addLayerButtonClicked() {
-    emit layerAddedSignal(list->currentRow());
+    emit layerAddedSignal(list->currentRow() + 1);
 }
 
 void LayerMenu::deleteLayerButtonClicked() {
-    emit layerDeletedSignal(list->currentRow());
+    emit layerDeletedSignal(translateClickIndex());
 }
 
 void LayerMenu::moveLayerUpButtonClicked(){
-    emit layersSwappedSignal(list->currentRow(), list->currentRow() - 1);
+    int translated = translateClickIndex();
+    emit layersSwappedSignal(translated, translated + 1);
 }
 
 void LayerMenu::moveLayerDownButtonClicked(){
-    emit layersSwappedSignal(list->currentRow(), list->currentRow() + 1);
+    int translated = translateClickIndex();
+    emit layersSwappedSignal(translated, translated - 1);
 }
