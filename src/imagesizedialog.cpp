@@ -14,7 +14,8 @@ ImageSizeDialog::~ImageSizeDialog() {
     delete ui;
 }
 
-void ImageSizeDialog::on_buttonBox_accepted() {
-//    int dim = ui->dimensionsBox->value();
-    emit done(64);
+
+
+void ImageSizeDialog::on_buttonBox_accepted(){
+    emit finish(ui->dimensionsBox->value());
 }

@@ -15,9 +15,11 @@ public:
     ~ImageSizeDialog();
 
 signals:
-    void done(int dimensions);
+    void finish(int dimension);
 
 private slots:
+
+
     void on_buttonBox_accepted();
 
 private:

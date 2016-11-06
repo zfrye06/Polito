@@ -80,7 +80,7 @@ void MainWindow::imageSize() {
     ImageSizeDialog* d = new ImageSizeDialog(this, dimension);
     d->activateWindow();
     d->setVisible(true);
-    connect(d,&ImageSizeDialog::done,this,&MainWindow::finishImageSize);
+    connect(d, &ImageSizeDialog::finish, this, &MainWindow::finishImageSize);
 }
 
 void MainWindow::bindings(){
@@ -153,6 +153,7 @@ void MainWindow::setSquareBind(const QKeySequence& keySequence){
 
 void MainWindow::finishImageSize(int dimension) {
     animation->resize(dimension);
+
 }
 
 void MainWindow::synchronizeScrubber() {
