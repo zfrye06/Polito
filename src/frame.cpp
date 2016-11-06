@@ -133,7 +133,7 @@ int Frame::numlayers() const {
     return layers.size();
 }
 
-const std::vector<Layer *>& Frame::getLayers() const {
+std::vector<Layer *>& Frame::getLayers() {
     return layers;
 }
 
@@ -142,9 +142,7 @@ void Frame::setDuration(int duration) { durationMs = duration; }
 int Frame::duration() const { return durationMs; }
 
 void Frame::resize(int dimension) {
-    for (auto& layer : layers) {
-        layer->resize(dimension);
-    }
+    for (auto layer : layers) layer->resize(dimension);
 }
 
 void Frame::clear() {

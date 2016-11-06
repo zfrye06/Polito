@@ -59,6 +59,8 @@ private:
     QIcon addIcon = QIcon(QPixmap(":/icons/add"));
 
     vector<unique_ptr<Frame>> *frames;
+
+    void addFrameIcons();
 };
 
 #endif // SCRUBBER_H

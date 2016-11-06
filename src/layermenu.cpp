@@ -6,7 +6,7 @@
 #include <QIcon>
 #include <QSize>
 
-LayerMenu::LayerMenu(QWidget *parent, Frame *frame) : QWidget(parent), frame(frame) {
+LayerMenu::LayerMenu(QWidget *parent, vector<Layer *> *layers) : QWidget(parent), layers(layers) {
     addLayerButton = new QPushButton();
     removeLayerButton = new QPushButton();
     moveLayerUp = new QPushButton();
@@ -34,7 +34,7 @@ LayerMenu::LayerMenu(QWidget *parent, Frame *frame) : QWidget(parent), frame(fra
 
     layerMenuLayout->addWidget(list);
 
-    addLayer(0);
+    addLayerIcons();
 
     list->setCurrentRow(0);
 
@@ -46,27 +46,11 @@ LayerMenu::LayerMenu(QWidget *parent, Frame *frame) : QWidget(parent), frame(fra
 }
 
 void LayerMenu::updateLayer(){
-    Layer* layer = frame->getLayers().at(list->currentRow());
+    Layer* layer = layers->at(list->currentRow());
     QPixmap &px = layer->pixmap();
     QIcon icon(px);
     QListWidgetItem* item = list->item(list->currentRow());
     item->setIcon(icon);
-}
-
-void LayerMenu::addExistingLayer(int index){
-    Layer* layer = frame->getLayers().at(index);
-    QPixmap &pixmap = layer->pixmap();
-    QIcon icon(pixmap);
-    QListWidgetItem* item = new QListWidgetItem(pixmap, "");
-    list->addItem(item);
-}
-
-void LayerMenu::layerClicked(){
-    emit activeLayerChangedSignal(list->currentRow());
-}
-
-void LayerMenu::setCurrentFrame(Frame *frame){
-    this->frame = frame;
 }
 
 void LayerMenu::addLayer(int index) {
@@ -94,12 +78,31 @@ void LayerMenu::setActiveLayer(int index) {
     list->setCurrentRow(index);
 }
 
+void LayerMenu::setLayers(vector<Layer *> *l){
+    clear();
+    layers = l;
+    addLayerIcons();
+}
+
 void LayerMenu::clear() {
     list->clear();
 }
 
+void LayerMenu::addLayerIcons() {
+    vector<Layer *> &l = *layers;
+    for (auto layer : l) {
+        QPixmap &pixmap = layer->pixmap();
+        QIcon icon(pixmap);
+        QListWidgetItem* item = new QListWidgetItem(pixmap, "");
+        list->addItem(item);        
+    }
+}
+
+void LayerMenu::layerClicked(){
+    emit activeLayerChangedSignal(list->currentRow());
+}
+
 void LayerMenu::addLayerButtonClicked() {
-    //  if(layers.size() >= 4) return;
     emit layerAddedSignal(list->currentRow());
 }
 

@@ -24,14 +24,13 @@ using namespace std;
 class LayerMenu : public QWidget, public FrameWidget {
     Q_OBJECT
 public:
-    explicit LayerMenu(QWidget *parent, Frame *);
+    explicit LayerMenu(QWidget *parent, vector<Layer *> *);
 
-    void setCurrentFrame(Frame *frame);
+    void setLayers(vector<Layer *>*);
     void addLayer(int index) override;
     void moveLayer(int from, int to) override;
     void removeLayer(int index) override;
     void setActiveLayer(int index) override;
-    void addExistingLayer(int index);
     void clear();
 
     //These signals allow the LayerMenu to send information to the model
@@ -55,7 +54,7 @@ public slots:
     void layerClicked();
 
 private:
-    Frame *frame;
+    vector<Layer *> *layers;
     QPushButton* addLayerButton;
     QPushButton* removeLayerButton;
     QPushButton* moveLayerUp;
@@ -68,6 +67,8 @@ private:
     QIcon addIcon = QIcon(QPixmap(":/icons/add"));
     QIcon upIcon = QIcon(QPixmap(":/icons/up"));
     QIcon downIcon = QIcon(QPixmap(":/icons/down"));
+
+    void addLayerIcons();
 };
 
 #endif // LAYERMENU_H
