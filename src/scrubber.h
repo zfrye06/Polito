@@ -30,6 +30,7 @@ public:
     void setActiveFrame(int index) override;
     void clear();
     int getCurrentListRow();
+    vector<unique_ptr<Frame>>* getFrames();
 
 signals:
     void addFrameClicked();

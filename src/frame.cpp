@@ -29,6 +29,7 @@ Frame::Frame(AnimationEventEmitter &emitter, std::vector<std::unique_ptr<Layer>>
 void Frame::addLayer() {
     addLayer(layers.size());
 }
+
 void Frame::addLayer(int index) {
     if (index < 0 || index > (int)layers.size()) {
         throw std::invalid_argument("Index out of bounds.");
@@ -142,6 +143,7 @@ void Frame::setDuration(int duration) { durationMs = duration; }
 int Frame::duration() const { return durationMs; }
 
 void Frame::resize(int dimension) {
+    dim = dimension;
     for (auto layer : layers) layer->resize(dimension);
 }
 

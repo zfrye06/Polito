@@ -75,9 +75,9 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void MainWindow::imageSize() {
-    int dimension = drawArea->width();
+    int dimension = currentDimension;
     // TODO: This leaks. Not deleted until the main window is.
-    ImageSizeDialog* d = new ImageSizeDialog(this, dimension);
+    ImageSizeDialog* d = new ImageSizeDialog(this, currentDimension);
     d->activateWindow();
     d->setVisible(true);
     connect(d, &ImageSizeDialog::finish, this, &MainWindow::finishImageSize);
@@ -152,7 +152,12 @@ void MainWindow::setSquareBind(const QKeySequence& keySequence){
 }
 
 void MainWindow::finishImageSize(int dimension) {
-    animation->resize(dimension);
+    currentDimension = dimension;\
+    animation->setDim(dimension);
+    vector<unique_ptr<Frame>>* frames = scrubber->getFrames();
+    for(int i = 0; i < frames->size(); i++){
+        frames->at(i)->resize(currentDimension);
+    }
 
 }
 
@@ -297,7 +302,7 @@ void MainWindow::initActions() {
     editMenu->addAction(removeLayerAct);
     editMenu->addAction(brushAct);
     editMenu->addAction(fillAct);
-//    editMenu->addAction(selectAct);
+    editMenu->addAction(selectAct);
     editMenu->addAction(circleAct);
     editMenu->addAction(squareAct);
 
@@ -320,6 +325,7 @@ void MainWindow::initWidgets() {
     kd = new KeyBindingDialog;
 
     drawArea->setFrame(&animation->activeFrame());
+    currentDimension = drawArea->width();
 
     layout->addWidget(splitter);
 

@@ -57,6 +57,8 @@ class Animation {
 
     std::vector<std::unique_ptr<Frame>>& getFrames();
 
+    void setDim(int dim);
+
  private:
 
     void addFrameInternal(std::unique_ptr<Frame>, int index);

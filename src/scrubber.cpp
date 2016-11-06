@@ -66,6 +66,10 @@ int Scrubber::getCurrentListRow(){
     return list->currentRow();
 }
 
+vector<unique_ptr<Frame>>* Scrubber::getFrames(){
+    return frames;
+}
+
 void Scrubber::frameClicked(QListWidgetItem *item) {
     emit frameIconClicked(list->currentRow());
 }

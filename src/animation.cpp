@@ -26,6 +26,10 @@ void Animation::addFrameInternal(std::unique_ptr<Frame> f, int index) {
     }
 }
 
+void Animation::setDim(int dim){
+    this->dim = dim;
+}
+
 void Animation::moveFrame(int fromIndex, int toIndex) {
     if (fromIndex < 0 || fromIndex >= (int)frames.size() ||
         toIndex < 0 || toIndex >= (int)frames.size()) {
