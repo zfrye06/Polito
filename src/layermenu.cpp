@@ -17,6 +17,11 @@ LayerMenu::LayerMenu(QWidget *parent, vector<Layer *> *layers) : QWidget(parent)
     moveLayerUp->setIcon(upIcon);
     moveLayerDown->setIcon(downIcon);
 
+    addLayerButton->setToolTip("Add Layer");
+    removeLayerButton->setToolTip("Delete Current Layer");
+    moveLayerUp->setToolTip("Move Layer Up");
+    moveLayerDown->setToolTip("Move Layer Down");
+
     layerMenuLayout = new QVBoxLayout(this);
     layerButtons = new QHBoxLayout();
     layerMenuLayout->addLayout(layerButtons);
