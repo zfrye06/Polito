@@ -69,6 +69,9 @@ private:
     QIcon downIcon = QIcon(QPixmap(":/icons/down"));
 
     void addLayerIcons();
+    int translatedClickIndex();
+    int translateToInternalIndex(int index);
+    int translateToExternalIndex(int index);
 };
 
 #endif // LAYERMENU_H
