@@ -39,7 +39,7 @@ LayerMenu::LayerMenu(QWidget *parent, vector<Layer *> *layers) : QWidget(parent)
 
     layerMenuLayout->addWidget(list);
 
-    addLayerIconsLoad();
+    addLayerIcons();
 
     list->setCurrentRow(0);
 

@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/icons">
         <file alias="brush">icons/brush.png</file>
+        <file alias="checkerboard">icons/checkerboard.png</file>
         <file alias="fill">icons/fill.png</file>
         <file alias="palette">icons/palette.png</file>
         <file alias="pan">icons/pan.png</file>
