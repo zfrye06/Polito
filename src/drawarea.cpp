@@ -25,6 +25,10 @@ PaintHandler &DrawArea::paintHandler() {
     return *currentPaintHandler;
 }
 
+void DrawArea::setBrushWidth(int width){
+    currentPaintHandler->settings.brushWidth = width;
+}
+
 void DrawArea::setFrame(Frame *frame) {
     this->frame = frame;
     QGraphicsScene &scene = frame->scene();
