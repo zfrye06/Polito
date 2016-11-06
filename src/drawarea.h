@@ -37,6 +37,7 @@ signals:
 
  private:
 
+    QPoint lastPos;
     QImage *checkerboard;
     Frame *frame; // does not own
     PaintHandler *currentPaintHandler; // owns

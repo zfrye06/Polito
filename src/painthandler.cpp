@@ -23,10 +23,16 @@ void PanTool::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPoint
 }
 
 void PaintBrush::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) {
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     lastMousePoint = pos;
 }
 
 void PaintBrush::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) {
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     QPainter painter(&image);
     painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
                       Qt::RoundJoin));
@@ -38,10 +44,16 @@ void PaintBrush::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPo
 }
 
 void Eraser::mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos ) {
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     lastMousePoint = pos;
 }
 
 void Eraser::mouseMoveEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos ) {
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     QPainter painter(&image);
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
     painter.setPen(QPen(Qt::transparent, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
@@ -54,6 +66,9 @@ void Eraser::mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, QPoint
 }
 
 void PaintBucket::mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF pos ){
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     QPainter painter(&image);
     QImage newImage = image.toImage();
     QPoint point = pos.toPoint();
@@ -136,11 +151,17 @@ void PaintBucket::mouseReleaseEvent( QPixmap &image, Qt::MouseButtons buttons, Q
 }
 
 void PaintSquare::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     baseImage = image;
     lastMousePoint = pos;
 }
 
 void PaintSquare::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     image = baseImage;
     QPainter painter(&image);
     painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
@@ -150,6 +171,9 @@ void PaintSquare::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPoin
 }
 
 void PaintSquare::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     QPainter painter(&image);
     painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
                       Qt::RoundJoin));
@@ -158,11 +182,17 @@ void PaintSquare::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QP
 }
 
 void PaintCircle::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     baseImage = image;
     lastMousePoint = pos;
 }
 
 void PaintCircle::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     image = baseImage;
     QPainter painter(&image);
     painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
@@ -172,6 +202,9 @@ void PaintCircle::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPoin
 }
 
 void PaintCircle::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     QPainter painter(&image);
     painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
                       Qt::RoundJoin));
@@ -180,11 +213,17 @@ void PaintCircle::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QP
 }
 
 void PaintLine::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     baseImage = image;
     lastMousePoint = pos;
 }
 
 void PaintLine::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     image = baseImage;
     QPainter painter(&image);
     painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
@@ -194,6 +233,9 @@ void PaintLine::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF
 }
 
 void PaintLine::mouseReleaseEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos){
+    if ( !(buttons & Qt::LeftButton) ) {
+        return;
+    }
     QPainter painter(&image);
     painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
                       Qt::RoundJoin));
