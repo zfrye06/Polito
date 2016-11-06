@@ -148,9 +148,16 @@ void Frame::resize(int dimension) {
 }
 
 void Frame::clear() {
-    gscene.clear();
+    Layer *newbottom = new Layer(dim);
+    std::vector<Layer *> layersCpy = layers;
+    clearInternal(newbottom);
+    emitter.emitClearFrameEvent(new ClearFrameAction(this, layersCpy, newbottom));
+}
+
+void Frame::clearInternal(Layer *newbottom) {
+    for (auto layer : layers) gscene.removeItem(layer);
     layers.clear();
-    addLayerInternal(new Layer(dim), 0);
+    addLayerInternal(newbottom, 0);
     activeLayerIndex = 0;
 }
 

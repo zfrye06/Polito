@@ -13,6 +13,7 @@
 class AddLayerAction;
 class MoveLayerAction;
 class RemoveLayerAction;
+class ClearFrameAction;
 
 // Represents a frame consisting of a stack of images, or layers,
 // indexed from 0 starting at the bottom-most layer. 
@@ -21,6 +22,7 @@ class Frame {
     friend class AddLayerAction;
     friend class RemoveLayerAction;
     friend class MoveLayerAction;
+    friend class ClearFrameAction;
  public:
 
     static const int DEFAULT_DURATION = 1000;
@@ -98,6 +100,7 @@ class Frame {
     void addLayerInternal(Layer *layer, int index);
     void moveLayerInternal(int fromIndex, int toIndex);
     void removeLayerInternal(Layer *layer, int index);
+    void clearInternal(Layer *newbottom);
 
     AnimationEventEmitter &emitter;
     
@@ -223,6 +226,48 @@ class RemoveLayerAction : public Action {
     int index;
     bool ownsLayer;
     FrameWidget *widget;
+};
+
+class ClearFrameAction : public Action {
+ public:
+    
+    ClearFrameAction(Frame *frame, std::vector<Layer*> layers, Layer *newbottom) :
+       frame(frame), layers(layers), newbottom(newbottom), ownsLayers(true), widget(nullptr) {}
+
+    ~ClearFrameAction() {
+        if (ownsLayers) for (auto layer : layers) delete layer;
+        else delete newbottom;
+    }
+
+    void undo() {
+        frame->layers.clear();
+        frame->gscene.removeItem(newbottom);
+        for (int i = 0; i < (int)layers.size(); i++) {
+            frame->addLayerInternal(layers.at(i), i);
+        }
+        frame->activeLayerIndex = 0;
+        if (widget != nullptr) {
+            widget->updateDisplay();
+        }
+    }
+
+    void redo() {
+        frame->clearInternal(newbottom);
+        if (widget != nullptr) {
+            widget->updateDisplay();
+        }
+    }
+
+    void setWidgetToUpdate(UpdateableWidget *w) {
+        widget = w;
+    }
+
+ private:
+    Frame *frame;
+    std::vector<Layer*> layers;
+    Layer *newbottom; // The "new bottom" layer added after the frame was cleared.
+    bool ownsLayers;
+    UpdateableWidget *widget;
 };
 
 #endif // FRAME_H

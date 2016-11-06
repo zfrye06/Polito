@@ -206,11 +206,14 @@ void MainWindow::initActions() {
     exitAct->setShortcuts(QKeySequence::Quit);
     connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-    clearScreenAct = new QAction(tr("&Clear Screen"), this);
+    clearScreenAct = new QAction(tr("&Clear Frame"), this);
     clearScreenAct->setShortcut(tr("Ctrl+L"));
     connect(clearScreenAct, &QAction::triggered,
             this, [this] {
+                actionHistory.clear();
                 animation->activeFrame().clear();
+                synchronizeLayerMenu();
+                previewArea->updatePreview();
             });
 
     chooseColor = new QAction(tr("&Choose Color"), this);
@@ -297,6 +300,7 @@ void MainWindow::initActions() {
     editMenu->addAction(layerDownAct);
     editMenu->addAction(frameLeftAct);
     editMenu->addAction(removeFrameAct);
+    editMenu->addAction(clearScreenAct);
     editMenu->addAction(removeLayerAct);
     editMenu->addAction(brushAct);
     editMenu->addAction(fillAct);
@@ -305,7 +309,6 @@ void MainWindow::initActions() {
     editMenu->addAction(squareAct);
 
     optionMenu->addAction(imageSizeAct);
-    optionMenu->addAction(clearScreenAct);
     optionMenu->addAction(keyBindAct);
 }
 
@@ -391,6 +394,12 @@ void MainWindow::initSignals() {
 
     connect(&emitter, &AnimationEventEmitter::removeFrameEvent,
             this, [this](RemoveFrameAction *a){
+                a->setWidgetToUpdate(this);
+                actionHistory.addAction(a);
+            });
+
+    connect(&emitter, &AnimationEventEmitter::clearFrameEvent,
+            this, [this](ClearFrameAction *a) {
                 a->setWidgetToUpdate(this);
                 actionHistory.addAction(a);
             });

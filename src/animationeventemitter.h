@@ -7,6 +7,7 @@
 class AddFrameAction;
 class MoveFrameAction;
 class RemoveFrameAction;
+class ClearFrameAction;
 class AddLayerAction;
 class MoveLayerAction;
 class RemoveLayerAction;
@@ -22,6 +23,7 @@ class AnimationEventEmitter : public QObject {
     void addFrameEvent(AddFrameAction *);
     void moveFrameEvent(MoveFrameAction *);
     void removeFrameEvent(RemoveFrameAction *);
+    void clearFrameEvent(ClearFrameAction *);
     void addLayerEvent(AddLayerAction *);
     void moveLayerEvent(MoveLayerAction *);
     void removeLayerEvent(RemoveLayerAction *);
@@ -32,6 +34,7 @@ class AnimationEventEmitter : public QObject {
     void emitAddFrameEvent(AddFrameAction *action) { emit addFrameEvent(action); }
     void emitMoveFrameEvent(MoveFrameAction *action) { emit moveFrameEvent(action); }
     void emitRemoveFrameEvent(RemoveFrameAction *action) { emit removeFrameEvent(action); }
+    void emitClearFrameEvent(ClearFrameAction *action) { emit clearFrameEvent(action); }
     void emitAddLayerEvent(AddLayerAction *action) { emit addLayerEvent(action); }
     void emitMoveLayerEvent(MoveLayerAction *action) { emit moveLayerEvent(action); }
     void emitRemoveLayerEvent(RemoveLayerAction *action) { emit removeLayerEvent(action); }
