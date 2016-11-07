@@ -42,8 +42,10 @@ private slots:
     void saveProject(bool extendedFormat);
     void saveGif();
     void loadProject();
+    void uploadToTwitter();
     void imageSize();
     void finishImageSize(int dimension);
+    void finishUploadToTwitter(QString pin);
     void bindings();
     void setColorBind(const QKeySequence&);
     void setEraserBind(const QKeySequence&);
@@ -84,6 +86,7 @@ private:
     QAction *saveExtendedAct;
     QAction *exportGifAct;
     QAction *loadAct;
+    QAction *twitterAct;
     QAction *undoAct;
     QAction *redoAct;
     QAction *imageSizeAct;

@@ -5,6 +5,7 @@
 
 #include "mainwindow.h"
 #include "imagesizedialog.h"
+#include "twitterdialog.h"
 
 MainWindow::MainWindow() :
     animation(std::unique_ptr<Animation>(new Animation(emitter))) {
@@ -68,6 +69,17 @@ void MainWindow::loadProject() {
             QMessageBox::information(this, tr("Polito"), msg);
         }
     }
+}
+
+void MainWindow::uploadToTwitter(){
+    twitterdialog* d = new twitterdialog();
+    d->activateWindow();
+    d->setVisible(true);
+    connect(d, &twitterdialog::finish, this, &MainWindow::finishUploadToTwitter);
+}
+
+void MainWindow::finishUploadToTwitter(QString pin){
+    std::cout<<"Twitter Pin: "<<pin.toStdString()<<std::endl;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -188,6 +200,9 @@ void MainWindow::initActions() {
     loadAct = new QAction(tr("Load Project"), this);
     connect(loadAct, &QAction::triggered, this, &MainWindow::loadProject);
 
+    twitterAct = new QAction(tr("Upload GIF to Twitter"), this);
+    connect(twitterAct, &QAction::triggered, this, &MainWindow::uploadToTwitter);
+
     imageSizeAct = new QAction(tr("&Change Sprite Size"), this);
     connect(imageSizeAct, &QAction::triggered, this, &MainWindow::imageSize);
 
@@ -282,8 +297,10 @@ void MainWindow::initActions() {
 
     fileMenu->addAction(saveAct);
     fileMenu->addAction(saveExtendedAct);
-    fileMenu->addAction(exportGifAct);
     fileMenu->addAction(loadAct);
+    fileMenu->addSeparator();
+    fileMenu->addAction(exportGifAct);
+    fileMenu->addAction(twitterAct);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAct);
 
