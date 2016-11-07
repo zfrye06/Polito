@@ -30,7 +30,7 @@ void Toolbar::initWidgets(){
     brushWidth = new QSlider(Qt::Vertical, this);
     brushWidth->setMaximum(10);
     brushWidth->setMinimum(1);
-    brushWidth->setValue(5);
+    brushWidth->setValue(1);
 
     // Init Buttons
     moveButton = new QPushButton(moveIcon, "");
@@ -112,7 +112,7 @@ void Toolbar::initConnections(){
     connect(squareButton, &QPushButton::clicked, this, &Toolbar::setSquare);
     connect(circleButton, &QPushButton::clicked, this, &Toolbar::setCircle);
     connect(lineButton, &QPushButton::clicked, this, &Toolbar::setLine);
-    connect(brushWidth, &QSlider::sliderReleased, this, [this] {emit setBrushWidth(brushWidth->value());});
+    connect(brushWidth, &QSlider::valueChanged, this, [this] {emit setBrushWidth(brushWidth->value());});
 }
 
 void Toolbar::setBrush() {

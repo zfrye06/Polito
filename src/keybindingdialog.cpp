@@ -7,6 +7,7 @@ KeyBindingDialog::KeyBindingDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     initConnections();
+    initWidgets();
 }
 
 KeyBindingDialog::~KeyBindingDialog()
@@ -34,7 +35,22 @@ void KeyBindingDialog::initConnections(){
 }
 
 void KeyBindingDialog::initWidgets(){
-
+    ui->colorBind->setKeySequence(QKeySequence("P"));
+    ui->eraserBind->setKeySequence(QKeySequence("E"));
+    ui->lineBind->setKeySequence(QKeySequence("I"));
+    ui->addFrameBind->setKeySequence(QKeySequence("Ctrl+T"));
+    ui->addLayerBind->setKeySequence(QKeySequence("Ctrl+A"));
+    ui->nextFrameBind->setKeySequence(QKeySequence("Ctrl+N"));
+    ui->previousFrameBind->setKeySequence(QKeySequence("Ctrl+G"));
+    ui->nextLayerBind->setKeySequence(QKeySequence("Ctrl+H"));
+    ui->previousLayerBind->setKeySequence(QKeySequence("Ctrl+D"));
+    ui->deleteFrameBind->setKeySequence(QKeySequence("Ctrl+J"));
+    ui->deleteLayerBind->setKeySequence(QKeySequence("Ctrl+K"));
+    ui->brushBind->setKeySequence(QKeySequence("B"));
+    ui->fillBind->setKeySequence(QKeySequence("F"));
+    ui->selectBind->setKeySequence(QKeySequence("M"));
+    ui->circleBind->setKeySequence(QKeySequence("R"));
+    ui->squareBind->setKeySequence(QKeySequence("S"));
 }
 
 void KeyBindingDialog::colorChanged(){
