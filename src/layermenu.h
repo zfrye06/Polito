@@ -26,6 +26,7 @@ class LayerMenu : public QWidget, public FrameWidget {
 public:
     explicit LayerMenu(QWidget *parent, vector<Layer *> *);
 
+    void updateLayers();
     void setLayers(vector<Layer *>*);
     void addLayer(int index) override;
     void moveLayer(int from, int to) override;

@@ -19,6 +19,7 @@ class PreviewArea : public QWidget {
     Q_OBJECT
 public:
     void setPreview();
+    void updateScale();
     explicit PreviewArea(QWidget *parent, vector<unique_ptr<Frame>> *publicFrames);
     void setFrames(vector<unique_ptr<Frame>> *publicFrames);
 signals:

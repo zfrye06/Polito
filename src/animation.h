@@ -167,12 +167,13 @@ class RemoveFrameAction : public Action {
     int index;
     UpdateableWidget *widget;
 };
-
+#include <iostream>
 class ResizeAction : public Action {
 public:
 
     ResizeAction(Animation *animation, int dimBefore, int dimAfter) :
         animation(animation), dimBefore(dimBefore), dimAfter(dimAfter), widget(nullptr) {}
+
 
     void undo() {
         animation->resizeInternal(dimBefore);

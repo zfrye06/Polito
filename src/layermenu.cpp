@@ -67,15 +67,24 @@ int LayerMenu::translateToInternalIndex(int index){
 void LayerMenu::updateLayer(){
     Layer* layer = layers->at(this->translateToExternalIndex(list->currentRow()));
     QPixmap &px = layer->pixmap();
-    QIcon icon(px);
+    QIcon icon(px.scaled(QSize(100,100)));
     QListWidgetItem* item = list->item(list->currentRow());
     item->setIcon(icon);
+}
+
+void LayerMenu::updateLayers(){
+    for(int i = 0; i < layers->size(); i++){
+        QPixmap &px = layers->at(i)->pixmap();
+        QIcon icon(px.scaled(QSize(100,100)));
+        QListWidgetItem* item = list->item(i);
+        item->setIcon(icon);
+    }
 }
 
 void LayerMenu::addLayer(int index) {
     QSize size(100,100);
     QPixmap pixmap;
-    QIcon icon(pixmap);
+    QIcon icon(pixmap.scaled(QSize(100,100)));
 
     QListWidgetItem* item = new QListWidgetItem(icon, "");
     item->setSizeHint(size);
@@ -111,8 +120,8 @@ void LayerMenu::addLayerIconsLoad() {
     vector<Layer *> &l = *layers;
     for (auto layer : l) {
         QPixmap &pixmap = layer->pixmap();
-        QIcon icon(pixmap);
-        QListWidgetItem* item = new QListWidgetItem(pixmap, "");
+        QIcon icon(pixmap.scaled(QSize(100,100)));
+        QListWidgetItem* item = new QListWidgetItem(icon, "");
         item->setSizeHint(QSize(100,100));
         list->addItem(item);
     }
@@ -122,8 +131,8 @@ void LayerMenu::addLayerIcons() {
     vector<Layer *> &l = *layers;
     for (auto layer : l) {
         QPixmap &pixmap = layer->pixmap();
-        QIcon icon(pixmap);
-        QListWidgetItem* item = new QListWidgetItem(pixmap, "");
+        QIcon icon(pixmap.scaled(QSize(100,100)));
+        QListWidgetItem* item = new QListWidgetItem(icon, "");
         item->setSizeHint(QSize(100,100));
         list->insertItem(0, item);
     }

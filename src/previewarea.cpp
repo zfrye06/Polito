@@ -103,16 +103,32 @@ void PreviewArea::updatePreview(){
     currentFrame->viewport()->update();
 }
 
+void PreviewArea::updateScale(){
+    currentFrame->scale(1/width, 1/height);
+    QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
+    QRectF rect(previewLayout->itemAt(0)->geometry());
+    if(rect.width() < rect.height()){
+        width = (rect.width() / scene->width()) - .2;
+        height = width;
+    }
+    else{
+        height = (rect.height() / scene->height()) - .2;
+        width = height;
+    }
+
+    currentFrame->scale(width, height);
+}
+
 void PreviewArea::resizeEvent(QResizeEvent *event){
     currentFrame->scale(1/width, 1/height);
     QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
     QRectF rect(previewLayout->itemAt(0)->geometry());
     if(rect.width() < rect.height()){
-        width = (rect.width() / scene->width()) - .01;
+        width = (rect.width() / scene->width()) - .2;
         height = width;
     }
     else{
-        height = (rect.height() / scene->height()) - .01;
+        height = (rect.height() / scene->height()) - .2;
         width = height;
     }
 

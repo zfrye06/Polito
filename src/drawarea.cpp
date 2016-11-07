@@ -56,16 +56,19 @@ void DrawArea::updateDisplay() {
 }
 
 void DrawArea::mousePressEvent(QMouseEvent *event) {
+    if ( event->buttons() & Qt::RightButton ) {
+        rightMouseDown = true;
+        lastPos = event->pos();
+        return;
+    }
+
     if (!currentPaintHandler) {
         return;
     }
     
     auto imgCpy = std::shared_ptr<QPixmap>(new QPixmap(frame->activeLayer()->pixmap()));
     currentAction = new DrawAction(frame->activeLayer(), imgCpy);
-    
-    if ( event->buttons() & Qt::RightButton ) {
-        lastPos = event->pos();
-    }
+
     QPointF pos = mapToScene(event->pos())-QPointF(0.5,0.5);
     currentPaintHandler->mousePressEvent(frame->activeLayer()->pixmap(), event->buttons(), pos );
     
@@ -75,13 +78,7 @@ void DrawArea::mousePressEvent(QMouseEvent *event) {
 }
 
 void DrawArea::mouseMoveEvent(QMouseEvent *event) {
-    if (!currentPaintHandler) {
-        return;
-    }
 
-    QPointF pos = mapToScene(event->pos())-QPointF(0.5,0.5);
-    currentPaintHandler->mouseMoveEvent(frame->activeLayer()->pixmap(), event->buttons(), pos );
-    
     if ( event->buttons() & Qt::RightButton ) {
         QPoint delta = event->pos()-lastPos;
         float deltay = 1.f + (float)delta.ry() / 500.f;
@@ -91,13 +88,28 @@ void DrawArea::mouseMoveEvent(QMouseEvent *event) {
         this->scale( deltay, deltay );
         lastPos = event->pos();
         updateDisplay();
+        return;
     }
+
+    if (!currentPaintHandler) {
+        return;
+    }
+
+    QPointF pos = mapToScene(event->pos())-QPointF(0.5,0.5);
+    currentPaintHandler->mouseMoveEvent(frame->activeLayer()->pixmap(), event->buttons(), pos );
+    
+
     this->viewport()->update();
     emit updateView();
     QGraphicsView::mouseMoveEvent( event );
 }
 
 void DrawArea::mouseReleaseEvent(QMouseEvent *event) {
+    if(rightMouseDown){
+        rightMouseDown = false;
+        return;
+    }
+
     if (!currentPaintHandler) {
         return;
     }
