@@ -38,7 +38,7 @@ void DrawArea::setFrame(Frame *frame) {
     this->frame = frame;
     QGraphicsScene &scene = frame->scene();
     setScene(&scene);
-    fitInView(scene.sceneRect());
+    fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
     updateDisplay();
 }
 
