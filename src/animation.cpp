@@ -1,4 +1,4 @@
-#include <iostream>
+
 #include "animation.h"
 #include "gif-h/gif.h"
 
@@ -23,11 +23,6 @@ void Animation::addFrameInternal(std::unique_ptr<Frame> f, int index) {
     if (activeFrameIndex >= index){
         activeFrameIndex++;
     }
-}
-
-void Animation::setDim(int dim){
-    this->dim = dim;
-    for (auto& frame : frames) frame->resize(dim);
 }
 
 void Animation::moveFrame(int fromIndex, int toIndex) {
@@ -92,7 +87,6 @@ Frame &Animation::activeFrame() {
 }
 
 void Animation::resize(int dimension) {
-    std::cout << dimension << std::endl;
     if (dimension < 8) {
         throw std::invalid_argument("Resize dimension must be at least 8.");
     }

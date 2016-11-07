@@ -38,6 +38,7 @@ signals:
 
  private:
 
+    bool rightMouseDown = false;
     QPoint lastPos;
     QImage *checkerboard;
     Frame *frame; // does not own

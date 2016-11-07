@@ -96,7 +96,8 @@ void MainWindow::imageSize() {
 
 void MainWindow::finishImageSize(int dimension) {
     if (dimension < 8) return;
-    animation->setDim(dimension);
+    if (dimension > 512) return;
+    animation->resize(dimension);
     QGraphicsScene &scene = animation->activeFrame().scene();
     scene.setSceneRect(0, 0, dimension, dimension);
     drawArea->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
@@ -110,6 +111,10 @@ void MainWindow::updateDisplay() {
     synchronizeScrubber();
     synchronizeLayerMenu();
     drawArea->setFrame(&animation->activeFrame());
+    drawArea->updateDisplay();
+    scrubber->updateFrames();
+    previewArea->updateScale();
+    layerMenu->updateLayers();
 }
 
 void MainWindow::bindings(){
@@ -445,7 +450,7 @@ void MainWindow::initSignals() {
 
     connect(&emitter, &AnimationEventEmitter::resizeEvent,
             this, [this](ResizeAction *action){
-                action->setWidgetToUpdate(drawArea);
+                action->setWidgetToUpdate(this);
                 actionHistory.addAction(action);
             });
 
