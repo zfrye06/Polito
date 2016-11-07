@@ -12,9 +12,11 @@
 #include "animationwidgets.h"
 
 class DrawAction;
+class ResizeAction;
 
 class Layer : public QGraphicsItem {
     friend class DrawAction;
+    friend class ResizeAction;
  public:
 
     Layer(int dim);
@@ -30,6 +32,8 @@ class Layer : public QGraphicsItem {
     QPixmap &pixmap();
 
     int dimension() const;
+
+    void setImage(QPixmap* image);
 
  private:
 

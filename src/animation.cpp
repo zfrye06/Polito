@@ -90,9 +90,9 @@ void Animation::resize(int dimension) {
     if (dimension < 8) {
         throw std::invalid_argument("Resize dimension must be at least 8.");
     }
-    int before = dim;
+    ResizeAction *action = new ResizeAction(this, frames);
     resizeInternal(dimension);
-    emitter.emiteResizeEvent(new ResizeAction(this, before, dimension));
+    emitter.emiteResizeEvent(action);
 }
 
 int Animation::dimension() const {

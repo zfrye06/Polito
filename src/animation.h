@@ -171,22 +171,38 @@ class RemoveFrameAction : public Action {
 class ResizeAction : public Action {
 public:
 
-    ResizeAction(Animation *animation, int dimBefore, int dimAfter) :
-        animation(animation), dimBefore(dimBefore), dimAfter(dimAfter), widget(nullptr) {}
+    ResizeAction(Animation *animation, std::vector<std::unique_ptr<Frame>> &frames) :
+        animation(animation), widget(nullptr) {
+        for(int i = 0; i < frames.size(); i++){
+            Frame &frame = *frames.at(i);
+            pastLayers.push_back(std::vector<std::shared_ptr<QPixmap>>());
+            for(auto layer : frame.getLayers()){
+                pastLayers.at(i).push_back(layer->image);
+            }
+        }
+    }
 
-
-    void undo() {
-        animation->resizeInternal(dimBefore);
+    void swapLayers() {
+        std::vector<std::unique_ptr<Frame>> &frames = animation->getFrames();
+        for (int i = 0; i < frames.size(); i++) {
+            std::vector<Layer *> &layers = frames.at(i)->getLayers();
+            for (int j = 0; j < layers.size(); j++) {
+                std::shared_ptr<QPixmap> temp = layers.at(j)->image;
+                layers.at(j)->image = pastLayers.at(i).at(j);
+                pastLayers.at(i)[j] = temp;
+            }
+        }
         if (widget != nullptr) {
             widget->updateDisplay();
         }
     }
 
+    void undo() {
+        swapLayers();
+    }
+
     void redo() {
-        animation->resizeInternal(dimAfter);
-        if (widget != nullptr) {
-            widget->updateDisplay();
-        }
+        swapLayers();
     }
 
     void setWidgetToUpdate(UpdateableWidget *w) {
@@ -195,8 +211,7 @@ public:
 
 private:
    Animation *animation;
-   int dimBefore;
-   int dimAfter;
+   std::vector<std::vector<std::shared_ptr<QPixmap>>> pastLayers;
    UpdateableWidget *widget;
 };
 

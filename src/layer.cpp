@@ -17,6 +17,10 @@ QRectF Layer::boundingRect() const {
     return QRectF(image->rect());
 }
 
+void Layer::setImage(QPixmap *image){
+
+}
+
 void Layer::paint(QPainter *painter,
                   const QStyleOptionGraphicsItem *option,
                   QWidget *widget) {
