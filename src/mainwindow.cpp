@@ -87,7 +87,7 @@ void MainWindow::finishImageSize(int dimension) {
     animation->setDim(dimension);
     QGraphicsScene &scene = animation->activeFrame().scene();
     scene.setSceneRect(0, 0, dimension, dimension);
-    drawArea->fitInView(scene.sceneRect());
+    drawArea->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
     drawArea->updateDisplay();
 }
 
