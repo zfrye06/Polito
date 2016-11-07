@@ -27,6 +27,10 @@ void PaintBrush::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPoin
         return;
     }
     lastMousePoint = pos;
+    QPainter painter(&image);
+    painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
+                      Qt::RoundJoin));
+    painter.drawLine(lastMousePoint, pos);
 }
 
 void PaintBrush::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) {
