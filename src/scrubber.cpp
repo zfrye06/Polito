@@ -56,10 +56,21 @@ void Scrubber::updateFrame(){
     QSize size(100, 100);
     QImage image = frames->at(list->currentRow())->image();
     QPixmap pixmap = QPixmap::fromImage(image);
-    QIcon icon(pixmap);
+    QIcon icon(pixmap.scaled(size));
 
     QListWidgetItem* item = list->currentItem();
     item->setIcon(icon);
+}
+
+void Scrubber::updateFrames(){
+    for(int i = 0; i < frames->size(); i++){
+        QImage image = frames->at(i)->image();
+        QPixmap px = QPixmap::fromImage(image);
+        QIcon icon(px.scaled(QSize(100,100)));
+
+        QListWidgetItem* item = list->item(i);
+        item->setIcon(icon);
+    }
 }
 
 int Scrubber::getCurrentListRow(){
@@ -78,9 +89,10 @@ void Scrubber::addFrame(int index) {
     QSize size(100,100);
     QImage image = frames->at(index)->image();
     QPixmap pixmap = QPixmap::fromImage(image);
-    QIcon icon(pixmap);
+    QIcon icon(pixmap.scaled(size));
 
-    QListWidgetItem* item = new QListWidgetItem(icon, "");
+    QListWidgetItem* item = new QListWidgetItem();
+    item->setIcon(icon);
     item->setSizeHint(size);
     list->insertItem(index, item);
     item->setTextAlignment(Qt::AlignCenter);
@@ -117,7 +129,7 @@ void Scrubber::addFrameIcons() {
         QSize size(100, 100);
         QImage image = frames->at(i)->image();
         QPixmap pixmap = QPixmap::fromImage(image);
-        QIcon icon(pixmap);
+        QIcon icon(pixmap.scaled(size));
         QListWidgetItem* item = new QListWidgetItem();
         item->setIcon(icon);
         item->setSizeHint(size);

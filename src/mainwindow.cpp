@@ -101,6 +101,9 @@ void MainWindow::finishImageSize(int dimension) {
     scene.setSceneRect(0, 0, dimension, dimension);
     drawArea->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);
     drawArea->updateDisplay();
+    scrubber->updateFrames();
+    previewArea->updateScale();
+    layerMenu->updateLayers();
 }
 
 void MainWindow::updateDisplay() {
