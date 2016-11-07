@@ -30,7 +30,7 @@ void PaintBrush::mousePressEvent(QPixmap &image, Qt::MouseButtons buttons, QPoin
     QPainter painter(&image);
     painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
                       Qt::RoundJoin));
-    painter.drawPoint(pos-QPointF(0.5,0.5));
+    painter.drawPoint(pos.toPoint());
 }
 
 void PaintBrush::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPointF pos) {
@@ -40,7 +40,7 @@ void PaintBrush::mouseMoveEvent(QPixmap &image, Qt::MouseButtons buttons, QPoint
     QPainter painter(&image);
     painter.setPen(QPen(settings.color, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
                       Qt::RoundJoin));
-    painter.drawLine(lastMousePoint, pos);
+    painter.drawLine(lastMousePoint.toPoint(), pos.toPoint());
     lastMousePoint = pos;
 }
 
@@ -55,7 +55,7 @@ void Eraser::mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF 
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
     painter.setPen(QPen(Qt::transparent, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
                       Qt::RoundJoin));
-    painter.drawPoint(pos-QPointF(0.5,0.5));
+    painter.drawPoint(pos.toPoint());
     lastMousePoint = pos;
 }
 
@@ -67,7 +67,7 @@ void Eraser::mouseMoveEvent( QPixmap &image, Qt::MouseButtons buttons, QPointF p
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
     painter.setPen(QPen(Qt::transparent, settings.brushWidth, Qt::SolidLine, Qt::RoundCap,
                       Qt::RoundJoin));
-    painter.drawLine(lastMousePoint, pos);
+    painter.drawLine(lastMousePoint.toPoint(), pos.toPoint());
     lastMousePoint = pos;
 }
 
@@ -80,7 +80,7 @@ void PaintBucket::mousePressEvent( QPixmap &image, Qt::MouseButtons buttons, QPo
     }
     QPainter painter(&image);
     QImage newImage = image.toImage();
-    QPoint point = (pos-QPointF(0.5,0.5)).toPoint();
+    QPoint point = pos.toPoint();
 
     painter.setPen(QPen(settings.color));
 

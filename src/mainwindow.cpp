@@ -346,6 +346,7 @@ void MainWindow::initWidgets() {
     kd = new KeyBindingDialog;
 
     drawArea->setFrame(&animation->activeFrame());
+    drawArea->fitToScene();
 
     layout->addWidget(splitter);
 

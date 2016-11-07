@@ -38,6 +38,12 @@ void DrawArea::setFrame(Frame *frame) {
     this->frame = frame;
     QGraphicsScene &scene = frame->scene();
     setScene(&scene);
+    //fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
+    updateDisplay();
+}
+
+void DrawArea::fitToScene() {
+    QGraphicsScene &scene = frame->scene();
     fitInView(scene.sceneRect(), Qt::KeepAspectRatio);
     updateDisplay();
 }
@@ -60,7 +66,7 @@ void DrawArea::mousePressEvent(QMouseEvent *event) {
     if ( event->buttons() & Qt::RightButton ) {
         lastPos = event->pos();
     }
-    QPointF pos = mapToScene(event->pos());
+    QPointF pos = mapToScene(event->pos())-QPointF(0.5,0.5);
     currentPaintHandler->mousePressEvent(frame->activeLayer()->pixmap(), event->buttons(), pos );
     
     this->viewport()->update();
@@ -73,7 +79,7 @@ void DrawArea::mouseMoveEvent(QMouseEvent *event) {
         return;
     }
 
-    QPointF pos = mapToScene(event->pos());
+    QPointF pos = mapToScene(event->pos())-QPointF(0.5,0.5);
     currentPaintHandler->mouseMoveEvent(frame->activeLayer()->pixmap(), event->buttons(), pos );
     
     if ( event->buttons() & Qt::RightButton ) {
@@ -96,7 +102,7 @@ void DrawArea::mouseReleaseEvent(QMouseEvent *event) {
         return;
     }
     
-    QPointF pos = mapToScene(event->pos());
+    QPointF pos = mapToScene(event->pos())-QPointF(0.5,0.5);
     currentPaintHandler->mouseReleaseEvent(frame->activeLayer()->pixmap(), event->buttons(), pos );
 
     auto imgCpy = std::shared_ptr<QPixmap>(new QPixmap(frame->activeLayer()->pixmap()));
