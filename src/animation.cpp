@@ -1,6 +1,6 @@
 #include <iostream>
 #include "animation.h"
-#include "gif-h/gif.h"
+#include "gif.h"
 
 Animation::Animation(AnimationEventEmitter &emitter) :
     activeFrameIndex(-1),  dim(Animation::DEFAULT_DIMENSION), emitter(emitter) {

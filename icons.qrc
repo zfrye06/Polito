@@ -9,9 +9,7 @@
         <file alias="play">icons/play.png</file>
         <file alias="previous">icons/previous.png</file>
         <file alias="delete">icons/delete.png</file>
-        <file alias="down">icons/downArrow.png</file>
         <file alias="next">icons/next.png</file>
-        <file alias="up">icons/upArrow.png</file>
         <file alias="erase">icons/erase.png</file>
         <file alias="circle">icons/circle.png</file>
         <file alias="line">icons/line.png</file>

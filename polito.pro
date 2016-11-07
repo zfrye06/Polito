@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = polito
 TEMPLATE = app
 
+include(o2/src/src.pri)
 
 SOURCES += src/main.cpp\
         src/mainwindow.cpp \
@@ -52,3 +53,7 @@ FORMS    += src/mainwindow.ui \
 
 RESOURCES += \
     icons.qrc
+
+INCLUDEPATH += $$PWD/gif-h
+
+DISTFILES +=
