@@ -25,6 +25,7 @@ class Frame {
     friend class ClearFrameAction;
  public:
 
+    // The default duration, in milliseconds, of a single frame.
     static const int DEFAULT_DURATION = 1000;
 
     // Constructs a new frame with a single layer.
@@ -121,7 +122,7 @@ class AddLayerAction : public Action {
  public:
 
  AddLayerAction(Frame *frame, Layer *layer, int index) :
-    frame(frame), layer(layer), index(index), ownsLayer(false), widget(nullptr) {}
+    frame(frame), layer(layer), index(index), ownsLayer(false) {}
 
     ~AddLayerAction() {
         if (ownsLayer) {
@@ -132,21 +133,11 @@ class AddLayerAction : public Action {
     void undo() {
         frame->removeLayerInternal(layer, index);
         ownsLayer = true;
-        if (widget != nullptr) {
-            widget->updateDisplay();
-        }
     }
 
     void redo() {
         frame->addLayerInternal(layer, index);
         ownsLayer = false;
-        if (widget != nullptr) {
-            widget->updateDisplay();
-        }
-    }
-
-    void setWidgetToUpdate(UpdateableWidget *w) {
-        widget = w;
     }
 
  private:
@@ -154,45 +145,33 @@ class AddLayerAction : public Action {
     Layer *layer;
     int index;
     bool ownsLayer;
-    UpdateableWidget *widget;
 };
 
 class MoveLayerAction : public Action {
  public:
 
  MoveLayerAction(Frame *frame, int fromIndex, int toIndex) :
-    frame(frame), fromIndex(fromIndex), toIndex(toIndex), widget(nullptr) {}
+    frame(frame), fromIndex(fromIndex), toIndex(toIndex) {}
 
     void undo() {
         frame->moveLayerInternal(toIndex, fromIndex);
-        if (widget != nullptr) {
-            widget->updateDisplay();
-        }
     }
 
     void redo() {
         frame->moveLayerInternal(fromIndex, toIndex);
-        if (widget != nullptr) {
-            widget->updateDisplay();
-        }
-    }
-
-    void setWidgetToUpdate(UpdateableWidget *w) {
-        widget = w;
     }
 
  private:
     Frame *frame;
     int fromIndex;
     int toIndex;
-    UpdateableWidget *widget;
 };
 
 class RemoveLayerAction : public Action {
  public:
 
  RemoveLayerAction(Frame *frame, Layer *layer, int index) :
-    frame(frame), layer(layer), index(index), ownsLayer(true), widget(nullptr) {}
+    frame(frame), layer(layer), index(index), ownsLayer(true) {}
 
     ~RemoveLayerAction() {
         if (ownsLayer) {
@@ -203,21 +182,11 @@ class RemoveLayerAction : public Action {
     void undo() {
         frame->addLayerInternal(layer, index);
         ownsLayer = false;
-        if (widget != nullptr) {
-            widget->updateDisplay();
-        }
     }
 
     void redo() {
         frame->removeLayerInternal(layer, index);
         ownsLayer = true;
-        if (widget != nullptr) {
-            widget->updateDisplay();
-        }
-    }
-
-    void setWidgetToUpdate(UpdateableWidget *w) {
-        widget = w;
     }
 
  private:
@@ -225,14 +194,13 @@ class RemoveLayerAction : public Action {
     Layer *layer;
     int index;
     bool ownsLayer;
-    UpdateableWidget *widget;
 };
 
 class ClearFrameAction : public Action {
  public:
     
     ClearFrameAction(Frame *frame, std::vector<Layer*> layers, Layer *newbottom) :
-       frame(frame), layers(layers), newbottom(newbottom), ownsLayers(true), widget(nullptr) {}
+       frame(frame), layers(layers), newbottom(newbottom), ownsLayers(true) {}
 
     ~ClearFrameAction() {
         if (ownsLayers) for (auto layer : layers) delete layer;
@@ -246,20 +214,10 @@ class ClearFrameAction : public Action {
             frame->addLayerInternal(layers.at(i), i);
         }
         frame->activeLayerIndex = 0;
-        if (widget != nullptr) {
-            widget->updateDisplay();
-        }
     }
 
     void redo() {
         frame->clearInternal(newbottom);
-        if (widget != nullptr) {
-            widget->updateDisplay();
-        }
-    }
-
-    void setWidgetToUpdate(UpdateableWidget *w) {
-        widget = w;
     }
 
  private:
@@ -267,7 +225,6 @@ class ClearFrameAction : public Action {
     std::vector<Layer*> layers;
     Layer *newbottom; // The "new bottom" layer added after the frame was cleared.
     bool ownsLayers;
-    UpdateableWidget *widget;
 };
 
 #endif // FRAME_H
