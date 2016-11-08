@@ -235,7 +235,7 @@ void Animation::saveGif(std::string filename) const {
    }
    GifWriter writer;
    GifBegin( &writer, filename.c_str(), dimension(), dimension(), 100, 8, true );
-   for (int i=0;i<frames.size();i++) {
+   for (int i=0;i<(int)frames.size();i++) {
        Frame* frame = frames[i].get();
        QImage image = frame->image();
        QImage newImage(image.width(), image.height(), QImage::Format_RGBA8888);
