@@ -42,7 +42,7 @@ private slots:
     void saveGif();
     void loadProject();
     void imageSize();
-    void finishImageSize(int dimension);
+    void finishImageSize(int dimension, bool bilinear);
     void bindings();
     void setColorBind(const QKeySequence&);
     void setEraserBind(const QKeySequence&);

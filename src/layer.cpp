@@ -9,8 +9,13 @@ Layer::Layer(int dim) :
 Layer::Layer(QImage image) :
     image(std::shared_ptr<QPixmap>(new QPixmap(QPixmap::fromImage(image)))) {}
 
-void Layer::resize(int dimension) {
-    image = std::make_shared<QPixmap>(image->scaled(dimension, dimension, Qt::KeepAspectRatio));
+void Layer::resize(int dimension, bool bilinear) {
+    if(bilinear){
+        image = std::make_shared<QPixmap>(image->scaled(dimension, dimension, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
+    else{
+        image = std::make_shared<QPixmap>(image->scaled(dimension, dimension, Qt::KeepAspectRatio));
+    }
 }
 
 QRectF Layer::boundingRect() const {

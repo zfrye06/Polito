@@ -86,12 +86,12 @@ Frame &Animation::activeFrame() {
     return *frames.at(activeFrameIndex);
 }
 
-void Animation::resize(int dimension) {
+void Animation::resize(int dimension, bool bilinear) {
     if (dimension < 8) {
         throw std::invalid_argument("Resize dimension must be at least 8.");
     }
     ResizeAction *action = new ResizeAction(this, frames);
-    resizeInternal(dimension);
+    resizeInternal(dimension, bilinear);
     emitter.emiteResizeEvent(action);
 }
 
@@ -99,10 +99,10 @@ int Animation::dimension() const {
     return dim;
 }
 
-void Animation::resizeInternal(int dimension) {
+void Animation::resizeInternal(int dimension, bool bilinear) {
     this->dim = dimension;
     for (auto& frame : frames) {
-        frame->resize(dim);
+        frame->resize(dim, bilinear);
     }
 }
 

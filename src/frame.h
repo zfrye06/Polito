@@ -83,7 +83,7 @@ class Frame {
     int duration() const;
 
     // Resizes the image this frame represents to the given dimension.
-    void resize(int dim);
+    void resize(int dim, bool bilinear);
 
     // Removes all layers from this frame and adds a single empty layer.
     void clear();

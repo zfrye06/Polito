@@ -22,7 +22,7 @@ class Layer : public QGraphicsItem {
 
     Layer(QImage);
 
-    void resize(int dim);
+    void resize(int dim, bool bilinear);
 
     QRectF boundingRect() const override;
 

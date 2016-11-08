@@ -84,10 +84,10 @@ void MainWindow::imageSize() {
     connect(d, &ImageSizeDialog::finish, this, &MainWindow::finishImageSize);
 }
 
-void MainWindow::finishImageSize(int dimension) {
+void MainWindow::finishImageSize(int dimension, bool bilinear) {
     if (dimension < 8) return;
     if (dimension > 512) return;
-    animation->resize(dimension);
+    animation->resize(dimension, bilinear);
     QGraphicsScene &scene = animation->activeFrame().scene();
     scene.setSceneRect(0, 0, dimension, dimension);
     drawArea->fitInView(scene.sceneRect(),Qt::KeepAspectRatio);

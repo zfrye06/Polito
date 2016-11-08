@@ -14,8 +14,7 @@ ImageSizeDialog::~ImageSizeDialog() {
     delete ui;
 }
 
-
-
 void ImageSizeDialog::on_buttonBox_accepted(){
-    emit finish(ui->dimensionsBox->value());
+    bool bilinear = ui->filtering->currentIndex() == 0;
+    emit finish(ui->dimensionsBox->value(), bilinear);
 }

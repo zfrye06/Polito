@@ -15,7 +15,7 @@ public:
     ~ImageSizeDialog();
 
 signals:
-    void finish(int dimension);
+    void finish(int dimension, bool bilinear);
 
 private slots:
 

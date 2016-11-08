@@ -54,7 +54,7 @@ class Animation {
     Frame &activeFrame();
 
     // Resizes every frame in this animation to the given dimension
-    void resize(int dim);
+    void resize(int dim, bool bilinear);
 
     // Returns the dimension of this animation.
     int dimension() const;
@@ -85,7 +85,7 @@ class Animation {
     void addFrameInternal(std::unique_ptr<Frame>, int index);
     void moveFrameInternal(int fromIndex, int toIndex);
     void removeFrameInternal(int index);
-    void resizeInternal(int dim);
+    void resizeInternal(int dim, bool bilinear);
 
     std::vector<std::unique_ptr<Frame>> frames;
     int activeFrameIndex;
