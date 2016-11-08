@@ -133,7 +133,7 @@ class AddLayerAction : public Action {
         frame->removeLayerInternal(layer, index);
         ownsLayer = true;
         if (widget != nullptr) {
-            widget->removeLayer(index);
+            widget->updateDisplay();
         }
     }
 
@@ -141,11 +141,11 @@ class AddLayerAction : public Action {
         frame->addLayerInternal(layer, index);
         ownsLayer = false;
         if (widget != nullptr) {
-            widget->addLayer(index);
+            widget->updateDisplay();
         }
     }
 
-    void setFrameWidget(FrameWidget *w) {
+    void setWidgetToUpdate(UpdateableWidget *w) {
         widget = w;
     }
 
@@ -154,7 +154,7 @@ class AddLayerAction : public Action {
     Layer *layer;
     int index;
     bool ownsLayer;
-    FrameWidget *widget;
+    UpdateableWidget *widget;
 };
 
 class MoveLayerAction : public Action {
@@ -166,18 +166,18 @@ class MoveLayerAction : public Action {
     void undo() {
         frame->moveLayerInternal(toIndex, fromIndex);
         if (widget != nullptr) {
-            widget->moveLayer(toIndex, fromIndex);
+            widget->updateDisplay();
         }
     }
 
     void redo() {
         frame->moveLayerInternal(fromIndex, toIndex);
         if (widget != nullptr) {
-            widget->moveLayer(fromIndex, toIndex);
+            widget->updateDisplay();
         }
     }
 
-    void setFrameWidget(FrameWidget *w) {
+    void setWidgetToUpdate(UpdateableWidget *w) {
         widget = w;
     }
 
@@ -185,7 +185,7 @@ class MoveLayerAction : public Action {
     Frame *frame;
     int fromIndex;
     int toIndex;
-    FrameWidget *widget;
+    UpdateableWidget *widget;
 };
 
 class RemoveLayerAction : public Action {
@@ -204,7 +204,7 @@ class RemoveLayerAction : public Action {
         frame->addLayerInternal(layer, index);
         ownsLayer = false;
         if (widget != nullptr) {
-            widget->addLayer(index);
+            widget->updateDisplay();
         }
     }
 
@@ -212,11 +212,11 @@ class RemoveLayerAction : public Action {
         frame->removeLayerInternal(layer, index);
         ownsLayer = true;
         if (widget != nullptr) {
-            widget->removeLayer(index);
+            widget->updateDisplay();
         }
     }
 
-    void setFrameWidget(FrameWidget *w) {
+    void setWidgetToUpdate(UpdateableWidget *w) {
         widget = w;
     }
 
@@ -225,7 +225,7 @@ class RemoveLayerAction : public Action {
     Layer *layer;
     int index;
     bool ownsLayer;
-    FrameWidget *widget;
+    UpdateableWidget *widget;
 };
 
 class ClearFrameAction : public Action {

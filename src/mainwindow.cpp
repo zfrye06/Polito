@@ -432,19 +432,19 @@ void MainWindow::initSignals() {
 
     connect(&emitter, &AnimationEventEmitter::addLayerEvent,
             this, [this](AddLayerAction *a){
-                a->setFrameWidget(layerMenu);
+                a->setWidgetToUpdate(this);
                 actionHistory.addAction(a);
             });
 
     connect(&emitter, &AnimationEventEmitter::moveLayerEvent,
             this, [this](MoveLayerAction *a){
-                a->setFrameWidget(layerMenu);
+                a->setWidgetToUpdate(this);
                 actionHistory.addAction(a);
             });
 
     connect(&emitter, &AnimationEventEmitter::removeLayerEvent,
             this, [this](RemoveLayerAction *a){
-                a->setFrameWidget(layerMenu);
+                a->setWidgetToUpdate(this);
                 actionHistory.addAction(a);
             });
 
@@ -524,6 +524,7 @@ void MainWindow::initSignals() {
                     frame.moveLayer(from, to);
                     layerMenu->moveLayer(from, to);
                     layerMenu->setActiveLayer(frame.activeLayerIdx());
+                    updateDisplay();
                 }
             });
 
@@ -533,6 +534,7 @@ void MainWindow::initSignals() {
                 Frame &frame = animation->activeFrame();
                 frame.removeLayer(index);
                 layerMenu->removeLayer(index);
+                updateDisplay();
             });
 
     connect(layerMenu, &LayerMenu::activeLayerChangedSignal,
