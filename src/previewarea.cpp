@@ -115,6 +115,9 @@ void PreviewArea::updatePreview(){
 void PreviewArea::updateScale(){
     if(isScaled->isChecked()){
         currentFrame->scale(1/width, 1/height);
+        if(currentFrameNumber >= ((int)frames->size() - 1)){
+            currentFrameNumber = 0;
+        }
         QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
         QRectF rect(previewLayout->itemAt(0)->geometry());
         if(rect.width() < rect.height()){
@@ -137,6 +140,9 @@ void PreviewArea::updateScale(){
 void PreviewArea::resizeEvent(QResizeEvent *event){
     if(isScaled->isChecked()){
         currentFrame->scale(1/width, 1/height);
+        if(currentFrameNumber >= ((int)frames->size() - 1)){
+            currentFrameNumber = 0;
+        }
         QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
         QRectF rect(previewLayout->itemAt(0)->geometry());
         if(rect.width() < rect.height()){
