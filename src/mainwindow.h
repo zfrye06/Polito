@@ -20,9 +20,6 @@
 #include "toolbar.h"
 #include "keybindingdialog.h"
 
-
-class DrawArea;
-
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
