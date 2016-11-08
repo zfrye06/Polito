@@ -74,6 +74,10 @@ void PreviewArea::initConnections(){
 
 }
 
+void PreviewArea::setDuration(int ms){
+    duration->setText(QString::number(ms));
+}
+
 void PreviewArea::updateDuration(){
     QString text = duration->toPlainText();
     QIntValidator validator;

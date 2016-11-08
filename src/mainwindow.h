@@ -19,6 +19,7 @@
 #include "previewarea.h"
 #include "scrubber.h"
 #include "toolbar.h"
+#include "fpsdialog.h"
 #include "keybindingdialog.h"
 
 
@@ -39,6 +40,8 @@ protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
+    void getFPS();
+    void setFPS(int fps);
     void saveProject(bool extendedFormat);
     void saveGif();
     void loadProject();
@@ -65,6 +68,7 @@ private slots:
     void setSquareBind(const QKeySequence&);
 
 private:
+    int currentFPS = 5;
 
     AnimationEventEmitter emitter;
     std::unique_ptr<Animation> animation;
@@ -78,11 +82,13 @@ private:
     
     ImageSizeDialog *d;
     KeyBindingDialog *kd;
+    FPSDialog *fd;
     QMenu *saveAsMenu;
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *optionMenu;
     QAction *saveAct;
+    QAction *fpsAct;
     QAction *saveExtendedAct;
     QAction *exportGifAct;
     QAction *loadAct;

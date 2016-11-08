@@ -195,6 +195,22 @@ void MainWindow::synchronizeLayerMenu() {
     layerMenu->setActiveLayer(animation->activeFrame().activeLayerIdx());
 }
 
+void MainWindow::getFPS(){
+    fd = new FPSDialog(this, currentFPS);
+    fd->show();
+    connect(fd, &FPSDialog::setFPS, this, &MainWindow::setFPS);
+}
+
+void MainWindow::setFPS(int fps){
+    currentFPS = fps;
+    int secsPerFrame = (1/double(currentFPS)) * 1000;
+    previewArea->setDuration(secsPerFrame);
+    std::vector<std::unique_ptr<Frame>> &frames = animation->getFrames();
+    for (int i = 0; i < (int)frames.size(); i++) {
+        frames.at(i)->setDuration(secsPerFrame);
+    }
+}
+
 void MainWindow::initActions() {
     saveAct = new QAction(tr("Save Project"), this);
     connect(saveAct, &QAction::triggered, this, [this] { this->saveProject(false); });
@@ -302,6 +318,9 @@ void MainWindow::initActions() {
     squareAct->setShortcut(tr("S"));
     connect(squareAct, &QAction::triggered, toolbar, &Toolbar::setSquare);
 
+    fpsAct = new QAction(tr("&Set FPS"));
+    connect(fpsAct, &QAction::triggered, this, &MainWindow::getFPS);
+
     fileMenu->addAction(saveAct);
     fileMenu->addAction(saveExtendedAct);
     fileMenu->addAction(loadAct);
@@ -334,6 +353,7 @@ void MainWindow::initActions() {
 
     optionMenu->addAction(imageSizeAct);
     optionMenu->addAction(keyBindAct);
+    optionMenu->addAction(fpsAct);
 }
 
 void MainWindow::initWidgets() {

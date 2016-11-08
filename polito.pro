@@ -25,7 +25,8 @@ SOURCES += src/main.cpp\
     src/layer.cpp \
     src/toolbar.cpp \
     src/keybindingdialog.cpp \
-    src/twitterdialog.cpp
+    src/twitterdialog.cpp \
+    src/fpsdialog.cpp
 
 HEADERS  += src/mainwindow.h \
     src/action.h \
@@ -42,12 +43,14 @@ HEADERS  += src/mainwindow.h \
     src/toolbar.h \
     src/animationwidgets.h \
     src/keybindingdialog.h \
-    src/twitterdialog.h
+    src/twitterdialog.h \
+    src/fpsdialog.h
 
 FORMS    += src/mainwindow.ui \
     src/imagesizedialog.ui \
     src/keybindingdialog.ui \
-    src/twitterdialog.ui
+    src/twitterdialog.ui \
+    src/fpsdialog.ui
 
 RESOURCES += \
     icons.qrc
