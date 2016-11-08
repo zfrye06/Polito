@@ -51,6 +51,7 @@ void Toolbar::initWidgets(){
     circleButton->setToolTip("Circle Tool");
     lineButton->setToolTip("Line Tool");
     squareButton->setToolTip("Square Tool");
+    brushWidth->setToolTip("Brush Width");
 
 
     // Setup color button
