@@ -35,7 +35,8 @@ void MainWindow::saveProject(bool extendedFormat) {
 
 void MainWindow::saveGif() {
    try {
-       QString fileName = QFileDialog::getSaveFileName(this);
+       QString filter = "Gif (*.gif)";
+       QString fileName = QFileDialog::getSaveFileName(this, tr("Save as Gif"), QString(), filter, &filter);
        animation->saveGif(fileName.toStdString());
    } catch (const std::exception &ex) {
        QString msg = "Unable to export as GIF: ";
