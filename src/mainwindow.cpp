@@ -18,7 +18,8 @@ MainWindow::MainWindow() :
 
 void MainWindow::saveProject(bool extendedFormat) {
     try {
-        QString fileName = QFileDialog::getSaveFileName(this);
+        QString filter = "Sprite Sheet Project (*.ssp)";
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Worksheet"), QString(), filter, &filter);
         ofstream out(fileName.toStdString());
         if (extendedFormat) {
             animation->saveExtendedFormat(out);
