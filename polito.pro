@@ -40,7 +40,6 @@ HEADERS  += src/mainwindow.h \
     src/layer.h \
     src/animationeventemitter.h \
     src/toolbar.h \
-    src/animationwidgets.h \
     src/keybindingdialog.h \
     src/twitterdialog.h
 

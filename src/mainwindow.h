@@ -12,7 +12,6 @@
 #include <memory>
 #include "action.h"
 #include "animation.h"
-#include "animationwidgets.h"
 #include "drawarea.h"
 #include "imagesizedialog.h"
 #include "layermenu.h"
@@ -24,7 +23,7 @@
 
 class DrawArea;
 
-class MainWindow : public QMainWindow, public UpdateableWidget {
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -33,7 +32,7 @@ public:
     // This is added as a callback to undo/redo actions
     // when the effect of the action includes updating
     // global UI state.
-    void updateDisplay() override;
+    void updateDisplay();
 
 protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;

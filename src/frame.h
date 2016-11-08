@@ -7,7 +7,6 @@
 #include <vector>
 #include "action.h"
 #include "animationeventemitter.h"
-#include "animationwidgets.h"
 #include "layer.h"
 
 class AddLayerAction;
