@@ -114,7 +114,6 @@ void MainWindow::updateDisplay() {
     drawArea->updateDisplay();
     scrubber->updateFrames();
     previewArea->updateScale();
-    layerMenu->updateLayers();
 }
 
 void MainWindow::bindings(){
