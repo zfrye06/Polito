@@ -173,7 +173,7 @@ public:
 
     ResizeAction(Animation *animation, std::vector<std::unique_ptr<Frame>> &frames) :
         animation(animation), widget(nullptr) {
-        for(int i = 0; i < frames.size(); i++){
+        for(int i = 0; i < (int)frames.size(); i++){
             Frame &frame = *frames.at(i);
             pastLayers.push_back(std::vector<std::shared_ptr<QPixmap>>());
             for(auto layer : frame.getLayers()){
@@ -184,9 +184,9 @@ public:
 
     void swapLayers() {
         std::vector<std::unique_ptr<Frame>> &frames = animation->getFrames();
-        for (int i = 0; i < frames.size(); i++) {
+        for (int i = 0; i < (int)frames.size(); i++) {
             std::vector<Layer *> &layers = frames.at(i)->getLayers();
-            for (int j = 0; j < layers.size(); j++) {
+            for (int j = 0; j < (int)layers.size(); j++) {
                 std::shared_ptr<QPixmap> temp = layers.at(j)->image;
                 layers.at(j)->image = pastLayers.at(i).at(j);
                 pastLayers.at(i)[j] = temp;

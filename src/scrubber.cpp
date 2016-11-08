@@ -63,7 +63,7 @@ void Scrubber::updateFrame(){
 }
 
 void Scrubber::updateFrames(){
-    for(int i = 0; i < frames->size(); i++){
+    for(int i = 0; i < (int)frames->size(); i++){
         QImage image = frames->at(i)->image();
         QPixmap px = QPixmap::fromImage(image);
         QIcon icon(px.scaled(QSize(100,100)));
@@ -124,7 +124,7 @@ void Scrubber::setFrames(vector<unique_ptr<Frame>> *frames) {
 }
 
 void Scrubber::addFrameIcons() {
-    for(int i = 0; i < frames->size(); i++){
+    for(int i = 0; i < (int)frames->size(); i++){
         int row = list->currentRow() + 1;
         QSize size(100, 100);
         QImage image = frames->at(i)->image();
