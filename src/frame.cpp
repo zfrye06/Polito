@@ -149,9 +149,9 @@ void Frame::resize(int dimension) {
 
 void Frame::clear() {
     Layer *newbottom = new Layer(dim);
-    std::vector<Layer *> layersCpy = layers;
+    std::unique_ptr<ClearFrameAction> action(new ClearFrameAction(this, layers, newbottom));
     clearInternal(newbottom);
-    emitter.emitClearFrameEvent(new ClearFrameAction(this, layersCpy, newbottom));
+    emitter.emitClearFrameEvent(action.release());
 }
 
 void Frame::clearInternal(Layer *newbottom) {

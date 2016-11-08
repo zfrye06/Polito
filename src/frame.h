@@ -214,10 +214,12 @@ class ClearFrameAction : public Action {
             frame->addLayerInternal(layers.at(i), i);
         }
         frame->activeLayerIndex = 0;
+        ownsLayers = false;
     }
 
     void redo() {
         frame->clearInternal(newbottom);
+        ownsLayers = true;
     }
 
  private:
