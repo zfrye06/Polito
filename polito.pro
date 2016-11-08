@@ -24,13 +24,8 @@ SOURCES += src/main.cpp\
     src/frame.cpp \
     src/layer.cpp \
     src/toolbar.cpp \
-<<<<<<< HEAD
     src/keybindingdialog.cpp \
-    src/twitterdialog.cpp \
     src/fpsdialog.cpp
-=======
-    src/keybindingdialog.cpp
->>>>>>> 88f0f099ae299fdea03b281ef858825fa302f026
 
 HEADERS  += src/mainwindow.h \
     src/action.h \
@@ -45,24 +40,13 @@ HEADERS  += src/mainwindow.h \
     src/layer.h \
     src/animationeventemitter.h \
     src/toolbar.h \
-<<<<<<< HEAD
-    src/animationwidgets.h \
     src/keybindingdialog.h \
-    src/twitterdialog.h \
     src/fpsdialog.h
 
 FORMS    += src/mainwindow.ui \
     src/imagesizedialog.ui \
     src/keybindingdialog.ui \
-    src/twitterdialog.ui \
-    src/fpsdialog.ui
-=======
-    src/keybindingdialog.h
-
-FORMS    += src/mainwindow.ui \
-    src/imagesizedialog.ui \
-    src/keybindingdialog.ui
->>>>>>> 88f0f099ae299fdea03b281ef858825fa302f026
+    src/fpsdialog.ui \
 
 RESOURCES += \
     icons.qrc
