@@ -235,8 +235,7 @@ void MainWindow::initActions() {
             this, [this] {
                 actionHistory.clear();
                 animation->activeFrame().clear();
-                synchronizeLayerMenu();
-                previewArea->updatePreview();
+                updateDisplay();
             });
 
     chooseColor = new QAction(tr("&Choose Color"), this);
