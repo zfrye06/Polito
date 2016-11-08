@@ -19,7 +19,7 @@ PreviewArea::PreviewArea(QWidget *parent, std::vector<std::unique_ptr<Frame>> *p
 
 void PreviewArea::initWidgets(){
     previewLayout = new QVBoxLayout(this);
-    buttonLayout = new QHBoxLayout(this);
+    buttonLayout = new QHBoxLayout();
     playbackButtons = new QButtonGroup(this);
 
     currentFrame = new QGraphicsView();

@@ -84,7 +84,7 @@ void LayerMenu::updateLayers(){
 void LayerMenu::addLayer(int index) {
     QSize size(100,100);
     QPixmap pixmap;
-    QIcon icon(pixmap.scaled(QSize(100,100)));
+    QIcon icon(pixmap);
 
     QListWidgetItem* item = new QListWidgetItem(icon, "");
     item->setSizeHint(size);
