@@ -400,59 +400,17 @@ void MainWindow::initSignals() {
     connect(drawArea, &DrawArea::updateView, scrubber, &Scrubber::updateFrame);
     connect(drawArea, &DrawArea::updateView, layerMenu, &LayerMenu::updateLayer);
 
-    connect(drawArea, &DrawArea::drawEvent,
-            this, [this](DrawAction *a) {
-                a->setWidgetToUpdate(this);
-                actionHistory.addAction(a);
-            });
+    connect(drawArea, &DrawArea::drawEvent, &actionHistory, &ActionHistory::addAction);
+    connect(&emitter, &AnimationEventEmitter::addFrameEvent, &actionHistory, &ActionHistory::addAction);
+    connect(&emitter, &AnimationEventEmitter::moveFrameEvent, &actionHistory, &ActionHistory::addAction);
+    connect(&emitter, &AnimationEventEmitter::removeFrameEvent, &actionHistory, &ActionHistory::addAction);
+    connect(&emitter, &AnimationEventEmitter::clearFrameEvent, &actionHistory, &ActionHistory::addAction);
+    connect(&emitter, &AnimationEventEmitter::addLayerEvent, &actionHistory, &ActionHistory::addAction);
+    connect(&emitter, &AnimationEventEmitter::moveLayerEvent, &actionHistory, &ActionHistory::addAction);
+    connect(&emitter, &AnimationEventEmitter::removeLayerEvent, &actionHistory, &ActionHistory::addAction);
+    connect(&emitter, &AnimationEventEmitter::resizeEvent, &actionHistory, &ActionHistory::addAction);
 
-    connect(&emitter, &AnimationEventEmitter::addFrameEvent,
-            this, [this](AddFrameAction *a){
-                a->setWidgetToUpdate(this);
-                actionHistory.addAction(a);
-            });
-
-    connect(&emitter, &AnimationEventEmitter::moveFrameEvent,
-            this, [this](MoveFrameAction *a){
-                a->setWidgetToUpdate(this);
-                actionHistory.addAction(a);
-            });
-
-    connect(&emitter, &AnimationEventEmitter::removeFrameEvent,
-            this, [this](RemoveFrameAction *a){
-                a->setWidgetToUpdate(this);
-                actionHistory.addAction(a);
-            });
-
-    connect(&emitter, &AnimationEventEmitter::clearFrameEvent,
-            this, [this](ClearFrameAction *a) {
-                a->setWidgetToUpdate(this);
-                actionHistory.addAction(a);
-            });
-
-    connect(&emitter, &AnimationEventEmitter::addLayerEvent,
-            this, [this](AddLayerAction *a){
-                a->setWidgetToUpdate(this);
-                actionHistory.addAction(a);
-            });
-
-    connect(&emitter, &AnimationEventEmitter::moveLayerEvent,
-            this, [this](MoveLayerAction *a){
-                a->setWidgetToUpdate(this);
-                actionHistory.addAction(a);
-            });
-
-    connect(&emitter, &AnimationEventEmitter::removeLayerEvent,
-            this, [this](RemoveLayerAction *a){
-                a->setWidgetToUpdate(this);
-                actionHistory.addAction(a);
-            });
-
-    connect(&emitter, &AnimationEventEmitter::resizeEvent,
-            this, [this](ResizeAction *action){
-                action->setWidgetToUpdate(this);
-                actionHistory.addAction(action);
-            });
+    connect(&actionHistory, &ActionHistory::update, this, &MainWindow::updateDisplay);
 
     connect(toolbar, &Toolbar::colorChanged,
             this, [this](QColor to){
