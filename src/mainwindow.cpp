@@ -439,15 +439,6 @@ void MainWindow::initSignals() {
             this, [this]() {
                 if (animation->numframes() <= 1) return;
                 int removeIndex = animation->activeFrameIdx();
-                
-                // TODO: We have a bit of a hacky situation here.  Between when
-                // we call Animation::removeFrame() and DrawArea::setFrame() the
-                // emitted RemoveFrameAction's ownership of the removed frame is
-                // the only thing keeping the removed frame from being deleted,
-                // which would then leave the drawArea with a deleted frame as
-                // its scene for a few milliseconds.  I set the drawArea's frame
-                // to an arbitrarily created frame during that timeframe to
-                // avoid the bug. Note that this is NOT exception safe.
                 std::unique_ptr<Frame> f(new Frame(emitter, animation->dimension()));
                 drawArea->setFrame(f.get());
                 animation->removeFrame(removeIndex);
@@ -476,7 +467,6 @@ void MainWindow::initSignals() {
             this, [this](int from, int to) {
                 if (from >= 0 && from < animation->activeFrame().numlayers() &&
                     to >= 0 && to < animation->activeFrame().numlayers()) {
-
                     Frame &frame = animation->activeFrame();
                     frame.moveLayer(from, to);
                     layerMenu->moveLayer(from, to);
