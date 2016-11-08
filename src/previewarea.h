@@ -10,6 +10,7 @@
 #include <memory>
 #include <vector>
 #include <QResizeEvent>
+#include <QCheckBox>
 #include "animation.h"
 #include "frame.h"
 
@@ -32,6 +33,7 @@ public slots:
     void goToNextFrame();
     void goToPreviousFrame();
     void updateDuration();
+    void stateChanged(int x);
 
 protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
@@ -55,6 +57,7 @@ private:
     QPushButton* nextFrame;
     QPushButton* previousFrame;
     QTextEdit* duration;
+    QCheckBox* isScaled;
 
     QIcon playIcon = QIcon(QPixmap(":/icons/play"));
     QIcon pauseIcon = QIcon(QPixmap(":/icons/pause"));
