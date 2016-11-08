@@ -74,7 +74,7 @@ void LayerMenu::updateLayer(){
 
 void LayerMenu::updateLayers(){
     for(int i = 0; i < (int)layers->size(); i++){
-        QPixmap &px = layers->at(i)->pixmap();
+        QPixmap &px = layers->at(translateToInternalIndex(i))->pixmap();
         QIcon icon(px.scaled(QSize(100,100)));
         QListWidgetItem* item = list->item(i);
         item->setIcon(icon);
