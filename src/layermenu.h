@@ -15,23 +15,22 @@
 #include <memory>
 #include "frame.h"
 #include "layer.h"
-#include "animationwidgets.h"
 
 class LayerWidget;
 
 using namespace std;
 
-class LayerMenu : public QWidget, public FrameWidget {
+class LayerMenu : public QWidget {
     Q_OBJECT
 public:
     explicit LayerMenu(QWidget *parent, vector<Layer *> *);
 
     void updateLayers();
     void setLayers(vector<Layer *>*);
-    void addLayer(int index) override;
-    void moveLayer(int from, int to) override;
-    void removeLayer(int index) override;
-    void setActiveLayer(int index) override;
+    void addLayer(int index);
+    void moveLayer(int from, int to);
+    void removeLayer(int index);
+    void setActiveLayer(int index);
     void clear();
 
     //These signals allow the LayerMenu to send information to the model

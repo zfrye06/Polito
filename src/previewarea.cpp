@@ -27,11 +27,14 @@ void PreviewArea::initWidgets(){
     pauseButton = new QPushButton();
     nextFrame = new QPushButton();
     previousFrame = new QPushButton();
+    isScaled = new QCheckBox();
+    isScaled->setChecked(true);
 
     playButton->setToolTip("Play");
     pauseButton->setToolTip("Pause");
     nextFrame->setToolTip("Next Frame");
     previousFrame->setToolTip("Previous Frame");
+    isScaled->setToolTip("Preview Scaled");
 
     duration = new QTextEdit();
     QSize size(80, 25);
@@ -43,6 +46,7 @@ void PreviewArea::initWidgets(){
     pauseButton->setCheckable(true);
     nextFrame->setCheckable(true);
     previousFrame->setCheckable(true);
+    isScaled->setCheckable(true);
 
     playButton->setIcon(playIcon);
     pauseButton->setIcon(pauseIcon);
@@ -60,6 +64,7 @@ void PreviewArea::initWidgets(){
     buttonLayout->addWidget(previousFrame);
     buttonLayout->addWidget(nextFrame);
     buttonLayout->addWidget(duration);
+    buttonLayout->addWidget(isScaled);
 
     previewLayout->addWidget(currentFrame);
     previewLayout->addLayout(buttonLayout);
@@ -71,7 +76,11 @@ void PreviewArea::initConnections(){
     connect(nextFrame, &QPushButton::released, this, &PreviewArea::goToNextFrame);
     connect(previousFrame, &QPushButton::released, this, &PreviewArea::goToPreviousFrame);
     connect(duration, &QTextEdit::textChanged, this, &PreviewArea::updateDuration);
+    connect(isScaled, &QCheckBox::stateChanged, this, &PreviewArea::stateChanged);
+}
 
+void PreviewArea::stateChanged(int x){
+    updateScale();
 }
 
 void PreviewArea::setDuration(int ms){
@@ -108,35 +117,54 @@ void PreviewArea::updatePreview(){
 }
 
 void PreviewArea::updateScale(){
-    currentFrame->scale(1/width, 1/height);
-    QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
-    QRectF rect(previewLayout->itemAt(0)->geometry());
-    if(rect.width() < rect.height()){
-        width = (rect.width() / scene->width()) - .2;
-        height = width;
+    if(isScaled->isChecked()){
+        currentFrame->scale(1/width, 1/height);
+        if(currentFrameNumber >= ((int)frames->size() - 1)){
+            currentFrameNumber = 0;
+        }
+        QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
+        QRectF rect(previewLayout->itemAt(0)->geometry());
+        if(rect.width() < rect.height()){
+            width = (rect.width() / scene->width()) - .2;
+            height = width;
+        }
+        else{
+            height = (rect.height() / scene->height()) - .2;
+            width = height;
+        }
+        currentFrame->scale(width, height);
     }
     else{
-        height = (rect.height() / scene->height()) - .2;
-        width = height;
+        currentFrame->scale(1/width, 1/height);
+        width = 1;
+        height = 1;
     }
-
-    currentFrame->scale(width, height);
 }
 
 void PreviewArea::resizeEvent(QResizeEvent *event){
-    currentFrame->scale(1/width, 1/height);
-    QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
-    QRectF rect(previewLayout->itemAt(0)->geometry());
-    if(rect.width() < rect.height()){
-        width = (rect.width() / scene->width()) - .2;
-        height = width;
+    if(isScaled->isChecked()){
+        currentFrame->scale(1/width, 1/height);
+        if(currentFrameNumber >= ((int)frames->size() - 1)){
+            currentFrameNumber = 0;
+        }
+        QGraphicsScene* scene= &frames->at(currentFrameNumber)->scene();
+        QRectF rect(previewLayout->itemAt(0)->geometry());
+        if(rect.width() < rect.height()){
+            width = (rect.width() / scene->width()) - .2;
+            height = width;
+        }
+        else{
+            height = (rect.height() / scene->height()) - .2;
+            width = height;
+        }
+
+        currentFrame->scale(width, height);
     }
     else{
-        height = (rect.height() / scene->height()) - .2;
-        width = height;
+        currentFrame->scale(1/width, 1/height);
+        width = 1;
+        height = 1;
     }
-
-    currentFrame->scale(width, height);
 }
 
 void PreviewArea::playAnimation(){

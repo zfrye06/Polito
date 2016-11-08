@@ -9,7 +9,6 @@
 #include <QWidget>
 #include <memory>
 #include "action.h"
-#include "animationwidgets.h"
 
 class DrawAction;
 class ResizeAction; // Implemented in animation.h

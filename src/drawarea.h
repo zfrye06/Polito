@@ -7,12 +7,11 @@
 #include <QColor>
 #include <typeinfo>
 #include "action.h"
-#include "animationwidgets.h"
 #include "frame.h"
 #include "layer.h"
 #include "painthandler.h"
 
-class DrawArea : public QGraphicsView, public UpdateableWidget {
+class DrawArea : public QGraphicsView {
     Q_OBJECT
 
  public:
@@ -21,7 +20,7 @@ class DrawArea : public QGraphicsView, public UpdateableWidget {
     ~DrawArea();
     PaintHandler &paintHandler();
     void setFrame(Frame *frame);
-    void updateDisplay() override;
+    void updateDisplay();
     void fitToScene();
     virtual void mousePressEvent( QMouseEvent* event ) override;
     virtual void mouseMoveEvent( QMouseEvent* event ) override;

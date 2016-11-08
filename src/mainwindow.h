@@ -12,7 +12,6 @@
 #include <memory>
 #include "action.h"
 #include "animation.h"
-#include "animationwidgets.h"
 #include "drawarea.h"
 #include "imagesizedialog.h"
 #include "layermenu.h"
@@ -22,10 +21,7 @@
 #include "fpsdialog.h"
 #include "keybindingdialog.h"
 
-
-class DrawArea;
-
-class MainWindow : public QMainWindow, public UpdateableWidget {
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -34,7 +30,7 @@ public:
     // This is added as a callback to undo/redo actions
     // when the effect of the action includes updating
     // global UI state.
-    void updateDisplay() override;
+    void updateDisplay();
 
 protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
@@ -45,10 +41,8 @@ private slots:
     void saveProject(bool extendedFormat);
     void saveGif();
     void loadProject();
-    void uploadToTwitter();
     void imageSize();
     void finishImageSize(int dimension);
-    void finishUploadToTwitter(QString pin);
     void bindings();
     void setColorBind(const QKeySequence&);
     void setEraserBind(const QKeySequence&);
@@ -92,7 +86,6 @@ private:
     QAction *saveExtendedAct;
     QAction *exportGifAct;
     QAction *loadAct;
-    QAction *twitterAct;
     QAction *undoAct;
     QAction *redoAct;
     QAction *imageSizeAct;
