@@ -1,9 +1,8 @@
 
+#include "mainwindow.h"
 #include <QtWidgets>
 #include <iostream>
 #include <fstream>
-
-#include "mainwindow.h"
 #include "imagesizedialog.h"
 #include "twitterdialog.h"
 
@@ -58,6 +57,7 @@ void MainWindow::loadProject() {
             std::unique_ptr<Animation> toLoad(new Animation(emitter));
             toLoad->load(in);
             actionHistory.clear();
+
             drawArea->setFrame(&toLoad->activeFrame());
             previewArea->setFrames(&toLoad->getFrames());
             animation.swap(toLoad);

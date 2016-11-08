@@ -12,11 +12,10 @@
 #include <vector>
 #include <memory>
 #include "animation.h"
-#include "animationwidgets.h"
 
 using namespace std;
 
-class Scrubber : public QWidget, public AnimationWidget {
+class Scrubber : public QWidget {
     Q_OBJECT
 public:
     explicit Scrubber(QWidget *parent, vector<unique_ptr<Frame>> *frames);
@@ -24,10 +23,10 @@ public:
 
     // Calling any of these will not emit the
     // corresponding signal.
-    void addFrame(int index) override;
-    void moveFrame(int from, int to) override;
-    void removeFrame(int index) override;
-    void setActiveFrame(int index) override;
+    void addFrame(int index);
+    void moveFrame(int from, int to);
+    void removeFrame(int index);
+    void setActiveFrame(int index);
     void clear();
     int getCurrentListRow();
     void updateFrames();

@@ -194,9 +194,9 @@ Frame *loadExtendedFrame(std::istream& in, AnimationEventEmitter& emitter, int d
         layers.push_back(std::unique_ptr<Layer>(new Layer(image)));
     }
     // Pass ownership of the layers to the new frame.
-    Frame *frame = new Frame(emitter, layers);
+    std::unique_ptr<Frame> frame(new Frame(emitter, layers));
     if (duration > 0) frame->setDuration(duration);
-    return frame;
+    return frame.release();
 }
 
 Frame *loadFrame(std::istream& in, AnimationEventEmitter& emitter, int dimension) {
