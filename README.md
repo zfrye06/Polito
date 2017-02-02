@@ -2,7 +2,7 @@
 ## Installation
 1. Install Qt
 2. Clone Repository
-3. Inside Repository type `git submodule init` and then `git submodule update`
+3. Navigate into the repository and execute `git submodule init` and then `git submodule update`
 4. You should be good to go!
 
 ---
